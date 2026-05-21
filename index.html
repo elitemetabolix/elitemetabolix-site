@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index,follow">
+<title>Elite Metabolix — Engineered Performance Coaching</title>
+<meta name="description" content="Private, doctoral-level clinical-science coaching. Training, nutrition, recovery and the decisions that compound — built around your data and iterated every week.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0C10; --bg2:#0E1117; --surface:#13171F; --card:#171C26; --line:#232a36; --line2:#2c3543;
+  --txt:#ECEFF3; --mut:#9aa4b2; --mut2:#6b7480;
+  --orange:#F0852E; --orange-d:#1f1206; --orange-rgb:240,133,46;
+  --green:#37B981; --blue:#4F92DE; --red:#E45D54; --lav:#A99BE0;
+  --fd:'Fraunces',Georgia,serif; --fb:'Hanken Grotesk',system-ui,sans-serif; --fm:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* grain + ambient */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.glow{position:fixed;border-radius:50%;filter:blur(120px);z-index:0;pointer-events:none;opacity:.4}
+.glow.a{width:520px;height:520px;background:radial-gradient(circle,rgba(var(--orange-rgb),.5),transparent 70%);top:-180px;right:-120px}
+.glow.b{width:440px;height:440px;background:radial-gradient(circle,rgba(79,146,222,.28),transparent 70%);top:520px;left:-180px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;position:relative;z-index:2}
+.mono{font-family:var(--fm);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut2)}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,12,16,.72);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1180px;margin:0 auto;padding:15px 28px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{font-family:var(--fd);font-weight:600;font-size:20px;letter-spacing:.01em;color:var(--txt);text-decoration:none;display:flex;align-items:center;gap:9px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--orange);box-shadow:0 0 14px var(--orange);display:inline-block}
+.nav-links{display:flex;align-items:center;gap:30px}
+.nav-links a{color:var(--mut);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--txt)}
+.nav-cta{font-family:var(--fm)!important;font-size:11px!important;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--line2);padding:9px 16px;border-radius:7px;color:var(--txt)!important;transition:all .2s}
+.nav-cta:hover{border-color:var(--orange);color:var(--orange)!important}
+.burger{display:none;background:none;border:none;color:var(--txt);font-size:22px;cursor:pointer}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fb);font-weight:600;font-size:15px;padding:15px 26px;border-radius:10px;text-decoration:none;cursor:pointer;border:none;transition:transform .18s,box-shadow .18s,filter .18s;position:relative}
+.btn-primary{background:linear-gradient(135deg,var(--orange),#f5a059);color:#1a0f04;box-shadow:0 10px 30px rgba(var(--orange-rgb),.32)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(var(--orange-rgb),.42)}
+.btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--line2)}
+.btn-ghost:hover{border-color:var(--mut);transform:translateY(-2px)}
+.btn .arr{transition:transform .2s}.btn:hover .arr{transform:translateX(4px)}
+
+/* apply / intake form */
+#apply{padding-top:30px}
+.apply-card{background:linear-gradient(160deg,rgba(var(--orange-rgb),.06),var(--card));border:1px solid var(--line2);border-radius:20px;padding:clamp(24px,4vw,44px);max-width:880px;margin:0 auto;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+.apply-card h2{font-family:var(--fd);font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.08;margin:12px 0 8px}
+.apply-card .lead{color:var(--mut);max-width:62ch;margin-bottom:26px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1 / -1}
+.field label{font-size:13px;font-weight:600;color:var(--txt)}
+.field label .opt{color:var(--mut2);font-weight:400}
+.field input,.field select,.field textarea{width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;color:var(--txt);font-family:var(--fb);font-size:14px;transition:border-color .18s,box-shadow .18s}
+.field textarea{resize:vertical;min-height:72px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(var(--orange-rgb),.15)}
+.field input::placeholder,.field textarea::placeholder{color:var(--mut2)}
+.field select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa4b2' stroke-width='1.6' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.consent{display:flex;gap:11px;align-items:flex-start;margin-top:14px;font-size:13px;color:var(--mut);line-height:1.5;cursor:pointer}
+.consent input{width:18px;height:18px;flex-shrink:0;margin-top:1px;accent-color:var(--orange)}
+.consent b{color:var(--green)}
+.apply-actions{margin-top:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.apply-msg{font-size:13px;color:var(--red)}
+.apply-success{text-align:center;padding:24px 0}
+.apply-success .tick{font-size:36px;color:var(--green)}
+.apply-success h3{font-family:var(--fd);font-weight:500;font-size:25px;margin:8px 0}
+.apply-success p{color:var(--mut);max-width:48ch;margin:0 auto}
+.priv-pill{display:inline-flex;align-items:center;gap:7px;font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);border:1px solid rgba(55,185,129,.3);background:rgba(55,185,129,.08);padding:6px 11px;border-radius:7px}
+@media(max-width:680px){.fgrid{grid-template-columns:1fr}}
+
+/* hero */
+header.hero{padding:88px 0 70px;position:relative}
+.hero-grid{position:absolute;inset:0;z-index:0;opacity:.5;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:12px;margin-bottom:26px;opacity:0;animation:rise .7s .05s forwards}
+.signal{display:inline-flex;gap:4px}.signal i{width:7px;height:7px;border-radius:2px;display:block}
+.signal i:nth-child(1){background:var(--orange)}.signal i:nth-child(2){background:var(--green)}
+.signal i:nth-child(3){background:var(--blue)}.signal i:nth-child(4){background:var(--red)}
+h1.head{font-family:var(--fd);font-weight:500;font-size:clamp(40px,6.6vw,76px);line-height:1.02;letter-spacing:-.018em;max-width:15ch;opacity:0;animation:rise .8s .15s forwards}
+h1.head em{font-style:italic;color:var(--orange)}
+.hero-sub{font-size:clamp(17px,2vw,20px);color:var(--mut);max-width:54ch;margin-top:26px;opacity:0;animation:rise .8s .28s forwards}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:38px;opacity:0;animation:rise .8s .4s forwards}
+.hero-meta{display:flex;gap:34px;flex-wrap:wrap;margin-top:54px;opacity:0;animation:rise .8s .52s forwards}
+.hero-meta .stat .n{font-family:var(--fd);font-size:30px;color:var(--txt);line-height:1}
+.hero-meta .stat .l{font-size:13px;color:var(--mut2);margin-top:6px}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* section scaffolding */
+section{padding:84px 0;position:relative}
+.sec-label{display:flex;align-items:center;gap:14px;margin-bottom:30px}
+.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec-h{font-family:var(--fd);font-weight:500;font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-.015em;max-width:20ch}
+.sec-intro{color:var(--mut);font-size:17px;max-width:58ch;margin-top:18px}
+
+/* principles strip */
+.principles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px}
+.principle{background:var(--bg2);padding:26px 22px}
+.principle .k{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.principle h3{font-family:var(--fd);font-weight:500;font-size:19px;margin-bottom:7px}
+.principle p{font-size:13.5px;color:var(--mut);line-height:1.55}
+
+/* method steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:14px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 22px;transition:transform .2s,border-color .2s}
+.step:hover{transform:translateY(-4px);border-color:var(--line2)}
+.step .num{font-family:var(--fm);font-size:12px;color:var(--orange);letter-spacing:.1em;margin-bottom:18px}
+.step h3{font-family:var(--fd);font-weight:500;font-size:21px;margin-bottom:9px}
+.step p{font-size:14px;color:var(--mut)}
+
+/* deliverables */
+.deliver{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}
+.deliver ul{list-style:none;margin-top:10px}
+.deliver li{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.deliver li:last-child{border-bottom:none}
+.deliver li .tick{flex-shrink:0;width:22px;height:22px;border-radius:6px;background:rgba(var(--orange-rgb),.12);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:12px;font-family:var(--fm);margin-top:2px}
+.deliver li b{font-weight:600}.deliver li span{color:var(--mut);font-size:14.5px}
+.panel{background:linear-gradient(160deg,var(--surface),var(--bg2));border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+.panel .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.panel .ph .t{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
+.bar{height:9px;border-radius:5px;background:var(--line);overflow:hidden;margin:9px 0 3px}
+.bar i{display:block;height:100%;border-radius:5px}
+.prow{margin-bottom:15px}.prow .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--mut)}
+.prow .lbl b{color:var(--txt);font-weight:600}
+
+/* pricing */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:14px}
+.tier{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
+.tier:hover{transform:translateY(-5px)}
+.tier.feature{border-color:rgba(var(--orange-rgb),.5);background:linear-gradient(170deg,rgba(var(--orange-rgb),.07),var(--card) 55%)}
+.tier .tag{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut2);margin-bottom:14px}
+.tier.feature .tag{color:var(--orange)}
+.tier h3{font-family:var(--fd);font-weight:500;font-size:26px;margin-bottom:6px}
+.tier .price{font-family:var(--fd);font-size:38px;line-height:1;margin:10px 0 4px}
+.tier .price small{font-family:var(--fb);font-size:14px;color:var(--mut2)}
+.tier .desc{font-size:14px;color:var(--mut);margin-bottom:20px;min-height:42px}
+.tier ul{list-style:none;margin-bottom:26px;flex:1}
+.tier li{font-size:14px;padding:8px 0;color:var(--mut);display:flex;gap:10px}
+.tier li::before{content:"›";color:var(--orange);font-weight:700}
+.btn-checkout{width:100%;justify-content:center}
+.tier:not(.feature) .btn-checkout{background:var(--surface);color:var(--txt);border:1px solid var(--line2)}
+.tier:not(.feature) .btn-checkout:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+
+/* ecosystem */
+.eco{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.eco-card{border-radius:16px;padding:34px;position:relative;overflow:hidden;border:1px solid var(--line);min-height:230px;display:flex;flex-direction:column;justify-content:flex-end}
+.eco-card.mind{background:linear-gradient(150deg,#1a2230,#141a24)}
+.eco-card.move{background:linear-gradient(150deg,#1e1a2b,#15131f)}
+.eco-card .ico{position:absolute;top:28px;left:34px;font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.eco-card.mind .ico{color:var(--blue)}.eco-card.move .ico{color:var(--lav)}
+.eco-card h3{font-family:var(--fd);font-weight:500;font-size:25px;margin-bottom:8px}
+.eco-card p{font-size:14.5px;color:var(--mut);margin-bottom:18px;max-width:42ch}
+.eco-btns{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-family:var(--fm);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:9px 15px;border-radius:8px;text-decoration:none;border:1px solid var(--line2);color:var(--txt);transition:all .2s}
+.chip:hover{transform:translateY(-2px)}
+.eco-card.move .chip:hover{border-color:var(--lav);color:var(--lav)}
+.eco-card.mind .chip:hover{border-color:var(--blue);color:var(--blue)}
+.disclose{font-size:12px;color:var(--mut2);margin-top:18px;font-style:italic}
+
+/* cta band */
+.band{background:linear-gradient(135deg,rgba(var(--orange-rgb),.1),rgba(79,146,222,.06));border:1px solid var(--line);border-radius:20px;padding:60px 48px;text-align:center;margin:40px 0}
+.band h2{font-family:var(--fd);font-weight:500;font-size:clamp(28px,4vw,42px);max-width:18ch;margin:0 auto 22px;line-height:1.08}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
+.foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:46px}
+.foot-top .brand{margin-bottom:14px}
+.foot-top p{font-size:14px;color:var(--mut);max-width:38ch}
+.foot-col h4{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut2);margin-bottom:16px}
+.foot-col a{display:block;color:var(--mut);text-decoration:none;font-size:14px;padding:6px 0;transition:color .2s}
+.foot-col a:hover{color:var(--txt)}
+.legal{border-top:1px solid var(--line);padding-top:26px;font-size:12px;color:var(--mut2);line-height:1.7}
+.legal p{margin-bottom:12px;max-width:92ch}
+.legal .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:18px}
+
+/* samples gallery */
+.samples-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
+.scard{position:relative;display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;transition:transform .2s,border-color .2s;overflow:hidden}
+.scard.live:hover{transform:translateY(-5px);border-color:var(--orange)}
+.scard::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--accent,var(--orange));opacity:.85}
+.scard .stag{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut2);display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.scard .stag .on{color:var(--green)}.scard .stag .soon{color:var(--mut2)}
+.scard h3{font-family:var(--fd);font-weight:500;font-size:21px;color:var(--txt);margin-bottom:5px}
+.scard .goal{font-size:13px;color:var(--orange);font-family:var(--fm);letter-spacing:.03em;margin-bottom:10px}
+.scard p{font-size:13.5px;color:var(--mut);line-height:1.5}
+.scard .open{margin-top:16px;font-size:13px;font-weight:600;color:var(--orange);display:inline-flex;gap:7px;align-items:center}
+.scard.soon{opacity:.62}
+@media(max-width:900px){.samples-grid{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .nav-links{display:none}.burger{display:block}
+  .principles,.steps{grid-template-columns:1fr 1fr}
+  .deliver{grid-template-columns:1fr;gap:30px}
+  .tiers{grid-template-columns:1fr}
+  .eco{grid-template-columns:1fr}
+  .foot-top{grid-template-columns:1fr;gap:28px}
+  .hero-meta{gap:24px}
+}
+@media(max-width:560px){
+  .principles,.steps{grid-template-columns:1fr}
+  .band{padding:40px 24px}
+}
+</style>
+</head>
+<body>
+<div class="glow a"></div><div class="glow b"></div>
+
+<nav>
+  <div class="nav-in">
+    <a href="#" class="brand"><span class="dot"></span>Elite Metabolix</a>
+    <div class="nav-links">
+      <a href="#method">The Method</a>
+      <a href="#inside">What's Inside</a>
+      <a href="#pricing">Programs</a>
+      <a href="#samples">Samples</a>
+      <a href="mobility.html">Yoga</a>
+      <a href="mind.html">Mind</a>
+      <!-- Stripe customer billing portal link goes here -->
+      <a href="STRIPE_BILLING_PORTAL_LINK" class="nav-cta">Manage Membership</a>
+    </div>
+    <button class="burger" onclick="document.querySelector('.nav-links').style.display=(getComputedStyle(document.querySelector('.nav-links')).display==='none'?'flex':'none')">☰</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="wrap">
+    <div class="hero-eyebrow">
+      <span class="signal"><i></i><i></i><i></i><i></i></span>
+      <span class="mono">Doctoral-level clinical science · Private performance coaching</span>
+    </div>
+    <h1 class="head">Elite performance, <em>engineered</em> to the gram.</h1>
+    <p class="hero-sub">Private, evidence-based coaching for people done guessing. Training, nutrition, recovery, and the small decisions that compound — built around your data and re-tuned every single week.</p>
+    <div class="hero-cta">
+      <!-- Stripe checkout / application link -->
+      <a href="#apply" class="btn btn-primary">Apply for coaching <span class="arr">→</span></a>
+      <a href="#method" class="btn btn-ghost">See the method</a>
+    </div>
+    <div class="hero-meta">
+      <div class="stat"><div class="n">1:1</div><div class="l">Concierge, never templated</div></div>
+      <div class="stat"><div class="n">Weekly</div><div class="l">Plan re-tuned on your data</div></div>
+      <div class="stat"><div class="n">100%</div><div class="l">Private &amp; evidence-based</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- PRINCIPLES -->
+<section style="padding-top:30px">
+  <div class="wrap">
+    <div class="principles">
+      <div class="principle"><div class="k" style="color:var(--orange)">01 / Evidence</div><h3>Peer-reviewed, not bro-science</h3><p>Every recommendation traces to current sports-medicine, physiology, and clinical-nutrition literature.</p></div>
+      <div class="principle"><div class="k" style="color:var(--green)">02 / Periodized</div><h3>Phased to your timeline</h3><p>Tissue, metabolic, peak, taper — the plan moves through deliberate blocks toward your event.</p></div>
+      <div class="principle"><div class="k" style="color:var(--blue)">03 / Personal</div><h3>Built around your life</h3><p>Shift work, travel, injuries, schedule — the program bends to your real week, not an ideal one.</p></div>
+      <div class="principle"><div class="k" style="color:var(--red)">04 / Private</div><h3>We will never sell your data</h3><p>Your dashboard lives on a private link. No feeds, no ads, no leaderboards — and your data is never sold, shared, or mined. Ever. Trust is the whole business.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section id="method">
+  <div class="wrap">
+    <div class="sec-label"><span class="mono">The Method</span></div>
+    <h2 class="sec-h">A coaching engine, not a PDF you'll never open.</h2>
+    <p class="sec-intro">Four steps from "where you are" to a living plan that adapts faster than you can plateau.</p>
+    <div class="steps">
+      <div class="step"><div class="num">STEP 01</div><h3>Intake</h3><p>A deep read of your goals, history, schedule, and constraints — so the plan starts from reality.</p></div>
+      <div class="step"><div class="num">STEP 02</div><h3>Synthesis</h3><p>Your inputs are mapped against the evidence base to shape training load, fueling, and recovery.</p></div>
+      <div class="step"><div class="num">STEP 03</div><h3>Build</h3><p>A custom dashboard: periodized calendar, nutrition targets, strength and mobility — every "why" stated.</p></div>
+      <div class="step"><div class="num">STEP 04</div><h3>Iterate</h3><p>Weekly check-ins feed the next revision. The plan compounds; it never goes stale.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIDE -->
+<section id="inside">
+  <div class="wrap">
+    <div class="deliver">
+      <div>
+        <div class="sec-label"><span class="mono">What's Inside</span></div>
+        <h2 class="sec-h">One private dashboard. Every variable, aligned.</h2>
+        <ul>
+          <li><span class="tick">↗</span><span><b>Periodized training calendar</b> — every session dated, with the reasoning behind the load.</span></li>
+          <li><span class="tick">◎</span><span><b>Nutrition, to the gram</b> — carbs periodized by session type, protein and fat targets, fueling windows.</span></li>
+          <li><span class="tick">⌃</span><span><b>Strength &amp; mobility protocols</b> — tendon-aware, progressive, built for your frame and history.</span></li>
+          <li><span class="tick">~</span><span><b>Recovery &amp; lifestyle</b> — sleep, circadian timing, travel and shift-work strategy.</span></li>
+          <li><span class="tick">+</span><span><b>OTC supplement guidance</b> — general, educational, and always "check interactions with your pharmacist."</span></li>
+          <li><span class="tick">⚑</span><span><b>Built-in feedback</b> — flag anything that doesn't fit your real life; it shapes the next revision.</span></li>
+        </ul>
+      </div>
+      <div class="panel" aria-hidden="true">
+        <div class="ph"><span class="t">Sample · Week 9 of 21</span><span class="signal"><i></i><i></i><i></i><i></i></span></div>
+        <div class="prow"><div class="lbl"><b>Training load</b><span>Build phase</span></div><div class="bar"><i style="width:72%;background:linear-gradient(90deg,var(--orange),#f5a059)"></i></div></div>
+        <div class="prow"><div class="lbl"><b>Carbohydrate</b><span>6–8 g/kg</span></div><div class="bar"><i style="width:64%;background:var(--green)"></i></div></div>
+        <div class="prow"><div class="lbl"><b>Recovery index</b><span>On track</span></div><div class="bar"><i style="width:81%;background:var(--blue)"></i></div></div>
+        <div class="prow"><div class="lbl"><b>Watch flag</b><span>Monitor</span></div><div class="bar"><i style="width:28%;background:var(--red)"></i></div></div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--mut2);margin-top:18px;letter-spacing:.06em">REVISED AFTER EVERY WEEKLY CHECK-IN</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAMPLES -->
+<section id="samples">
+  <div class="wrap">
+    <div class="sec-label"><span class="mono">Sample Builds</span></div>
+    <h2 class="sec-h">See the work. De-identified, never templated.</h2>
+    <p class="sec-intro">Real plan architecture, anonymized. Each build is research-grounded and tuned to a specific goal, schedule, and body — these are the shapes yours could take.</p>
+    <div class="samples-grid">
+      <a class="scard live" href="sample-endurance.html" style="--accent:var(--orange)">
+        <div class="stag"><span>Endurance</span><span class="on">● Live</span></div>
+        <h3>The Sub-50 Build</h3>
+        <div class="goal">10K · ~64 → sub-50 min</div>
+        <p>15-week periodization around an evening-shift schedule. Interactive, day by day.</p>
+        <span class="open">View sample →</span>
+      </a>
+      <div class="scard soon" style="--accent:var(--green)">
+        <div class="stag"><span>Marathon</span><span class="soon">In build</span></div>
+        <h3>The Distance Build</h3>
+        <div class="goal">26.2 · full periodization</div>
+        <p>Long-range base, fueling strategy, and taper for a first or faster marathon.</p>
+      </div>
+      <div class="scard soon" style="--accent:var(--blue)">
+        <div class="stag"><span>Metabolic</span><span class="soon">In build</span></div>
+        <h3>The Recomposition Build</h3>
+        <div class="goal">Body comp · energy · habits</div>
+        <p>Training, nutrition, and routine engineered for sustainable metabolic change.</p>
+      </div>
+      <div class="scard soon" style="--accent:var(--red)">
+        <div class="stag"><span>Hormonal</span><span class="soon">In build</span></div>
+        <h3>The Balanced Build</h3>
+        <div class="goal">Train with your physiology</div>
+        <p>A plan that works with a managed hormonal condition — coordinated with your care team.</p>
+      </div>
+      <div class="scard soon" style="--accent:var(--lav,#A99BE0)">
+        <div class="stag"><span>Renal-aware</span><span class="soon">In build</span></div>
+        <h3>The Steady Build</h3>
+        <div class="goal">Movement that complements care</div>
+        <p>Gentle, progressive movement support designed to defer entirely to a renal team's guidance.</p>
+      </div>
+      <a class="scard live" href="#apply" style="--accent:var(--orange)">
+        <div class="stag"><span>Yours</span><span class="on">● Open</span></div>
+        <h3>Your Build</h3>
+        <div class="goal">Engineered around you</div>
+        <p>Your goal, your schedule, your data — refined every week. Apply to start.</p>
+        <span class="open">Start →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-label"><span class="mono">Programs</span></div>
+    <h2 class="sec-h">Concierge coaching. Priced for people who value the edge.</h2>
+    <p class="sec-intro">Every tier includes a custom-built private dashboard. Choose how much ongoing partnership you want.</p>
+    <div class="tiers">
+      <div class="tier">
+        <div class="tag">One-Time</div>
+        <h3>The Build</h3>
+        <div class="price">$299<small> / once</small></div>
+        <p class="desc">The full research synthesis and a custom dashboard — built, deployed to your private link, and yours to run.</p>
+        <ul><li>Deep intake &amp; evidence synthesis</li><li>Custom periodized dashboard</li><li>Nutrition, strength &amp; recovery built in</li><li>Deployed to a private link</li><li>30-day revision window</li></ul>
+        <!-- Replace with your Stripe Payment Link -->
+        <a href="STRIPE_CHECKOUT_LINK_BUILD" class="btn btn-checkout">Get the build</a>
+      </div>
+      <div class="tier feature">
+        <div class="tag">Most Chosen</div>
+        <h3>Concierge</h3>
+        <div class="price">$249<small> / mo</small></div>
+        <p class="desc">Your initial build, then ongoing coaching with weekly iteration on your data.</p>
+        <ul><li>Initial Build included</li><li>Weekly check-in &amp; revision</li><li>Direct messaging access</li><li>Nutrition + recovery tuning</li><li>Priority on flags</li></ul>
+        <a href="#apply" class="btn btn-primary btn-checkout">Apply now <span class="arr">→</span></a>
+      </div>
+      <div class="tier">
+        <div class="tag">High-Touch</div>
+        <h3>Inner Circle</h3>
+        <div class="price">$499<small> / mo</small></div>
+        <p class="desc">The highest level of partnership — for athletes chasing a hard target on a deadline.</p>
+        <ul><li>Everything in Concierge</li><li>Twice-weekly revisions</li><li>Rapid-response priority access</li><li>Monthly live strategy call</li><li>Travel &amp; competition planning</li><li>Quarterly deep rebuild</li></ul>
+        <a href="STRIPE_CHECKOUT_LINK_INNER" class="btn btn-checkout">Request access</a>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--mut2);font-size:13.5px;margin-top:28px">Student-athlete &amp; team rates — <strong style="color:var(--mut)">15% off</strong> for verified high-school &amp; collegiate athletes, <strong style="color:var(--mut)">25% off</strong> for teams &amp; programs. <a href="#apply" style="color:var(--orange);text-decoration:none">Inquire →</a></p>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section id="ecosystem">
+  <div class="wrap">
+    <div class="sec-label"><span class="mono">The Ecosystem</span></div>
+    <h2 class="sec-h">Performance is more than the workout.</h2>
+    <p class="sec-intro">Two companion spaces that round out the system — recovery for the body, regulation for the mind.</p>
+    <div class="eco">
+      <div class="eco-card move">
+        <span class="ico">Mobility &amp; Recovery</span>
+        <h3>Move better, recover faster</h3>
+        <p>Efficient mobility flows and down-regulation work for athletes — plus a partner integration to take it further.</p>
+        <div class="eco-btns">
+          <a href="mobility.html" class="chip">Enter the portal</a>
+        </div>
+      </div>
+      <div class="eco-card mind">
+        <span class="ico">Mind &amp; Breath</span>
+        <h3>Regulate the nervous system</h3>
+        <p>10–15 minute breathing and stress-alleviation resources for high-pressure lives and odd-hour schedules.</p>
+        <div class="eco-btns">
+          <a href="mind.html" class="chip">Enter the hub</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLY / INTAKE -->
+<section id="apply">
+  <div class="wrap">
+    <div class="apply-card">
+      <div id="applyForm">
+        <span class="priv-pill">● Private · never sold</span>
+        <h2>Apply for coaching</h2>
+        <p class="lead">A few questions so your first plan is built around your real life, not a template. Takes about two minutes. Spots are limited, so this is also how we make sure it's a good fit.</p>
+        <div class="fgrid">
+          <div class="field"><label>Full name</label><input id="f-name" type="text" placeholder="First and last"></div>
+          <div class="field"><label>Email</label><input id="f-email" type="email" placeholder="you@email.com"></div>
+          <div class="field"><label>Primary goal</label><select id="f-goal">
+            <option value="">Select…</option>
+            <option>Endurance / a race</option>
+            <option>Fat loss &amp; body composition</option>
+            <option>Strength &amp; muscle</option>
+            <option>General performance</option>
+            <option>Metabolic health</option>
+          </select></div>
+          <div class="field"><label>Target event or date <span class="opt">· optional</span></label><input id="f-target" type="text" placeholder="e.g., 10K on Sept 5, or no set date"></div>
+          <div class="field"><label>Training experience</label><select id="f-exp">
+            <option value="">Select…</option>
+            <option>New to training</option>
+            <option>Some experience</option>
+            <option>Experienced</option>
+            <option>Highly trained</option>
+          </select></div>
+          <div class="field"><label>Days per week you can train</label><select id="f-days">
+            <option value="">Select…</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+          </select></div>
+          <div class="field"><label>Equipment access</label><select id="f-equip">
+            <option value="">Select…</option>
+            <option>Full gym</option>
+            <option>Home — some equipment</option>
+            <option>Bodyweight only</option>
+            <option>Other</option>
+          </select></div>
+          <div class="field"><label>Schedule constraints <span class="opt">· optional</span></label><input id="f-constraints" type="text" placeholder="shift work, travel, early mornings…"></div>
+          <div class="field full"><label>Injuries or physical limitations <span class="opt">· optional</span></label><textarea id="f-injuries" placeholder="Anything that affects how you move or what you can train safely."></textarea></div>
+          <div class="field"><label>Heritage / cuisine background <span class="opt">· optional</span></label><input id="f-heritage" type="text" placeholder="Helps tailor nutrition to foods you enjoy"></div>
+          <div class="field"><label>Dietary preferences <span class="opt">· optional</span></label><input id="f-diet" type="text" placeholder="vegetarian, halal, allergies…"></div>
+          <div class="field full"><label>Anything else you want me to know <span class="opt">· optional</span></label><textarea id="f-notes" placeholder="Context, history, what's worked or what hasn't."></textarea></div>
+        </div>
+        <label class="consent"><input id="f-clear" type="checkbox"><span>I have no medical condition that prevents safe exercise, or I've been cleared by my physician to train.</span></label>
+        <label class="consent"><input id="f-consent" type="checkbox"><span>I understand Elite Metabolix is performance coaching, <b style="color:var(--mut)">not medical care</b>, and I agree to the privacy terms. My information stays <b>private and is never sold.</b></span></label>
+        <div class="apply-actions">
+          <button class="btn btn-primary" onclick="submitIntake()">Submit application <span class="arr">→</span></button>
+          <span class="apply-msg" id="applyMsg"></span>
+        </div>
+      </div>
+      <div id="applyDone" class="apply-success" style="display:none">
+        <div class="tick">✓</div>
+        <h3>Application received.</h3>
+        <p>Thanks — every application is reviewed personally and you'll hear back by email shortly. Keep moving.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding-top:20px">
+  <div class="wrap">
+    <div class="band">
+      <span class="mono" style="color:var(--orange)">Limited concierge spots</span>
+      <h2 style="margin-top:18px">Your body has been asking for a real plan. Let's build it.</h2>
+      <a href="#apply" class="btn btn-primary">Apply for coaching <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a href="#" class="brand"><span class="dot"></span>Elite Metabolix</a>
+        <p>Doctoral-level clinical science. Elite performance coaching. Built around your data, iterated every week. <b style="color:var(--green)">We will never sell your data.</b></p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="#method">The Method</a>
+        <a href="#inside">What's Inside</a>
+        <a href="#pricing">Programs</a>
+        <a href="#ecosystem">Ecosystem</a>
+      </div>
+      <div class="foot-col">
+        <h4>Ecosystem</h4>
+        <a href="mobility.html">Mobility &amp; Recovery</a>
+        <a href="mind.html">Mind &amp; Breath</a>
+        <a href="STRIPE_BILLING_PORTAL_LINK">Manage Membership</a>
+      </div>
+    </div>
+    <div class="legal">
+      <p><strong style="color:var(--mut)">Scope.</strong> Elite Metabolix provides performance and wellness coaching — training programming, nutrition strategy, general OTC-supplement education, sleep and recovery guidance. <strong style="color:var(--mut)">This is not medical care.</strong> Elite Metabolix does not diagnose, treat, or manage any medical condition; does not interpret laboratory results; and does not prescribe, adjust, or discontinue medication. Any health information you share is used to coach safely and to know when to refer you to your own clinicians. Always consult your physician or pharmacist before beginning any new exercise, nutrition, or supplement program, and for any medical or medication decision.</p>
+      <p><strong style="color:var(--mut)">This is not medical care.</strong> Elite Metabolix does not diagnose, treat, or manage any medical condition; does not interpret laboratory results; and does not prescribe, adjust, or discontinue medication. Any health information you share is used to coach safely and to know when to refer you to your own clinicians.</p>
+      <div class="row">
+        <span>© <span id="yr"></span> Elite Metabolix. All rights reserved.</span>
+        <span class="mono">Engineered for performance</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+function submitIntake(){
+  var g=function(id){return document.getElementById(id);};
+  var req=[['f-name','your name'],['f-email','your email'],['f-goal','a primary goal'],['f-exp','your experience level'],['f-days','days per week'],['f-equip','equipment access']];
+  for(var i=0;i<req.length;i++){ if(!g(req[i][0]).value){ g('applyMsg').textContent='Please add '+req[i][1]+'.'; return; } }
+  if(!g('f-clear').checked || !g('f-consent').checked){ g('applyMsg').textContent='Please confirm both boxes to continue.'; return; }
+  g('applyMsg').textContent='';
+  var payload={ form:'intake',
+    name:g('f-name').value, email:g('f-email').value, goal:g('f-goal').value, target:g('f-target').value,
+    experience:g('f-exp').value, days:g('f-days').value, equipment:g('f-equip').value, constraints:g('f-constraints').value,
+    injuries:g('f-injuries').value, heritage:g('f-heritage').value, diet:g('f-diet').value, notes:g('f-notes').value,
+    clearance:'yes', consent:'yes' };
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbzosdkuK6u5QKFqH7Lei41mmuk6PSy8nMAIm9dPakMuedbYdwHLCCCb_X5499ooa-6N9A/exec';
+  try{ if(ENDPOINT.indexOf('http')===0){ fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)}); } }catch(e){}
+  g('applyForm').style.display='none'; g('applyDone').style.display='block';
+  document.getElementById('apply').scrollIntoView({behavior:'smooth',block:'center'});
+}
+</script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

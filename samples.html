@@ -210,7 +210,19 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
   .band{padding:40px 24px}
 }
 </style>
-<style>.nav-links a.active{color:var(--orange)}</style></head>
+<style>.nav-links a.active{color:var(--orange)}</style><style>
+/* Mobile nav: open as a vertical full-width dropdown, not a horizontal scrolling bar */
+@media(max-width:900px){
+  nav{position:sticky}
+  .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;
+    gap:0;background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    box-shadow:0 16px 34px rgba(0,0,0,.5);padding:6px 0}
+  .nav-links a{padding:14px 28px;font-size:15px;border-top:1px solid rgba(255,255,255,.045)}
+  .nav-links a:first-child{border-top:none}
+  .nav-cta{margin:10px 28px 6px!important;text-align:center}
+}
+</style>
+</head>
 <body>
 <nav><div class="nav-in"><a href="index.html" class="brand"><span class="dot"></span>Elite Metabolix</a><div class="nav-links"><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html" class="active">Samples</a><a href="mobility.html">Yoga</a><a href="mind.html">Mind</a><a href="mailto:hello@elitemetabolixhq.com?subject=Manage%20my%20membership" class="nav-cta">Manage Membership</a></div><button class="burger" onclick="var n=document.querySelector('.nav-links');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button></div></nav>
 <section id="samples">

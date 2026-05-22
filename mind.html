@@ -68,12 +68,20 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
 @media(max-width:840px){.grid3,.pillarnav{grid-template-columns:1fr}.support{flex-direction:column}.brand .wm{display:none}.nav-right{gap:15px}}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s}.reveal.in{opacity:1;transform:none}
 </style>
-<style>.nav-right{flex-wrap:wrap;row-gap:8px}.nav-right a{font-size:12.5px}</style></head>
+<style>
+.burger{display:none;background:none;border:none;color:var(--txt);font-size:22px;cursor:pointer;line-height:1;padding:4px}
+@media(max-width:900px){
+  .nav-right{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 16px 34px rgba(0,0,0,.5);padding:6px 0}
+  .nav-right a{padding:14px 26px;font-size:15px;border-top:1px solid rgba(255,255,255,.045)}
+  .nav-right a:first-child{border-top:none}
+  .burger{display:block}
+}
+</style></head>
 <body>
 <div class="glow a"></div><div class="glow b"></div>
 <nav><div class="nav-in">
   <a class="brand" href="index.html"><span class="em-mark">E&nbsp;M</span><span class="wm">Elite&nbsp;Metabolix</span></a>
-  <div class="nav-right"><a href="index.html">Home</a><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html">Yoga</a><a href="mind.html" class="active">Mind</a><a href="apply.html">Apply</a></div>
+  <div class="nav-right"><a href="index.html">Home</a><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html">Yoga</a><a href="mind.html" class="active">Mind</a><a href="apply.html">Apply</a></div></div><button class="burger" onclick="var n=this.parentElement.querySelector('.nav-right');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button>
 </div></nav>
 
 <header class="hero"><div class="hero-grid"></div><div class="wrap">

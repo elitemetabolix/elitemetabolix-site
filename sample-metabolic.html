@@ -296,7 +296,7 @@ footer{border-top:1px solid var(--line);margin-top:30px;padding:38px 0 60px}
     </ul></div>
     <div class="block"><h3>Low-friction shift prep</h3><ul class="flow">
       <li><b>Pre-shift bowl (~4 min)</b>Rotisserie chicken + ½ cup brown rice or quinoa + a big handful of spinach + a drizzle of EVOO.</li>
-      <li><b>Batch keema</b>Ground turkey 93/7 with Punjabi spices, cooked on an off-day; assemble with cauliflower rice through an ICU block.</li>
+      <li><b>Batch protein</b>Ground turkey 93/7 with whatever spices you like, cooked on an off day; assemble with cauliflower rice through a run of night shifts.</li>
       <li><b>Locker stock</b>High-protein shakes, Greek yogurt, raw almonds — so 3 a.m. decisions aren't willpower decisions.</li>
       <li><b>Family meals</b>Ask for your portion to be pulled before the final ghee tadka, or request olive/avocado oil.</li>
     </ul></div>
@@ -311,7 +311,7 @@ footer{border-top:1px solid var(--line);margin-top:30px;padding:38px 0 60px}
       <li><b>Front-load the active window</b>Glucose tolerance tracks the circadian clock — higher earlier in your waking day, lower toward biological night — so the same meal is handled better earlier than late. Build the day's calories into your awake-and-working hours.</li>
       <li><b>Pre-shift, ~2–3 h before the floor</b>Protein + low-glycemic carbohydrate. Steadier glucose across a long shift; the protein blunts the post-meal rise and primes muscle protein synthesis.</li>
       <li><b>Protein, evenly spread</b>~40–50 g at each of 3–4 meals. Each dose clears the leucine threshold and triggers a fresh MPS pulse — more effective than one large serving, and key while building lean mass on a hard schedule.</li>
-      <li><b>On the ICU night block</b>Lean on time-restricted eating: largest meal pre-shift, then keep overnight intake light (one low-GI snack before ~1 a.m. if needed). Large meals in the biological night blunt next-morning glucose tolerance.</li>
+      <li><b>On the night-shift block</b>Lean on time-restricted eating: largest meal pre-shift, then keep overnight intake light (one low-GI snack before ~1 a.m. if needed). Large meals in the biological night blunt next-morning glucose tolerance.</li>
       <li><b>Caffeine + sleep</b>Caffeine's ~5 h half-life means a 4 a.m. coffee still blocks adenosine at 8 a.m. and wrecks day-sleep. Set a hard caffeine curfew ~8 h before your target sleep, and a 100 oz/24 h hydration floor with electrolytes mid-shift.</li>
     </ul>
   </div>
@@ -362,7 +362,7 @@ footer{border-top:1px solid var(--line);margin-top:30px;padding:38px 0 60px}
 
 <script>
 const weeks=[
-  {num:1,type:'night',dates:'May 18–May 24',phase:'Foundation',miles:'3× Sutter nights',current:true,
+  {num:1,type:'night',dates:'May 18–May 24',phase:'Foundation',miles:'3× night shifts',current:true,
    focus:'Foundation block — groove the movement patterns, build the aerobic base, and let the body adapt to training around shifts. Adherence is the only metric that matters yet.',
    days:[
     {d:'Mon',dt:'May 18', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -373,7 +373,7 @@ const weeks=[
     {d:'Sat',dt:'May 23', w:[['hiit', 'Norwegian 4×4'], ['zone2', 'Optional Zone 2']], p:'4 × 4 min hard (RPE 8–9) / 3 min easy. The single highest-yield session for VO₂max.', n:'Bike or row to spare the joints after nights.'},
     {d:'Sun',dt:'May 24', w:[['zone2', 'Zone 2 + mobility']], p:'45–60 min easy aerobic (conversational) + 15 min mobility. Builds the aerobic base and aids recovery.', n:'Sets up the next block.'}
   ]},
-  {num:2,type:'day',dates:'May 25–May 31',phase:'Foundation',miles:'5× NorthBay days',
+  {num:2,type:'day',dates:'May 25–May 31',phase:'Foundation',miles:'5× day shifts',
    focus:'Foundation block — groove the movement patterns, build the aerobic base, and let the body adapt to training around shifts. Adherence is the only metric that matters yet.',
    days:[
     {d:'Mon',dt:'May 25', w:[['shift', '8hr Day Shift'], ['lift', 'Push (PM)']], p:'Push — chest, shoulders, triceps. Work to RIR 2–3; apply the 2-for-2 progression rule.', n:'Warm up 5–8 min easy + ramp sets on the first compound.'},
@@ -384,7 +384,7 @@ const weeks=[
     {d:'Sat',dt:'May 30', w:[['hiit', 'HIIT or sport'], ['zone2', 'Long Zone 2']], p:'Recreational sport or a HIIT block, plus a longer easy Zone 2. Aerobic base + adherence.'},
     {d:'Sun',dt:'May 31', w:[['rest', 'Rest / mobility']], n:'Full rest or a gentle walk + 15 min mobility. Recovery is where adaptation sticks.'}
   ]},
-  {num:3,type:'night',dates:'Jun 1–Jun 7',phase:'Foundation',miles:'3× Sutter nights',
+  {num:3,type:'night',dates:'Jun 1–Jun 7',phase:'Foundation',miles:'3× night shifts',
    focus:'Foundation block — groove the movement patterns, build the aerobic base, and let the body adapt to training around shifts. Adherence is the only metric that matters yet.',
    days:[
     {d:'Mon',dt:'Jun 1', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -395,7 +395,7 @@ const weeks=[
     {d:'Sat',dt:'Jun 6', w:[['hiit', 'Norwegian 4×4'], ['zone2', 'Optional Zone 2']], p:'4 × 4 min hard (RPE 8–9) / 3 min easy. The single highest-yield session for VO₂max.', n:'Bike or row to spare the joints after nights.'},
     {d:'Sun',dt:'Jun 7', w:[['zone2', 'Zone 2 + mobility']], p:'45–60 min easy aerobic (conversational) + 15 min mobility. Builds the aerobic base and aids recovery.', n:'Sets up the next block.'}
   ]},
-  {num:4,type:'day',dates:'Jun 8–Jun 14',phase:'Foundation',miles:'5× NorthBay days',
+  {num:4,type:'day',dates:'Jun 8–Jun 14',phase:'Foundation',miles:'5× day shifts',
    focus:'Foundation block — groove the movement patterns, build the aerobic base, and let the body adapt to training around shifts. Adherence is the only metric that matters yet.',
    days:[
     {d:'Mon',dt:'Jun 8', w:[['shift', '8hr Day Shift'], ['lift', 'Push (PM)']], p:'Push — chest, shoulders, triceps. Work to RIR 2–3; apply the 2-for-2 progression rule.', n:'Warm up 5–8 min easy + ramp sets on the first compound.'},
@@ -406,7 +406,7 @@ const weeks=[
     {d:'Sat',dt:'Jun 13', w:[['hiit', 'HIIT or sport'], ['zone2', 'Long Zone 2']], p:'Recreational sport or a HIIT block, plus a longer easy Zone 2. Aerobic base + adherence.'},
     {d:'Sun',dt:'Jun 14', w:[['rest', 'Rest / mobility']], n:'Full rest or a gentle walk + 15 min mobility. Recovery is where adaptation sticks.'}
   ]},
-  {num:5,type:'night',dates:'Jun 15–Jun 21',phase:'Build',miles:'3× Sutter nights',
+  {num:5,type:'night',dates:'Jun 15–Jun 21',phase:'Build',miles:'3× night shifts',
    focus:'Build block — progressive overload via the 2-for-2 rule. Volume and load climb steadily; sleep and protein keep pace.',
    days:[
     {d:'Mon',dt:'Jun 15', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -417,7 +417,7 @@ const weeks=[
     {d:'Sat',dt:'Jun 20', w:[['hiit', 'Norwegian 4×4'], ['zone2', 'Optional Zone 2']], p:'4 × 4 min hard (RPE 8–9) / 3 min easy. The single highest-yield session for VO₂max.', n:'Bike or row to spare the joints after nights.'},
     {d:'Sun',dt:'Jun 21', w:[['zone2', 'Zone 2 + mobility']], p:'45–60 min easy aerobic (conversational) + 15 min mobility. Builds the aerobic base and aids recovery.', n:'Sets up the next block.'}
   ]},
-  {num:6,type:'day',dates:'Jun 22–Jun 28',phase:'Build',miles:'5× NorthBay days',
+  {num:6,type:'day',dates:'Jun 22–Jun 28',phase:'Build',miles:'5× day shifts',
    focus:'Build block — progressive overload via the 2-for-2 rule. Volume and load climb steadily; sleep and protein keep pace.',
    days:[
     {d:'Mon',dt:'Jun 22', w:[['shift', '8hr Day Shift'], ['lift', 'Push (PM)']], p:'Push — chest, shoulders, triceps. Work to RIR 2–3; apply the 2-for-2 progression rule.', n:'Warm up 5–8 min easy + ramp sets on the first compound.'},
@@ -428,7 +428,7 @@ const weeks=[
     {d:'Sat',dt:'Jun 27', w:[['hiit', 'HIIT or sport'], ['zone2', 'Long Zone 2']], p:'Recreational sport or a HIIT block, plus a longer easy Zone 2. Aerobic base + adherence.'},
     {d:'Sun',dt:'Jun 28', w:[['rest', 'Rest / mobility']], n:'Full rest or a gentle walk + 15 min mobility. Recovery is where adaptation sticks.'}
   ]},
-  {num:7,type:'night',dates:'Jun 29–Jul 5',phase:'Build',miles:'3× Sutter nights',
+  {num:7,type:'night',dates:'Jun 29–Jul 5',phase:'Build',miles:'3× night shifts',
    focus:'Build block — progressive overload via the 2-for-2 rule. Volume and load climb steadily; sleep and protein keep pace.',
    days:[
     {d:'Mon',dt:'Jun 29', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -450,7 +450,7 @@ const weeks=[
     {d:'Sat',dt:'Jul 11', w:[['zone2', 'Zone 2 + mobility']], p:'Easy aerobic + mobility. Bank recovery before the next training block.'},
     {d:'Sun',dt:'Jul 12', w:[['rest', 'Rest']], n:'Rest. You\'ll come back stronger for the deload.'}
   ]},
-  {num:9,type:'night',dates:'Jul 13–Jul 19',phase:'Intensify',miles:'3× Sutter nights',
+  {num:9,type:'night',dates:'Jul 13–Jul 19',phase:'Intensify',miles:'3× night shifts',
    focus:'Intensify block — VO₂max work takes center stage (the highest-yield lever for this profile). Strength holds, conditioning sharpens.',
    days:[
     {d:'Mon',dt:'Jul 13', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -461,7 +461,7 @@ const weeks=[
     {d:'Sat',dt:'Jul 18', w:[['hiit', 'Norwegian 4×4'], ['zone2', 'Optional Zone 2']], p:'4 × 4 min hard (RPE 8–9) / 3 min easy. The single highest-yield session for VO₂max.', n:'Bike or row to spare the joints after nights.'},
     {d:'Sun',dt:'Jul 19', w:[['zone2', 'Zone 2 + mobility']], p:'45–60 min easy aerobic (conversational) + 15 min mobility. Builds the aerobic base and aids recovery.', n:'Sets up the next block.'}
   ]},
-  {num:10,type:'day',dates:'Jul 20–Jul 26',phase:'Intensify',miles:'5× NorthBay days',
+  {num:10,type:'day',dates:'Jul 20–Jul 26',phase:'Intensify',miles:'5× day shifts',
    focus:'Intensify block — VO₂max work takes center stage (the highest-yield lever for this profile). Strength holds, conditioning sharpens.',
    days:[
     {d:'Mon',dt:'Jul 20', w:[['shift', '8hr Day Shift'], ['lift', 'Push (PM)']], p:'Push — chest, shoulders, triceps. Work to RIR 1–2; apply the 2-for-2 progression rule.', n:'Warm up 5–8 min easy + ramp sets on the first compound.'},
@@ -472,7 +472,7 @@ const weeks=[
     {d:'Sat',dt:'Jul 25', w:[['hiit', 'HIIT or sport'], ['zone2', 'Long Zone 2']], p:'Recreational sport or a HIIT block, plus a longer easy Zone 2. Aerobic base + adherence.'},
     {d:'Sun',dt:'Jul 26', w:[['rest', 'Rest / mobility']], n:'Full rest or a gentle walk + 15 min mobility. Recovery is where adaptation sticks.'}
   ]},
-  {num:11,type:'night',dates:'Jul 27–Aug 2',phase:'Intensify',miles:'3× Sutter nights',
+  {num:11,type:'night',dates:'Jul 27–Aug 2',phase:'Intensify',miles:'3× night shifts',
    focus:'Intensify block — VO₂max work takes center stage (the highest-yield lever for this profile). Strength holds, conditioning sharpens.',
    days:[
     {d:'Mon',dt:'Jul 27', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -483,7 +483,7 @@ const weeks=[
     {d:'Sat',dt:'Aug 1', w:[['hiit', 'Norwegian 4×4'], ['zone2', 'Optional Zone 2']], p:'4 × 4 min hard (RPE 8–9) / 3 min easy. The single highest-yield session for VO₂max.', n:'Bike or row to spare the joints after nights.'},
     {d:'Sun',dt:'Aug 2', w:[['zone2', 'Zone 2 + mobility']], p:'45–60 min easy aerobic (conversational) + 15 min mobility. Builds the aerobic base and aids recovery.', n:'Sets up the next block.'}
   ]},
-  {num:12,type:'day',dates:'Aug 3–Aug 9',phase:'Intensify',miles:'5× NorthBay days',
+  {num:12,type:'day',dates:'Aug 3–Aug 9',phase:'Intensify',miles:'5× day shifts',
    focus:'Intensify block — VO₂max work takes center stage (the highest-yield lever for this profile). Strength holds, conditioning sharpens.',
    days:[
     {d:'Mon',dt:'Aug 3', w:[['shift', '8hr Day Shift'], ['lift', 'Push (PM)']], p:'Push — chest, shoulders, triceps. Work to RIR 1–2; apply the 2-for-2 progression rule.', n:'Warm up 5–8 min easy + ramp sets on the first compound.'},
@@ -494,7 +494,7 @@ const weeks=[
     {d:'Sat',dt:'Aug 8', w:[['hiit', 'HIIT or sport'], ['zone2', 'Long Zone 2']], p:'Recreational sport or a HIIT block, plus a longer easy Zone 2. Aerobic base + adherence.'},
     {d:'Sun',dt:'Aug 9', w:[['rest', 'Rest / mobility']], n:'Full rest or a gentle walk + 15 min mobility. Recovery is where adaptation sticks.'}
   ]},
-  {num:13,type:'night',dates:'Aug 10–Aug 16',phase:'Peak',miles:'3× Sutter nights',
+  {num:13,type:'night',dates:'Aug 10–Aug 16',phase:'Peak',miles:'3× night shifts',
    focus:'Peak block — highest sustained volume and intensity. Protect recovery hard on night weeks so the work lands.',
    days:[
     {d:'Mon',dt:'Aug 10', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -505,7 +505,7 @@ const weeks=[
     {d:'Sat',dt:'Aug 15', w:[['hiit', 'Norwegian 4×4'], ['zone2', 'Optional Zone 2']], p:'4 × 4 min hard (RPE 8–9) / 3 min easy. The single highest-yield session for VO₂max.', n:'Bike or row to spare the joints after nights.'},
     {d:'Sun',dt:'Aug 16', w:[['zone2', 'Zone 2 + mobility']], p:'45–60 min easy aerobic (conversational) + 15 min mobility. Builds the aerobic base and aids recovery.', n:'Sets up the next block.'}
   ]},
-  {num:14,type:'day',dates:'Aug 17–Aug 23',phase:'Peak',miles:'5× NorthBay days',
+  {num:14,type:'day',dates:'Aug 17–Aug 23',phase:'Peak',miles:'5× day shifts',
    focus:'Peak block — highest sustained volume and intensity. Protect recovery hard on night weeks so the work lands.',
    days:[
     {d:'Mon',dt:'Aug 17', w:[['shift', '8hr Day Shift'], ['lift', 'Push (PM)']], p:'Push — chest, shoulders, triceps. Work to RIR 1–2; apply the 2-for-2 progression rule.', n:'Warm up 5–8 min easy + ramp sets on the first compound.'},
@@ -516,7 +516,7 @@ const weeks=[
     {d:'Sat',dt:'Aug 22', w:[['hiit', 'HIIT or sport'], ['zone2', 'Long Zone 2']], p:'Recreational sport or a HIIT block, plus a longer easy Zone 2. Aerobic base + adherence.'},
     {d:'Sun',dt:'Aug 23', w:[['rest', 'Rest / mobility']], n:'Full rest or a gentle walk + 15 min mobility. Recovery is where adaptation sticks.'}
   ]},
-  {num:15,type:'night',dates:'Aug 24–Aug 30',phase:'Peak',miles:'3× Sutter nights',
+  {num:15,type:'night',dates:'Aug 24–Aug 30',phase:'Peak',miles:'3× night shifts',
    focus:'Peak block — highest sustained volume and intensity. Protect recovery hard on night weeks so the work lands.',
    days:[
     {d:'Mon',dt:'Aug 24', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -538,7 +538,7 @@ const weeks=[
     {d:'Sat',dt:'Sep 5', w:[['zone2', 'Zone 2 + mobility']], p:'Easy aerobic + mobility. Bank recovery before the next training block.'},
     {d:'Sun',dt:'Sep 6', w:[['rest', 'Rest']], n:'Rest. You\'ll come back stronger for the deload.'}
   ]},
-  {num:17,type:'night',dates:'Sep 7–Sep 13',phase:'Consolidate',miles:'3× Sutter nights',
+  {num:17,type:'night',dates:'Sep 7–Sep 13',phase:'Consolidate',miles:'3× night shifts',
    focus:'Consolidate block — lock in the gains, then transition toward a sustainable maintenance rhythm (2× lift, 1× HIIT, 1× Zone 2).',
    days:[
     {d:'Mon',dt:'Sep 7', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -549,7 +549,7 @@ const weeks=[
     {d:'Sat',dt:'Sep 12', w:[['hiit', 'Norwegian 4×4'], ['zone2', 'Optional Zone 2']], p:'4 × 4 min hard (RPE 8–9) / 3 min easy. The single highest-yield session for VO₂max.', n:'Bike or row to spare the joints after nights.'},
     {d:'Sun',dt:'Sep 13', w:[['zone2', 'Zone 2 + mobility']], p:'45–60 min easy aerobic (conversational) + 15 min mobility. Builds the aerobic base and aids recovery.', n:'Sets up the next block.'}
   ]},
-  {num:18,type:'day',dates:'Sep 14–Sep 20',phase:'Consolidate',miles:'5× NorthBay days',
+  {num:18,type:'day',dates:'Sep 14–Sep 20',phase:'Consolidate',miles:'5× day shifts',
    focus:'Consolidate block — lock in the gains, then transition toward a sustainable maintenance rhythm (2× lift, 1× HIIT, 1× Zone 2).',
    days:[
     {d:'Mon',dt:'Sep 14', w:[['shift', '8hr Day Shift'], ['lift', 'Push (PM)']], p:'Push — chest, shoulders, triceps. Work to RIR 2–3; apply the 2-for-2 progression rule.', n:'Warm up 5–8 min easy + ramp sets on the first compound.'},
@@ -560,7 +560,7 @@ const weeks=[
     {d:'Sat',dt:'Sep 19', w:[['hiit', 'HIIT or sport'], ['zone2', 'Long Zone 2']], p:'Recreational sport or a HIIT block, plus a longer easy Zone 2. Aerobic base + adherence.'},
     {d:'Sun',dt:'Sep 20', w:[['rest', 'Rest / mobility']], n:'Full rest or a gentle walk + 15 min mobility. Recovery is where adaptation sticks.'}
   ]},
-  {num:19,type:'night',dates:'Sep 21–Sep 27',phase:'Consolidate',miles:'3× Sutter nights',
+  {num:19,type:'night',dates:'Sep 21–Sep 27',phase:'Consolidate',miles:'3× night shifts',
    focus:'Consolidate block — lock in the gains, then transition toward a sustainable maintenance rhythm (2× lift, 1× HIIT, 1× Zone 2).',
    days:[
     {d:'Mon',dt:'Sep 21', w:[['shift', '12hr Night Shift']], p:'Night 1 of 3. If you can, 20–30 min Zone 2 walk + mobility pre-shift. No lifting on night-shift days — sleep is the priority.', n:'Aim for 10k+ steps on the floor; that\'s your Zone 2 today.'},
@@ -571,7 +571,7 @@ const weeks=[
     {d:'Sat',dt:'Sep 26', w:[['hiit', 'Norwegian 4×4'], ['zone2', 'Optional Zone 2']], p:'4 × 4 min hard (RPE 8–9) / 3 min easy. The single highest-yield session for VO₂max.', n:'Bike or row to spare the joints after nights.'},
     {d:'Sun',dt:'Sep 27', w:[['zone2', 'Zone 2 + mobility']], p:'45–60 min easy aerobic (conversational) + 15 min mobility. Builds the aerobic base and aids recovery.', n:'Sets up the next block.'}
   ]},
-  {num:20,type:'day',dates:'Sep 28–Oct 4',phase:'Consolidate',miles:'5× NorthBay days',
+  {num:20,type:'day',dates:'Sep 28–Oct 4',phase:'Consolidate',miles:'5× day shifts',
    focus:'Consolidate block — lock in the gains, then transition toward a sustainable maintenance rhythm (2× lift, 1× HIIT, 1× Zone 2).',
    days:[
     {d:'Mon',dt:'Sep 28', w:[['shift', '8hr Day Shift'], ['lift', 'Push (PM)']], p:'Push — chest, shoulders, triceps. Work to RIR 2–3; apply the 2-for-2 progression rule.', n:'Warm up 5–8 min easy + ramp sets on the first compound.'},
@@ -648,7 +648,7 @@ function renderNav(){
 function renderWeek(){
   document.querySelectorAll('.wkchip').forEach((c,i)=>c.classList.toggle('active',i===sel));
   const w=weeks[sel]; const tw=TW[w.type];
-  let h='<div class="wkhead"><div><span class="wktype" style="background:'+tw[1]+'22;color:'+tw[1]+'">'+tw[0]+' · '+w.phase+'</span><h3>Week '+w.num+' · '+w.dates+'</h3></div><div class="wkmeta">Target<br><span style="font-size:18px;color:var(--orange);font-family:var(--fd)">'+w.miles+' mi</span></div></div>';
+  let h='<div class="wkhead"><div><span class="wktype" style="background:'+tw[1]+'22;color:'+tw[1]+'">'+tw[0]+' · '+w.phase+'</span><h3>Week '+w.num+' · '+w.dates+'</h3></div><div class="wkmeta">Target<br><span style="font-size:18px;color:var(--orange);font-family:var(--fd)">'+w.miles+'</span></div></div>';
   if(w.focus)h+='<div class="wkfocus">'+w.focus+'</div>';
   if(w.events&&w.events.length)h+='<ul class="wkevents">'+w.events.map(e=>'<li>'+e+'</li>').join('')+'</ul>';
   h+='<div class="days">'+w.days.map(d=>{

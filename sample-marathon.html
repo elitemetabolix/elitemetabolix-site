@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  CLIENT PLAN TEMPLATE
+  ------------------------------------------------------------
+  To make a new client's plan:
+   1) Open the script block near the bottom and edit the CONFIG block
+      (name, brand, links, goal/race date, check-in endpoint).
+   2) Replace the `weeks` array with this client's schedule. Keep
+      each day's `dt` as a real calendar date ('Mon D', 3-letter
+      month) so the Today button lands on the right day.
+   3) The exercise library (EX), glossary, and animations are
+      reusable across clients — usually no edits needed.
+   4) Leave CONFIG.endpoint blank to disable check-in logging,
+      or paste your own POST URL (e.g. a Google Apps Script) to
+      collect responses. Never hard-code a client's private link
+      anywhere else.
+  No real client data should live in this template file.
+  ============================================================
+-->
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index,follow">
+<title>Elite Metabolix — Your Build</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230A0C10'/%3E%3Ctext x='50' y='52' font-family='Arial' font-weight='200' font-size='40' letter-spacing='4' fill='%23F0852E' text-anchor='middle' dominant-baseline='central'%3EEM%3C/text%3E%3Crect x='28' y='66' width='44' height='3' rx='1.5' fill='%23F0852E'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0C10;--bg2:#0E1117;--surface:#13171F;--card:#171C26;--line:#232a36;--line2:#2c3543;--txt:#ECEFF3;--mut:#9aa4b2;--mut2:#6b7480;--orange:#F0852E;--orange-rgb:240,133,46;--orange-lt:#f7a864;--green:#37B981;--blue:#4F92DE;--red:#E45D54;--lav:#A99BE0;--gold:#ffd24a;--fd:'Fraunces',Georgia,serif;--fb:'Hanken Grotesk',system-ui,sans-serif;--fm:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.glow{position:fixed;border-radius:50%;filter:blur(130px);z-index:0;pointer-events:none;opacity:.34}
+.glow.a{width:520px;height:520px;background:radial-gradient(circle,rgba(var(--orange-rgb),.5),transparent 70%);top:-200px;right:-140px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px;position:relative;z-index:2}
+.mono{font-family:var(--fm);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut2)}
+.signal{display:inline-flex;gap:4px;vertical-align:middle}.signal i{width:7px;height:7px;border-radius:2px;display:block}
+.signal i:nth-child(1){background:var(--orange)}.signal i:nth-child(2){background:var(--green)}.signal i:nth-child(3){background:var(--blue)}.signal i:nth-child(4){background:var(--red)}
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,12,16,.74);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1080px;margin:0 auto;padding:14px 26px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.em-mark{font-family:var(--fb);font-weight:200;font-size:21px;letter-spacing:.12em;color:var(--orange);line-height:1;position:relative;padding-bottom:5px}
+.em-mark::after{content:"";position:absolute;left:8%;right:8%;bottom:0;height:2px;background:var(--orange);border-radius:2px}
+.brand .wm{font-family:var(--fb);font-weight:300;letter-spacing:.2em;font-size:13px;color:var(--txt);text-transform:uppercase}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-right .priv{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);border:1px solid rgba(55,185,129,.35);padding:5px 10px;border-radius:6px}
+.nav-right a{color:var(--mut);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}.nav-right a:hover{color:var(--txt)}
+.today-btn{font-family:var(--fb)!important;font-weight:600!important;font-size:13px!important;background:linear-gradient(135deg,var(--orange),var(--orange-lt));color:#1a0f04!important;padding:8px 16px;border-radius:9px;border:none;cursor:pointer;box-shadow:0 8px 22px rgba(var(--orange-rgb),.32);transition:transform .18s}.today-btn:hover{transform:translateY(-2px)}
+.refer-btn{font-family:var(--fm)!important;font-size:10px!important;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(var(--orange-rgb),.4);padding:7px 11px;border-radius:7px;color:var(--orange)!important;cursor:pointer;text-decoration:none}.refer-btn:hover{background:rgba(var(--orange-rgb),.1)}
+header.hero{padding:54px 0 26px;position:relative}
+.hero-grid{position:absolute;inset:0;z-index:0;opacity:.5;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:58px 58px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%)}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;margin-bottom:16px}
+h1.head{font-family:var(--fd);font-weight:500;font-size:clamp(32px,5.4vw,54px);line-height:1.03;letter-spacing:-.02em}
+h1.head em{font-style:italic;color:var(--orange)}
+.hero-sub{font-size:clamp(15px,1.7vw,17px);color:var(--mut);max-width:60ch;margin-top:16px}
+/* today card */
+.todaycard{margin-top:30px;background:linear-gradient(150deg,rgba(var(--orange-rgb),.1),var(--card));border:1px solid rgba(var(--orange-rgb),.35);border-radius:18px;padding:26px;box-shadow:0 26px 60px rgba(0,0,0,.4)}
+.todaycard .tt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.todaycard .tlab{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange)}
+.todaycard .tdate{font-family:var(--fm);font-size:12px;color:var(--mut2)}
+.todaycard h2{font-family:var(--fd);font-weight:500;font-size:clamp(24px,3vw,32px);line-height:1.1;margin:2px 0 12px}
+.todaycard .wchips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.todaycard .tnote{font-size:14.5px;color:var(--mut);line-height:1.6}
+.todaycard .tpresc{font-size:14px;color:var(--txt);border-left:2px solid var(--orange);padding-left:12px;margin-top:10px}
+.wchip{font-family:var(--fm);font-size:11px;letter-spacing:.04em;padding:6px 12px;border-radius:8px;background:var(--bg2);border:1px solid var(--line);color:var(--txt);display:inline-flex;align-items:center;gap:7px}
+.wchip i{width:7px;height:7px;border-radius:2px;display:block}
+.countdown{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-family:var(--fm);font-size:12px;color:var(--mut2)}
+.countdown b{color:var(--orange);font-size:15px}
+section{padding:38px 0;position:relative}
+.sec-label{display:flex;align-items:center;gap:14px;margin-bottom:8px}.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec-h{font-family:var(--fd);font-weight:500;font-size:clamp(24px,3.2vw,34px);line-height:1.1;letter-spacing:-.015em}
+.sec-intro{color:var(--mut);font-size:15px;max-width:64ch;margin:10px 0 20px}
+/* week nav */
+.weeknav{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin}
+.wkchip{flex:0 0 auto;min-width:104px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;cursor:pointer;transition:all .16s;border-top:3px solid var(--wc,var(--line2))}
+.wkchip:hover{transform:translateY(-3px);border-color:var(--line2)}
+.wkchip.active{border-color:var(--orange);background:rgba(var(--orange-rgb),.08)}
+.wkchip .wn{font-family:var(--fm);font-size:10px;letter-spacing:.06em;color:var(--mut2)}
+.wkchip .wd{font-size:13px;font-weight:600;color:var(--txt);margin:3px 0}
+.wkchip .wt{font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--wc,var(--mut2))}
+/* week panel */
+.wkpanel{margin-top:8px;background:linear-gradient(160deg,var(--surface),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+.wkhead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.wkhead h3{font-family:var(--fd);font-weight:500;font-size:24px}
+.wkhead .wkmeta{font-family:var(--fm);font-size:11px;color:var(--mut2);letter-spacing:.05em;text-align:right}
+.wktype{display:inline-block;font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:10px}
+.wkfocus{font-size:14px;color:var(--mut);line-height:1.6;margin-bottom:12px}
+.wkevents{list-style:none;margin-bottom:18px}.wkevents li{font-size:12.5px;color:var(--mut2);padding:3px 0;display:flex;gap:8px}.wkevents li::before{content:"\2022";color:var(--orange)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.dcard{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 11px;min-height:130px;transition:border-color .15s}
+.dcard.today{border-color:var(--orange);background:rgba(var(--orange-rgb),.07);box-shadow:0 0 0 1px rgba(var(--orange-rgb),.3)}
+.dcard.rest{opacity:.72}
+.dhead{display:flex;align-items:baseline;gap:6px;margin-bottom:9px}
+.dhead .dd{font-family:var(--fm);font-size:11px;color:var(--txt);font-weight:500}.dhead .dt2{font-family:var(--fm);font-size:9px;color:var(--mut2)}
+.todaytag{margin-left:auto;font-family:var(--fm);font-size:8px;letter-spacing:.1em;background:var(--orange);color:#1a0f04;padding:2px 6px;border-radius:4px;font-weight:700}
+.wlist{display:flex;flex-direction:column;gap:6px}
+.wpill{font-size:11.5px;line-height:1.25;color:var(--txt);display:flex;gap:7px;align-items:flex-start}
+.wpill i{flex-shrink:0;width:6px;height:6px;border-radius:2px;display:block;margin-top:5px;background:var(--wc,var(--orange))}
+.dpresc{font-size:11px;color:var(--mut);margin-top:9px;line-height:1.4;border-top:1px solid var(--line);padding-top:8px}
+.dnote{font-size:10.5px;color:var(--mut2);margin-top:7px;line-height:1.4;font-style:italic}
+.dhike{font-size:10.5px;color:var(--green);margin-top:7px;line-height:1.4}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;font-size:10.5px;color:var(--mut2);font-family:var(--fm);letter-spacing:.04em}
+.legend span{display:flex;align-items:center;gap:6px}.legend i{width:8px;height:8px;border-radius:2px;display:block}
+/* fueling + scope */
+.block{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-top:8px}
+.block h3{font-family:var(--fd);font-weight:500;font-size:19px;margin-bottom:12px}
+.block ul{list-style:none}.block li{font-size:14px;color:var(--mut);padding:8px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px}.block li:last-child{border-bottom:none}.block li b{color:var(--txt);font-weight:600;text-align:right}
+.block ul.flow li{display:block;text-align:left;padding:12px 0;line-height:1.6}.block ul.flow li b{display:block;text-align:left;font-weight:600;font-size:13px;letter-spacing:.02em;color:var(--orange-lt);margin-bottom:3px}
+.block ul.meals li{display:flex;justify-content:flex-start;gap:16px;align-items:baseline;padding:11px 0;text-align:left}.block ul.meals .t{flex:0 0 84px;color:var(--orange-lt);font-weight:600;font-size:12.5px;letter-spacing:.03em;white-space:nowrap}.block ul.meals .m{color:var(--mut);font-size:14px;line-height:1.5}.block ul.meals .m b{color:var(--txt);font-weight:600;text-align:left}
+.callout{margin-top:24px;background:linear-gradient(160deg,rgba(79,146,222,.06),var(--card));border:1px solid var(--line2);border-radius:16px;padding:24px;display:flex;gap:18px}
+.callout .ic{flex-shrink:0;width:40px;height:40px;border-radius:11px;background:rgba(79,146,222,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:19px}
+.callout h3{font-family:var(--fd);font-weight:500;font-size:18px;margin-bottom:7px}.callout p{font-size:14px;color:var(--mut);max-width:72ch}
+.actionrow{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fb);font-weight:600;font-size:15px;padding:14px 28px;border-radius:11px;text-decoration:none;cursor:pointer;border:none;background:linear-gradient(135deg,var(--orange),var(--orange-lt));color:#1a0f04;box-shadow:0 12px 34px rgba(var(--orange-rgb),.34);transition:transform .18s}.btn:hover{transform:translateY(-3px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:9px;font-family:var(--fb);font-weight:600;font-size:14px;padding:13px 24px;border-radius:11px;text-decoration:none;cursor:pointer;background:transparent;color:var(--txt);border:1px solid var(--line2);transition:all .2s}.btn-ghost:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:38px 0 60px}
+.foot-top{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.foot-tag{font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--orange)}
+.foot-links{display:flex;gap:20px}.foot-links a{color:var(--mut);text-decoration:none;font-size:13px}.foot-links a:hover{color:var(--txt)}
+.disclaimer{font-size:12px;color:var(--mut2);line-height:1.6;max-width:82ch;border-top:1px solid var(--line);padding-top:18px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--orange);color:var(--txt);padding:14px 22px;border-radius:12px;font-size:14px;z-index:200;opacity:0;transition:all .3s;box-shadow:0 20px 50px rgba(0,0,0,.5);max-width:90vw}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.toast b{color:var(--orange)}
+/* daily check-in (top) */
+.checkcard{background:linear-gradient(150deg,rgba(55,185,129,.1),var(--card));border:1px solid rgba(55,185,129,.3);border-radius:18px;padding:24px;box-shadow:0 24px 56px rgba(0,0,0,.36)}
+.chead{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.clab{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.ctitle{font-family:var(--fd);font-weight:500;font-size:clamp(20px,2.6vw,26px);margin-top:4px}
+.cmetrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+.cm{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:13px 12px;cursor:pointer;transition:border-color .15s}.cm:hover{border-color:var(--green)}
+.cm .cmk{display:block;font-size:13px;font-weight:600;color:var(--txt)}.cm .cmd{display:block;font-family:var(--fm);font-size:10px;color:var(--mut2);margin-top:3px}
+.cnote{font-size:12.5px;color:var(--mut)}
+@media(max-width:860px){.cmetrics{grid-template-columns:repeat(2,1fr)}}
+/* clickable calendar workout links */
+.wpill.wlink{cursor:pointer}.wpill.wlink span{border-bottom:1px dotted var(--line2)}.wpill.wlink:hover span{color:var(--orange);border-color:var(--orange)}
+/* glossary FAB + modal */
+.fab{position:fixed;left:22px;bottom:24px;z-index:120;background:linear-gradient(135deg,var(--orange),var(--orange-lt));color:#1a0f04;border:none;border-radius:30px;padding:13px 20px;font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 14px 34px rgba(var(--orange-rgb),.4);display:flex;align-items:center;gap:8px;transition:transform .18s}.fab:hover{transform:translateY(-3px)}
+.gmodal{position:fixed;inset:0;z-index:310;background:rgba(5,6,9,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}.gmodal.show{display:flex}
+.gcard{background:var(--surface);border:1px solid var(--line2);border-radius:20px;max-width:560px;width:100%;padding:30px;position:relative;box-shadow:0 40px 90px rgba(0,0,0,.6);max-height:86vh;overflow-y:auto}
+.gcard h3{font-family:var(--fd);font-weight:500;font-size:24px;margin-bottom:4px}.gcard .gsub{font-size:13px;color:var(--mut2);margin-bottom:18px}
+.gterm{padding:13px 0;border-bottom:1px solid var(--line)}.gterm:last-child{border-bottom:none}
+.gterm b{font-family:var(--fd);font-weight:500;font-size:16px;color:var(--orange)}.gterm p{font-size:13.5px;color:var(--mut);margin-top:3px;line-height:1.5}
+@media(max-width:860px){.fab{left:14px;bottom:16px;padding:11px 16px}}
+/* animated muscle map */
+.mfig{display:flex;justify-content:center;gap:10px;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:16px}
+.mfig svg{height:188px;width:auto}
+.mfig .mbase{fill:#1b212c}
+.mfig .mz{fill:#2a3340;transition:fill .3s}
+.mfig .mz.active{fill:var(--orange);animation:mpulse 1.4s ease-in-out infinite}
+@keyframes mpulse{0%,100%{opacity:.45}50%{opacity:1}}
+.mfig .mlabel{font-family:var(--fm);font-size:7px;letter-spacing:.1em;fill:var(--mut2)}
+/* movement animation figure */
+.demo{display:flex;gap:20px;justify-content:center;align-items:flex-end;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:16px;margin-bottom:16px;flex-wrap:wrap}
+.dcol{display:flex;flex-direction:column;align-items:center;gap:8px}
+.movesvg{height:182px;width:auto}
+.movesvg line{stroke:var(--orange);stroke-width:5.5;stroke-linecap:round}
+.movesvg circle{fill:var(--orange)}
+.demo .mfig{margin:0;border:none;background:none;padding:0}
+.demo .mfig svg{height:168px}
+.dlbl{font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut2)}
+/* inline daily form */
+.dform{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
+.dfrow{display:flex;align-items:center;gap:14px;padding:9px 0;flex-wrap:wrap}
+.dfl{font-size:13.5px;color:var(--txt);min-width:96px;font-weight:500}.dfl b{color:var(--orange);font-weight:600}
+.dfsub{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.sb{font-family:var(--fm);font-size:12px;padding:6px 11px;border-radius:7px;background:var(--bg2);border:1px solid var(--line);color:var(--mut);cursor:pointer;transition:all .14s}
+.sb:hover{border-color:var(--line2);color:var(--txt)}.sb.on{background:rgba(55,185,129,.16);border-color:var(--green);color:var(--green)}
+.dfi{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:8px 11px;color:var(--txt);font-family:var(--fb);font-size:13px;width:96px}.dfi.wide{width:100%;max-width:340px}
+.dfi:focus{outline:none;border-color:var(--green)}
+.dsuccess{font-size:14.5px;color:var(--green);padding:16px;text-align:center;background:rgba(55,185,129,.08);border:1px solid rgba(55,185,129,.25);border-radius:12px}
+/* nutrition */
+.nwhy{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+.ncard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;border-top:3px solid var(--ac,var(--orange))}
+.ncard .nk{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac,var(--orange));margin-bottom:8px}
+.ncard h4{font-family:var(--fd);font-weight:500;font-size:18px;margin-bottom:7px}
+.ncard p{font-size:13px;color:var(--mut);line-height:1.55}
+.ntargets{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:16px 0}
+.ntargets .nt{background:var(--bg2);padding:16px}
+.ntargets .nt .k{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2)}
+.ntargets .nt .v{font-family:var(--fd);font-size:20px;color:var(--orange);margin-top:5px;line-height:1.1}.ntargets .nt .v small{font-family:var(--fb);font-size:11px;color:var(--mut);display:block;margin-top:3px}
+.ncarb .crow{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}.ncarb .crow:last-child{border-bottom:none}.ncarb .crow b{color:var(--txt)}.ncarb .crow .amt{font-family:var(--fm);font-size:13px;color:var(--orange)}
+.nswaps{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:860px){.nwhy{grid-template-columns:1fr}.ntargets{grid-template-columns:repeat(2,1fr)}.nswaps{grid-template-columns:1fr}}
+/* workouts + exercise modal */
+.wsel{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.wsbtn{font-family:var(--fm);font-size:11px;letter-spacing:.05em;padding:9px 14px;border-radius:9px;background:var(--card);border:1px solid var(--line);color:var(--mut);cursor:pointer;transition:all .16s}
+.wsbtn:hover{border-color:var(--line2);color:var(--txt)}.wsbtn.active{border-color:var(--orange);color:var(--orange);background:rgba(var(--orange-rgb),.08)}
+.wpanel{background:linear-gradient(160deg,var(--surface),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+.wtime{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11px;color:var(--orange);background:rgba(var(--orange-rgb),.08);border:1px solid rgba(var(--orange-rgb),.25);padding:7px 12px;border-radius:8px}
+.wwin{font-size:13px;color:var(--mut2);margin:10px 0 16px;line-height:1.5}
+.exrow{display:flex;align-items:center;gap:14px;padding:14px 14px;border-radius:11px;border:1px solid var(--line);background:var(--bg2);margin-bottom:8px;cursor:pointer;transition:all .16s}
+.exrow:hover{border-color:var(--orange);transform:translateX(3px)}
+.exrow .xn{font-family:var(--fd);font-size:17px;color:var(--txt);flex:1}
+.exrow .xs{font-family:var(--fm);font-size:12px;color:var(--orange);white-space:nowrap}
+.exrow .xa{color:var(--mut2);font-size:16px}
+.modal{position:fixed;inset:0;z-index:300;background:rgba(5,6,9,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.mcard{background:var(--surface);border:1px solid var(--line2);border-radius:20px;max-width:520px;width:100%;padding:30px;position:relative;box-shadow:0 40px 90px rgba(0,0,0,.6);max-height:88vh;overflow-y:auto}
+.mcard h3{font-family:var(--fd);font-weight:500;font-size:26px}
+.mclose{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--mut);font-size:26px;cursor:pointer;line-height:1}.mclose:hover{color:var(--txt)}
+.mtags{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 18px}.mtag{font-family:var(--fm);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--blue);background:rgba(79,146,222,.1);border:1px solid rgba(79,146,222,.25);padding:4px 9px;border-radius:6px}
+.mspec{display:flex;gap:26px;margin-bottom:18px}.mspec .ms .mk{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2)}.mspec .ms .mv{font-family:var(--fd);font-size:22px;color:var(--orange);margin-top:3px}
+.tempo{display:flex;gap:16px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:16px;margin-bottom:18px}
+.ttrack{width:18px;height:92px;background:var(--bg);border:1px solid var(--line2);border-radius:10px;position:relative;flex-shrink:0}
+.tdot{position:absolute;left:1px;top:0;width:14px;height:16px;border-radius:6px;background:linear-gradient(180deg,var(--orange),var(--orange-lt))}
+.tinfo .tlbl{font-family:var(--fd);font-size:19px;color:var(--txt)}.tinfo .tsub{font-size:12.5px;color:var(--mut2);margin-top:4px}
+.mcues{list-style:none}.mcues li{font-size:14px;color:var(--mut);padding:7px 0;display:flex;gap:10px;line-height:1.45}.mcues li::before{content:"";flex-shrink:0;width:5px;height:5px;border-radius:50%;background:var(--orange);margin-top:9px}
+.hh{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut2);margin-bottom:8px}
+.mdemo{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:13px;font-weight:600;color:var(--orange);text-decoration:none;border:1px solid rgba(var(--orange-rgb),.3);padding:10px 16px;border-radius:9px}.mdemo:hover{background:rgba(var(--orange-rgb),.08)}
+.mdemo-note{font-size:11px;color:var(--mut2);margin-top:8px;line-height:1.4}
+.daily{margin-top:24px;background:linear-gradient(160deg,rgba(55,185,129,.06),var(--card));border:1px dashed var(--line2);border-radius:16px;padding:26px;text-align:center}
+.daily h3{font-family:var(--fd);font-weight:500;font-size:20px;margin-bottom:6px}.daily p{font-size:13.5px;color:var(--mut);max-width:62ch;margin:0 auto 16px}
+@media(max-width:860px){.days{grid-template-columns:repeat(2,1fr)}.wsel{overflow-x:auto}.brand .wm{display:none}.nav-right{gap:10px}.nav-right a:not(.today-btn):not(.refer-btn){display:none}}
+</style></head>
+<body>
+<div class="glow a"></div>
+<nav><div class="nav-in">
+  <a class="brand" href="https://elitemetabolixhq.com/"><span class="em-mark">E&nbsp;M</span><span class="wm">Elite&nbsp;Metabolix</span></a>
+  <div class="nav-right"><span class="priv">● Private</span><a href="https://elitemetabolixhq.com/">Home</a><a href="https://elitemetabolixhq.com/mobility.html">Mobility</a><a href="#workouts">Strength</a><a href="#cal">Plan</a><a class="refer-btn" href="https://elitemetabolixhq.com/apply">Apply →</a><button class="today-btn" onclick="goToday()">● Today</button></div>
+</div></nav>
+
+<header class="hero"><div class="hero-grid"></div><div class="wrap">
+  <div class="eyebrow"><span class="signal"><i></i><i></i><i></i><i></i></span><span class="mono" id="eyebrowGoal">Sample · Sub-3:30 Marathon · 21-week plan</span></div>
+  <h1 class="head" id="greet">Welcome back, Client. <em>Keep moving.</em></h1>
+  <p class="hero-sub">A full 21-week build to a <b>sub-3:30 marathon</b> — every run, strength session, and recovery day, base through race day. The <b>Today</b> button always lands on today\'s session.</p>
+  <div class="todaycard" id="todayCard"></div>
+</div></header>
+
+<section id="checkin" style="padding-top:24px"><div class="wrap">
+  <div class="checkcard">
+    <div class=" chead"><div><div class="clab">● Daily check-in · 30 seconds</div><div class="ctitle">How did today go, Client?</div></div><button class="btn" id="logbtn" onclick="toggleDaily()">Log today →</button></div>
+    <div class="cmetrics">
+      <div class="cm"><span class="cmk">Energy</span><span class="cmd">tap 1–10</span></div>
+      <div class="cm"><span class="cmk">Sleep</span><span class="cmd">hrs + quality</span></div>
+      <div class="cm"><span class="cmk">Legs</span><span class="cmd">fresh → sore</span></div>
+      <div class="cm"><span class="cmk">Session done?</span><span class="cmd">done / modified / no</span></div>
+      <div class="cm"><span class="cmk">Weight</span><span class="cmd">optional, AM</span></div>
+    </div>
+    <div class="cnote">Logging daily is what makes the weekly tune-ups sharp — the more honest data in, the better the plan out. <b style="color:var(--green)">Your data is private. We never sell it, ever.</b></div>
+    <div class="dform" id="dform" style="display:none">
+      <div class="dfrow"><span class="dfl">Energy</span><div class="seg" data-f="energy" id="segEnergy"></div></div>
+      <div class="dfrow"><span class="dfl">Sleep</span><div class="dfsub"><input class="dfi" id="df-sleep" type="number" min="0" max="14" step="0.5" placeholder="hrs"><div class="seg" data-f="sleepq"><button class="sb" data-v="good">good</button><button class="sb" data-v="ok">ok</button><button class="sb" data-v="poor">poor</button></div></div></div>
+      <div class="dfrow"><span class="dfl">Legs (general)</span><div class="seg" data-f="soreness"><button class="sb" data-v="fresh">fresh</button><button class="sb" data-v="ok">ok</button><button class="sb" data-v="heavy">heavy</button><button class="sb" data-v="sore">sore</button></div></div>
+      <div class="dfrow"><span class="dfl">Today: <b id="dft">session</b></span><div class="seg" data-f="session"><button class="sb" data-v="done">done</button><button class="sb" data-v="modified">modified</button><button class="sb" data-v="skipped">skipped</button></div></div>
+      <div class="dfrow"><span class="dfl">Weight</span><input class="dfi" id="df-weight" type="number" step="0.1" placeholder="lb (optional)"></div>
+      <div class="dfrow"><span class="dfl">Notes</span><input class="dfi wide" id="df-notes" type="text" placeholder="anything worth flagging (optional)"></div>
+      <button class="btn" onclick="submitDaily()" style="margin-top:8px">Submit check-in ✓</button>
+    </div>
+  </div>
+</div></section>
+
+<section id="intro" style="padding-top:8px"><div class="wrap">
+  <div class="callout" style="border-color:rgba(var(--orange-rgb),.4)"><div class="ic" style="background:rgba(var(--orange-rgb),.14);color:var(--orange)">★</div><div>
+    <h3>This is a sample plan.</h3>
+    <p>It shows how a sub-3:30 marathon build looks inside Elite Metabolix — a week-by-week calendar, tappable sessions, exercise demos with form cues, a plain-language glossary, and a 30-second daily check-in. Your real plan is built around your goal, schedule, history, and how you respond week to week. <a href="https://elitemetabolixhq.com/apply" style="color:var(--orange);font-weight:600">Apply to get yours →</a></p>
+  </div></div>
+  <div class="callout" style="margin-top:14px"><div class="ic">✚</div><div>
+    <h3>Coaching, not medical care.</h3>
+    <p>Elite Metabolix covers training, fueling, and recovery only. Anything medical — pain, injury, bloodwork, medication — stays with your physician or another licensed provider. Never run through pain; when in doubt, get it checked.</p>
+  </div></div>
+</div></section>
+
+<section id="cal"><div class="wrap">
+  <div class="sec-label"><span class="mono">The Plan · Week by Week</span></div>
+  <h2 class="sec-h">21 weeks to race day.</h2>
+  <p class="sec-intro">A balanced week — quality midweek, long run on the weekend, easy running and lower-leg strength around them — from base through race day. Volume climbs gradually with a planned down week every 3–4 weeks, because steady beats heroic in a marathon build. Tap a week, then any day.</p>
+  <div class="weeknav" id="weeknav"></div>
+  <div class="wkpanel" id="wkpanel"></div>
+  <div class="legend" id="legend"></div>
+</div></section>
+
+<section id="nutrition"><div class="wrap">
+  <div class="sec-label"><span class="mono">Nutrition · Built around you</span></div>
+  <h2 class="sec-h">Why your plan looks the way it does.</h2>
+  <p class="sec-intro">Fueling for a marathon comes down to three things: eating heart-smart day to day, getting enough protein to stay durable, and timing carbohydrate around the running. This is the reasoning, not a rigid diet.</p>
+  <div class="nwhy">
+    <div class="ncard" style="--ac:var(--red)"><div class="nk">Everyday base</div><h4>Heart-smart by default</h4><p>The everyday plate leans Mediterranean: more fiber and whole grains, fish and plants, olive oil over butter, fewer refined-carb and fried foods. It's a habit, not a restriction. (Any bloodwork, lipid numbers, or medication stay entirely with your physician — we don't touch those.)</p></div>
+    <div class="ncard" style="--ac:var(--blue)"><div class="nk">Frame</div><h4>Protein for durability</h4><p>A bigger runner has higher absolute needs and more tendon load per stride. Protein stays high (~1.8–2.0 g/kg, roughly 165–185 g/day) to protect muscle and support connective-tissue repair through a heavy build.</p></div>
+    <div class="ncard" style="--ac:var(--green)"><div class="nk">Goal</div><h4>Fuel the marathon</h4><p>Carbohydrate is the fuel for long miles. We periodize it — more on long-run and quality days, less on easy and rest days — so the tank is full when the work demands it. Eat enough to train well; under-fueling a marathon build is how injuries and stalls happen.</p></div>
+  </div>
+  <h3 style="font-family:var(--fd);font-weight:500;font-size:20px;margin:22px 0 2px">Daily targets</h3>
+  <div class="ntargets">
+    <div class="nt"><div class="k">Calories</div><div class="v">fuel the work<small>don't diet the build</small></div></div>
+    <div class="nt"><div class="k">Protein</div><div class="v">165–185<small>grams · every day</small></div></div>
+    <div class="nt"><div class="k">Fat</div><div class="v">heart-smart<small>olive oil, fish, nuts</small></div></div>
+    <div class="nt"><div class="k">Carbs</div><div class="v">periodized<small>by day, see below</small></div></div>
+  </div>
+  <div class="block"><h3>Carbohydrate, by day type</h3><div class="ncarb">
+    <div class="crow"><b>Long-run / quality days</b><span class="amt">higher — top the tank the day before & fuel mid-run</span></div>
+    <div class="crow"><b>Easy run / strength days</b><span class="amt">moderate — around the session</span></div>
+    <div class="crow"><b>Rest days</b><span class="amt">lower — protein and veg lead the plate</span></div>
+  </div><p style="font-size:12.5px;color:var(--mut2);margin-top:8px">Anchor carbs around the running; pull them back on rest days. Protein and the heart-smart base hold steady all week. On long runs over ~75 min, practice taking carbs every 30–40 min so race-day fueling is rehearsed.</p></div>
+  <div class="nswaps">
+    <div class="block"><h3>Heart-smart swaps</h3><ul>
+      <li>White rice <b>→ brown rice / quinoa</b></li>
+      <li>Refined bread <b>→ whole-grain / sourdough</b></li>
+      <li>Fried snacks <b>→ roasted chickpeas, nuts</b></li>
+      <li>Red/processed meat <b>→ fish, chicken, beans, tofu</b></li>
+      <li>Cook with <b>→ olive oil, lighter on butter</b></li>
+    </ul></div>
+    <div class="block"><h3>A training day, reasonably</h3><ul class="meals">
+      <li><span class="t">~7a</span><span class="m"><b>Breakfast</b> — oats, berries, walnuts + eggs or yogurt</span></li>
+      <li><span class="t">~12:30p</span><span class="m"><b>Lunch</b> — salmon or chicken + brown rice + veg</span></li>
+      <li><span class="t">~5:30p</span><span class="m"><b>Pre-run</b> — banana or toast, coffee if needed</span></li>
+      <li><span class="t">post-run</span><span class="m"><b>Recovery</b> — protein + carbs within ~45 min, then dinner</span></li>
+    </ul></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-label"><span class="mono">Quick reference · fueling</span></div>
+  <div class="block">
+    <h3>Timing it around your day and the long run</h3>
+    <ul class="flow">
+      <li><b>Front-load the day</b>A real breakfast and lunch fuel your afternoon and evening sessions far better than back-loading calories late. Eat enough during the workday that you're not running on empty after 5pm.</li>
+      <li><b>Pre-run top-up</b>About 60–90 minutes before an evening run, have a small, mostly-carb snack — a banana, toast, or a couple of dates. Steady energy without sitting heavy.</li>
+      <li><b>Spread protein evenly</b>Roughly 30–40 g at each of four meals beats one big serving. Even feeding supports muscle and connective-tissue repair across the day — which matters more across a heavy training block.</li>
+      <li><b>Cross-training / sport days</b>If you add a hard cross-training session or a sport, eat a proper meal and a light carb snack beforehand and rehydrate after. It's a real load on the legs — fuel it like one.</li>
+      <li><b>Long-run mornings (Sat)</b>Easy carbs 1–2 hours before, fuel every 30–40 minutes once you pass ~75 minutes, and refuel with protein + carbs within ~45 minutes of finishing. This is your race-day rehearsal — practise it now.</li>
+    </ul>
+  </div>
+  <div class="callout"><div class="ic">✚</div><div>
+    <h3>Built to complement your medical care.</h3>
+    <p>Training, fueling, and recovery only — no diagnosis, no lab interpretation, no medical management. Bloodwork, any injury or medical condition, and any medication or supplement decisions stay with your physician, sports-medicine doctor, registered dietitian, or PT. If their guidance and this plan ever disagree, theirs wins.</p>
+  </div></div>
+  <div class="actionrow">
+    <a class="btn-ghost" id="reqTweak" href="#" target="_blank" rel="noopener">✎ Request a tweak</a>
+    <a class="btn-ghost" href="#" onclick="refer(event)">↗ Refer · 25% off</a>
+    <button class="btn" onclick="goToday()">● Jump to Today</button>
+  </div>
+</div></section>
+
+<section id="workouts"><div class="wrap">
+  <div class="sec-label"><span class="mono">Strength · Tap any exercise</span></div>
+  <h2 class="sec-h">Strength that protects the miles.</h2>
+  <p class="sec-intro">Tap any exercise for sets, a live tempo animation, and exactly how to perform it — plus an optional video demo a tap away. Calf and lower-leg work is the durability anchor; the bigger lifts build the strength to hold pace late. Keep every rep pain-free, and let your PT set anything injury-specific.</p>
+  <div class="wsel" id="wsel"></div>
+  <div class="wpanel" id="wpanel"></div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="foot-top"><a class="brand" href="https://elitemetabolixhq.com/"><span class="em-mark">E&nbsp;M</span><span class="wm">Elite&nbsp;Metabolix</span></a><div class="foot-links"><a href="https://elitemetabolixhq.com/">Home</a><a href="https://elitemetabolixhq.com/mobility.html">Mobility</a></div><span class="foot-tag">Train smart · Arrive ready</span></div>
+  <p class="disclaimer"><b style="color:var(--green)">We will never sell your data — ever.</b> Elite Metabolix provides performance, fitness, and nutrition coaching — not medical care. It does not diagnose, treat, manage, or rehabilitate any condition or injury, and does not interpret laboratory results. Consult your physician, sports-medicine doctor, registered dietitian, or physical therapist before changing any exercise, medication, or supplement — and follow their guidance over this plan if the two ever conflict.</p>
+</div></footer>
+<div class="modal" id="exmodal" onclick="if(event.target===this)closeEx()"><div class="mcard" id="exbody"></div></div>
+<button class="fab" onclick="openGloss()">📖 Glossary</button>
+<div class="gmodal" id="gmodal" onclick="if(event.target===this)closeGloss()"><div class="gcard" id="gbody"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const weeks=[
+  {num:1,type:'base',dates:'May 18–May 24',phase:'Base',miles:'16',current:true,
+   focus:'Re-entry week. Keep every easy run honestly conversational and let the body settle into daily mileage. Strength is light, controlled lower-leg durability.',
+   days:[
+    {d:'Mon',dt:'May 18', w:[['easy', 'Easy 3 mi'], ['legs', 'Lower-leg strength']], p:'Easy 3 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'May 19', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'May 20', w:[['easy', 'Easy + strides']], p:'Easy run, then 4–6 × 100m strides (build to ~90%, full walk-back). Sharpens turnover, adds no fatigue.'},
+    {d:'Thu',dt:'May 21', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'May 22', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'May 23', w:[['long', 'Long run 8 mi']], p:'8 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'May 24', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:2,type:'base',dates:'May 25–May 31',phase:'Base',miles:'19',
+   focus:'Add a little volume, nothing else. Same easy effort, one extra short run. Durability work twice this week.',
+   days:[
+    {d:'Mon',dt:'May 25', w:[['easy', 'Easy 3 mi'], ['legs', 'Lower-leg strength']], p:'Easy 3 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'May 26', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'May 27', w:[['easy', 'Easy + strides']], p:'Easy run, then 4–6 × 100m strides (build to ~90%, full walk-back). Sharpens turnover, adds no fatigue.'},
+    {d:'Thu',dt:'May 28', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'May 29', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'May 30', w:[['long', 'Long run 9 mi']], p:'9 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'May 31', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:3,type:'base',dates:'Jun 1–Jun 7',phase:'Base',miles:'22',
+   focus:'First double-digit long run. Run it slow — time on feet is the goal, not pace.',
+   days:[
+    {d:'Mon',dt:'Jun 1', w:[['easy', 'Easy 4 mi'], ['legs', 'Lower-leg strength']], p:'Easy 4 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Jun 2', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Jun 3', w:[['easy', 'Easy + strides']], p:'Easy run, then 4–6 × 100m strides (build to ~90%, full walk-back). Sharpens turnover, adds no fatigue.'},
+    {d:'Thu',dt:'Jun 4', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Jun 5', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Jun 6', w:[['long', 'Long run 10 mi']], p:'10 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Jun 7', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:4,type:'base',dates:'Jun 8–Jun 14',phase:'Base',miles:'16',
+   focus:'Planned down week — volume drops ~30%. Adaptation happens here. Resist adding mileage.',
+   days:[
+    {d:'Mon',dt:'Jun 8', w:[['easy', 'Easy 3 mi'], ['legs', 'Lower-leg strength']], p:'Easy 3 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Jun 9', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Jun 10', w:[['easy', 'Easy run']], p:'Short, easy, conversational. Down-week pace — keep it gentle.'},
+    {d:'Thu',dt:'Jun 11', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Jun 12', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Jun 13', w:[['long', 'Long run 7 mi']], p:'7 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Jun 14', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:5,type:'base',dates:'Jun 15–Jun 21',phase:'Base',miles:'24',
+   focus:'Volume climbs again. Introduce light tempo touches mid-week to wake up the legs.',
+   days:[
+    {d:'Mon',dt:'Jun 15', w:[['easy', 'Easy 4 mi'], ['legs', 'Lower-leg strength']], p:'Easy 4 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Jun 16', w:[['easy', 'Easy 4 mi']], p:'Easy 4 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Jun 17', w:[['tempo', 'Tempo run']], p:'1 mi easy → 3 mi @ tempo (comfortably hard) → 1 mi easy. A big lever on marathon pace.'},
+    {d:'Thu',dt:'Jun 18', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Jun 19', w:[['easy', 'Easy 4 mi']], p:'Easy 4 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Jun 20', w:[['long', 'Long run 11 mi']], p:'11 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Jun 21', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:6,type:'base',dates:'Jun 22–Jun 28',phase:'Base',miles:'28',
+   focus:'Close of the base block. The aerobic engine is the priority — finish long runs feeling you could do more.',
+   days:[
+    {d:'Mon',dt:'Jun 22', w:[['easy', 'Easy 4 mi'], ['legs', 'Lower-leg strength']], p:'Easy 4 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Jun 23', w:[['easy', 'Easy 4 mi']], p:'Easy 4 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Jun 24', w:[['tempo', 'Tempo run']], p:'1 mi easy → 3 mi @ tempo (comfortably hard) → 1 mi easy. A big lever on marathon pace.'},
+    {d:'Thu',dt:'Jun 25', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Jun 26', w:[['easy', 'Easy 4 mi']], p:'Easy 4 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Jun 27', w:[['long', 'Long run 12 mi']], p:'12 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Jun 28', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:7,type:'endur',dates:'Jun 29–Jul 5',phase:'Endurance',miles:'31',
+   focus:'Build block opens. Wednesday tempo becomes a fixture — comfortably hard, repeatable, never a race.',
+   days:[
+    {d:'Mon',dt:'Jun 29', w:[['easy', 'Easy 5 mi'], ['legs', 'Lower-leg strength']], p:'Easy 5 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Jun 30', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Jul 1', w:[['tempo', 'Tempo run']], p:'1 mi easy → 3 mi @ tempo (comfortably hard) → 1 mi easy. A big lever on marathon pace.'},
+    {d:'Thu',dt:'Jul 2', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Jul 3', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Jul 4', w:[['long', 'Long run 13 mi']], p:'13 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Jul 5', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:8,type:'endur',dates:'Jul 6–Jul 12',phase:'Endurance',miles:'23',
+   focus:'Down week. Trim ~30% and keep intensity light. Recovery is training.',
+   days:[
+    {d:'Mon',dt:'Jul 6', w:[['easy', 'Easy 4 mi'], ['legs', 'Lower-leg strength']], p:'Easy 4 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Jul 7', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Jul 8', w:[['easy', 'Easy run']], p:'Short, easy, conversational. Down-week pace — keep it gentle.'},
+    {d:'Thu',dt:'Jul 9', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Jul 10', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Jul 11', w:[['long', 'Long run 10 mi']], p:'10 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Jul 12', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:9,type:'endur',dates:'Jul 13–Jul 19',phase:'Endurance',miles:'33',
+   focus:'Long run extends; start practising mid-run fuel (carbs every ~30–40 min) so race-day fueling is rehearsed.',
+   days:[
+    {d:'Mon',dt:'Jul 13', w:[['easy', 'Easy 5 mi'], ['legs', 'Lower-leg strength']], p:'Easy 5 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Jul 14', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Jul 15', w:[['tempo', 'Tempo run']], p:'1 mi easy → 3 mi @ tempo (comfortably hard) → 1 mi easy. A big lever on marathon pace.'},
+    {d:'Thu',dt:'Jul 16', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Jul 17', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Jul 18', w:[['long', 'Long run 14 mi']], p:'14 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Jul 19', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:10,type:'endur',dates:'Jul 20–Jul 26',phase:'Endurance',miles:'36',
+   focus:'Biggest long run yet. Dial pace back at the start so the back half stays controlled.',
+   days:[
+    {d:'Mon',dt:'Jul 20', w:[['easy', 'Easy 6 mi'], ['legs', 'Lower-leg strength']], p:'Easy 6 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Jul 21', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Jul 22', w:[['tempo', 'Tempo run']], p:'1 mi easy → 3 mi @ tempo (comfortably hard) → 1 mi easy. A big lever on marathon pace.'},
+    {d:'Thu',dt:'Jul 23', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Jul 24', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Jul 25', w:[['long', 'Long run 15 mi']], p:'15 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Jul 26', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:11,type:'endur',dates:'Jul 27–Aug 2',phase:'Endurance',miles:'31',
+   focus:'Mid-block down week — pull volume back, hold a short sharp tempo so fitness stays keen.',
+   days:[
+    {d:'Mon',dt:'Jul 27', w:[['easy', 'Easy 5 mi'], ['legs', 'Lower-leg strength']], p:'Easy 5 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Jul 28', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Jul 29', w:[['tempo', 'Tempo run']], p:'1 mi easy → 3 mi @ tempo (comfortably hard) → 1 mi easy. A big lever on marathon pace.'},
+    {d:'Thu',dt:'Jul 30', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Jul 31', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Aug 1', w:[['long', 'Long run 13 mi']], p:'13 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Aug 2', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:12,type:'endur',dates:'Aug 3–Aug 9',phase:'Endurance',miles:'37',
+   focus:'End of the endurance block. Add a 2–3 mi goal-pace finish to the long run to teach pace on tired legs.',
+   days:[
+    {d:'Mon',dt:'Aug 3', w:[['easy', 'Easy 6 mi'], ['legs', 'Lower-leg strength']], p:'Easy 6 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Aug 4', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Aug 5', w:[['tempo', 'Goal-pace work']], p:'2 mi easy → 4–5 mi @ goal pace → 1 mi easy. Lock in race-day rhythm.'},
+    {d:'Thu',dt:'Aug 6', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Aug 7', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Aug 8', w:[['long', 'Long run 16 mi']], p:'16 mi @ 8:30–9:30/mi. Final 2–3 mi @ goal pace if feeling strong.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Aug 9', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:13,type:'peak',dates:'Aug 10–Aug 16',phase:'Peak',miles:'39',
+   focus:'Peak block. Long runs are the centrepiece now; everything else supports them.',
+   days:[
+    {d:'Mon',dt:'Aug 10', w:[['easy', 'Easy 6 mi'], ['legs', 'Lower-leg strength']], p:'Easy 6 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Aug 11', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Aug 12', w:[['tempo', 'Goal-pace work']], p:'2 mi easy → 4–5 mi @ goal pace → 1 mi easy. Lock in race-day rhythm.'},
+    {d:'Thu',dt:'Aug 13', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Aug 14', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Aug 15', w:[['long', 'Long run 17 mi']], p:'17 mi @ 8:30–9:30/mi. Final 2–3 mi @ goal pace if feeling strong.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Aug 16', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:14,type:'peak',dates:'Aug 17–Aug 23',phase:'Peak',miles:'41',
+   focus:'Highest sustained volume. Keep easy days genuinely easy to absorb the long runs.',
+   days:[
+    {d:'Mon',dt:'Aug 17', w:[['easy', 'Easy 7 mi'], ['legs', 'Lower-leg strength']], p:'Easy 7 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Aug 18', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Aug 19', w:[['tempo', 'Goal-pace work']], p:'2 mi easy → 4–5 mi @ goal pace → 1 mi easy. Lock in race-day rhythm.'},
+    {d:'Thu',dt:'Aug 20', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Aug 21', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Aug 22', w:[['long', 'Long run 18 mi']], p:'18 mi @ 8:30–9:30/mi. Final 2–3 mi @ goal pace if feeling strong.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Aug 23', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:15,type:'peak',dates:'Aug 24–Aug 30',phase:'Peak',miles:'31',
+   focus:'Down week inside the peak — non-negotiable. Cutting back now lets the last big weeks land.',
+   days:[
+    {d:'Mon',dt:'Aug 24', w:[['easy', 'Easy 5 mi'], ['legs', 'Lower-leg strength']], p:'Easy 5 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Aug 25', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Aug 26', w:[['tempo', 'Tempo run']], p:'1 mi easy → 3 mi @ tempo (comfortably hard) → 1 mi easy. A big lever on marathon pace.'},
+    {d:'Thu',dt:'Aug 27', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Aug 28', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Aug 29', w:[['long', 'Long run 13 mi']], p:'13 mi @ easy 8:45–9:30/mi. Fuel before you head out; finish strong, not crawling.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Aug 30', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:16,type:'peak',dates:'Aug 31–Sep 6',phase:'Peak',miles:'41',
+   focus:'Longest run approaches. Practise the full race-morning routine: wake time, breakfast, kit, fuel.',
+   days:[
+    {d:'Mon',dt:'Aug 31', w:[['easy', 'Easy 7 mi'], ['legs', 'Lower-leg strength']], p:'Easy 7 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Sep 1', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Sep 2', w:[['tempo', 'Goal-pace work']], p:'2 mi easy → 4–5 mi @ goal pace → 1 mi easy. Lock in race-day rhythm.'},
+    {d:'Thu',dt:'Sep 3', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Sep 4', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Sep 5', w:[['long', 'Long run 19 mi']], p:'19 mi @ 8:30–9:30/mi. Final 2–3 mi @ goal pace if feeling strong.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Sep 6', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:17,type:'peak',dates:'Sep 7–Sep 13',phase:'Peak',miles:'43',
+   focus:'Peak long run — 20 miles, mostly easy with a steady goal-pace block in the middle third. Then the taper begins.',
+   days:[
+    {d:'Mon',dt:'Sep 7', w:[['easy', 'Easy 7 mi'], ['legs', 'Lower-leg strength']], p:'Easy 7 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Sep 8', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Sep 9', w:[['tempo', 'Goal-pace work']], p:'2 mi easy → 4–5 mi @ goal pace → 1 mi easy. Lock in race-day rhythm.'},
+    {d:'Thu',dt:'Sep 10', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Sep 11', w:[['easy', 'Easy 6 mi']], p:'Easy 6 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Sep 12', w:[['long', 'Long run 20 mi']], p:'20 mi @ 8:30–9:30/mi. Final 2–3 mi @ goal pace if feeling strong.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Sep 13', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:18,type:'peak',dates:'Sep 14–Sep 20',phase:'Peak',miles:'35',
+   focus:'Volume eases. Intensity stays — short, sharp goal-pace work keeps the legs fast while fatigue clears.',
+   days:[
+    {d:'Mon',dt:'Sep 14', w:[['easy', 'Easy 6 mi'], ['legs', 'Lower-leg strength']], p:'Easy 6 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Sep 15', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Sep 16', w:[['tempo', 'Sharpening']], p:'2 mi easy → 3 × 1 mi @ goal pace w/ 2 min jog → 1 mi easy. Quality stays, volume drops.'},
+    {d:'Thu',dt:'Sep 17', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Sep 18', w:[['easy', 'Easy 5 mi']], p:'Easy 5 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Sep 19', w:[['long', 'Long run 16 mi']], p:'16 mi @ 8:30–9:30/mi. Final 2–3 mi @ goal pace if feeling strong.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Sep 20', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:19,type:'taper',dates:'Sep 21–Sep 27',phase:'Taper',miles:'27',
+   focus:'Taper week 1. Volume down ~30%, quality preserved. Feeling restless or slightly sluggish is normal.',
+   days:[
+    {d:'Mon',dt:'Sep 21', w:[['easy', 'Easy 4 mi'], ['legs', 'Lower-leg strength']], p:'Easy 4 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Sep 22', w:[['easy', 'Easy 4 mi']], p:'Easy 4 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Sep 23', w:[['tempo', 'Sharpening']], p:'2 mi easy → 3 × 1 mi @ goal pace w/ 2 min jog → 1 mi easy. Quality stays, volume drops.'},
+    {d:'Thu',dt:'Sep 24', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Sep 25', w:[['easy', 'Easy 4 mi']], p:'Easy 4 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Sep 26', w:[['long', 'Long run 13 mi']], p:'13 mi @ 8:30–9:30/mi. Final 2–3 mi @ goal pace if feeling strong.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Sep 27', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:20,type:'taper',dates:'Sep 28–Oct 4',phase:'Taper',miles:'18',
+   focus:'Taper week 2. Short and crisp. Sleep, hydration, and easy legs are the whole job now.',
+   days:[
+    {d:'Mon',dt:'Sep 28', w:[['easy', 'Easy 3 mi'], ['legs', 'Lower-leg strength']], p:'Easy 3 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Sep 29', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Sep 30', w:[['tempo', 'Sharpening']], p:'2 mi easy → 3 × 1 mi @ goal pace w/ 2 min jog → 1 mi easy. Quality stays, volume drops.'},
+    {d:'Thu',dt:'Oct 1', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Oct 2', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Oct 3', w:[['long', 'Long run 8 mi']], p:'8 mi @ 8:30–9:30/mi. Final 2–3 mi @ goal pace if feeling strong.', n:'The key session of the week. Bank sleep the night before.'},
+    {d:'Sun',dt:'Oct 4', w:[['rest', 'Rest']], n:'Full rest or a gentle walk. Recovery is where the training sticks.'}
+  ]},
+  {num:21,type:'race',dates:'Oct 5–Oct 11',phase:'Taper',miles:'race',
+   focus:'Race week. A few short shakeouts, then race day. Trust the work — execute, don\'t improvise.',
+   days:[
+    {d:'Mon',dt:'Oct 5', w:[['easy', 'Easy 3 mi'], ['legs', 'Lower-leg strength']], p:'Easy 3 mi @ conversational pace, then a durability block: calf raises (seated + standing) and ankle work.', n:'Strength session 1 — lower-leg focus, controlled and pain-free.'},
+    {d:'Tue',dt:'Oct 6', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed recovery pace. Nothing fast.'},
+    {d:'Wed',dt:'Oct 7', w:[['easy', 'Easy run']]},
+    {d:'Thu',dt:'Oct 8', w:[['yoga', 'Mobility flow'], ['legs', 'Lower-leg strength']], p:'~15 min mobility (hips, ankles, calves) + strength session 2. Optional 2–3 mi shakeout if legs feel good.', n:'Active recovery — keep tissue moving without adding fatigue.'},
+    {d:'Fri',dt:'Oct 9', w:[['easy', 'Easy 3 mi']], p:'Easy 3 mi, relaxed. Fresh legs for the long run tomorrow.'},
+    {d:'Sat',dt:'Oct 10', w:[['easy', 'Shakeout 2 mi']], p:'Very easy 2 mi + 4 strides. Loosen the legs, nothing more.'},
+    {d:'Sun',dt:'Oct 11', w:[['race', '🏁 Race Day — Marathon']], p:'26.2 mi · goal sub-3:30 (~8:00/mi). Negative-split: controlled first half, settle into 8:00 by mile 2, empty the tank over the last 10K.', n:'Race day. Everything is done — execute, don\'t improvise.'}
+  ]}
+];
+const TYPE={lift:{c:'var(--blue)'},easy:{c:'#6ea8e6'},run:{c:'#6ea8e6'},legs:{c:'var(--orange)'},yoga:{c:'var(--green)'},long:{c:'var(--orange)'},tempo:{c:'var(--orange-lt)'},rest:{c:'var(--mut2)'},hike:{c:'var(--green)'},drive:{c:'var(--mut2)'},event:{c:'var(--lav)'},race:{c:'var(--gold)'}};
+const TW={base:['Base','var(--blue)'],endur:['Endurance','var(--green)'],peak:['Peak','var(--orange)'],taper:['Taper','var(--lav)'],race:['Race Week','var(--gold)']};
+/* ============================================================
+   CONFIG — edit everything in this block per client. Nothing
+   below this block should need changing for a new client except
+   the `weeks` plan array further down.
+   ============================================================ */
+const CONFIG={
+  clientFirst:'',                                             // sample: no client name
+  clientId:'SAMPLE',                                          // sample tag (endpoint disabled, posts nowhere)
+  brand:'Elite&nbsp;Metabolix',
+  monogram:'E&nbsp;M',
+  site:'https://elitemetabolixhq.com',
+  goalLabel:'Sub-3:30 Marathon',
+  goalShort:'race day',
+  raceDate:'Oct 11',
+  raceDateLabel:'21-week plan',
+  referLink:'https://elitemetabolixhq.com/apply',
+  requestFormUrl:'https://elitemetabolixhq.com/apply',
+  endpoint:''                                                 // disabled — a prospect's test check-in posts to nothing
+};
+function applyConfig(){
+  try{
+    document.title=CONFIG.brand.replace(/&nbsp;/g,' ')+' \u2014 Sample Marathon Plan';
+    document.querySelectorAll('.em-mark').forEach(function(e){e.innerHTML=CONFIG.monogram;});
+    document.querySelectorAll('.wm').forEach(function(e){e.innerHTML=CONFIG.brand;});
+    document.querySelectorAll('a[href*="example.com"]').forEach(function(a){
+      a.setAttribute('href', a.getAttribute('href').replace('https://example.com', CONFIG.site));
+    });
+    var g=document.getElementById('greet');
+    if(g) g.innerHTML='A sample marathon build. <em>Yours is tailored to you.</em>';
+    var c=document.querySelector('.ctitle');
+    if(c) c.textContent='How did today go?';
+    var eb=document.getElementById('eyebrowGoal');
+    if(eb) eb.textContent='Sample \u00b7 '+CONFIG.goalLabel+' \u00b7 '+CONFIG.raceDateLabel;
+    var ft=document.getElementById('reqTweak');
+    if(ft) ft.setAttribute('href', CONFIG.requestFormUrl);
+  }catch(err){console.warn('applyConfig',err);}
+}
+const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const $=id=>document.getElementById(id);
+function pdt(dt){const a=dt.trim().split(' ');return new Date(2026,MON[a[0]],parseInt(a[1]));}
+const now=new Date(); const todayK=now.getMonth()+'-'+now.getDate();
+function findToday(){for(let wi=0;wi<weeks.length;wi++){const dd=weeks[wi].days;for(let di=0;di<dd.length;di++){const t=pdt(dd[di].dt);if(t.getMonth()+'-'+t.getDate()===todayK)return[wi,di];}}
+  // fallback: the flagged current week
+  let ci=weeks.findIndex(w=>w.current); return [ci<0?2:ci,0];}
+let sel=0;
+function chip(w){return '<span class="wchip"><i style="background:'+(TYPE[w[0]]||{c:'var(--orange)'}).c+'"></i>'+w[1]+'</span>';}
+function renderToday(){
+  const [wi,di]=findToday(); const d=weeks[wi].days[di];
+  const tr=pdt(CONFIG.raceDate); const days=Math.max(0,Math.round((tr-now)/864e5));
+  let html='<div class="tt"><span class="tlab">● Today · '+TW[weeks[wi].type][0]+'</span><span class="tdate">'+d.d+' '+d.dt+' · Week '+weeks[wi].num+'</span></div>';
+  html+='<h2>'+(d.w&&d.w.length?d.w.map(x=>x[1]).join(' + '):'Rest')+'</h2>';
+  if(d.w&&d.w.length){html+='<div class="wchips">'+d.w.map(chip).join('')+'</div>';}
+  if(d.p)html+='<div class="tpresc">'+d.p+'</div>';
+  if(d.n)html+='<div class="tnote">'+d.n+'</div>';
+  html+='<div class="countdown">🏁 <b>'+days+'</b> days to '+CONFIG.goalShort+'</div>';
+  $('todayCard').innerHTML=html;
+}
+function renderNav(){
+  $('weeknav').innerHTML=weeks.map((w,i)=>{const tw=TW[w.type];return '<div class="wkchip'+(i===sel?' active':'')+'" style="--wc:'+tw[1]+'" onclick="sel='+i+';renderWeek();this.scrollIntoView({inline:\'center\',block:\'nearest\',behavior:\'smooth\'})"><div class="wn">Week '+w.num+'</div><div class="wd">'+w.dates+'</div><div class="wt">'+tw[0]+'</div></div>';}).join('');
+}
+function renderWeek(){
+  document.querySelectorAll('.wkchip').forEach((c,i)=>c.classList.toggle('active',i===sel));
+  const w=weeks[sel]; const tw=TW[w.type];
+  let h='<div class="wkhead"><div><span class="wktype" style="background:'+tw[1]+'22;color:'+tw[1]+'">'+tw[0]+' · '+w.phase+'</span><h3>Week '+w.num+' · '+w.dates+'</h3></div><div class="wkmeta">Target<br><span style="font-size:18px;color:var(--orange);font-family:var(--fd)">'+w.miles+' mi</span></div></div>';
+  if(w.focus)h+='<div class="wkfocus">'+w.focus+'</div>';
+  if(w.events&&w.events.length)h+='<ul class="wkevents">'+w.events.map(e=>'<li>'+e+'</li>').join('')+'</ul>';
+  h+='<div class="days">'+w.days.map(d=>{
+    const rest=d.w&&d.w.length===1&&d.w[0][0]==='rest';
+    const _dt=pdt(d.dt);const isT=(_dt.getMonth()+'-'+_dt.getDate())===todayK;
+    let c='<div class="dcard'+(isT?' today':'')+(rest?' rest':'')+'">';
+    c+='<div class="dhead"><span class="dd">'+d.d+'</span><span class="dt2">'+d.dt+'</span>'+(isT?'<span class="todaytag">TODAY</span>':'')+'</div>';
+    c+='<div class="wlist">'+(d.w||[['rest','Rest']]).map(x=>{var lk=mapWk(x[0],x[1]);return '<div class="wpill'+(lk?' wlink':'')+'"'+(lk?' data-wlink="'+lk+'"':'')+' style="--wc:'+(TYPE[x[0]]||{c:'var(--orange)'}).c+'"><i></i><span>'+x[1]+'</span></div>';}).join('')+'</div>';
+    if(d.p)c+='<div class="dpresc">'+d.p+'</div>';
+    if(d.n)c+='<div class="dnote">'+d.n+'</div>';
+    if(d.hike)c+='<div class="dhike">⛰ '+d.hike.name+' — '+d.hike.detail+'</div>';
+    return c+'</div>';
+  }).join('')+'</div>';
+  $('wkpanel').innerHTML=h;
+}
+function goToday(){const [wi]=findToday();sel=wi;renderNav();renderWeek();document.getElementById('cal').scrollIntoView({behavior:'smooth'});}
+$('legend').innerHTML=['easy:Easy','tempo:Tempo','long:Long','legs:Strength','yoga:Mobility','rest:Rest','race:Race'].map(s=>{const[k,l]=s.split(':');return '<span><i style="background:'+TYPE[k].c+'"></i>'+l+'</span>';}).join('');
+applyConfig(); sel=findToday()[0]; renderToday(); renderNav(); renderWeek();
+setTimeout(()=>{const a=document.querySelector('.wkchip.active');if(a)a.scrollIntoView({inline:'center',block:'nearest'});},200);
+/* ---- workout library + exercise modal ---- */
+var EX={
+ squat:{n:'Back Squat',m:['Quads','Glutes'],s:'3 × 5',l:'@80–85%',tempo:[3,1,1,0],cues:['Brace the trunk hard before you unrack','Sit between the hips, knees track over toes','Drive the floor away to a full lockout']},
+ rdl:{n:'Romanian Deadlift',m:['Hamstrings','Glutes'],s:'3 × 6',l:'@75–80%',tempo:[3,0,1,0],cues:['Soft knees, push the hips straight back','Bar drags up the thighs the whole way','Stop at the hamstring stretch — flat back']},
+ bulgarian:{n:'Bulgarian Split Squat',m:['Quads','Glutes'],s:'3 × 8 / leg',l:'DBs',tempo:[2,0,1,0],cues:['Weight through the front heel','Drop straight down, torso tall','Controlled descent, no bounce']},
+ standcalf:{n:'Standing Calf Raise',m:['Gastrocnemius'],s:'3–4 × 10–15',l:'controlled',tempo:[3,1,3,0],cues:['Slow 3s up, pause, slow 3s down — this is the durability anchor','Full pain-free range; never grind through pain','Knee straight biases the upper calf; add load gradually']},
+ copen:{n:'Copenhagen Plank',m:['Adductors','Core'],s:'3 × 20s / side',l:'hold',tempo:[0,0,0,0],cues:['Top leg on the bench, body in a line','Squeeze the inner thigh to hold','Build time before adding leverage']},
+ legpress:{n:'Leg Press',m:['Quads','Glutes'],s:'4 × 10',l:'',tempo:[2,0,1,0],cues:['Feet shoulder-width, mid-platform','Lower to about 90 degrees at the knee','Do not slam the lockout']},
+ hack:{n:'Hack Squat',m:['Quads'],s:'3 × 10',l:'',tempo:[3,0,1,0],cues:['Controlled deep descent','Drive through the whole foot','Lower back flat on the pad']},
+ lunge:{n:'Walking Lunge',m:['Quads','Glutes'],s:'3 × 12 / leg',l:'DBs',tempo:[2,0,1,0],cues:['Long stride, vertical front shin','Push through the front heel to stand','Tall posture, steady cadence']},
+ legcurl:{n:'Lying Leg Curl',m:['Hamstrings'],s:'3 × 12',l:'',tempo:[2,1,2,0],cues:['Curl with the hamstring, not momentum','Pause at peak contraction','Slow the negative fully']},
+ legext:{n:'Leg Extension',m:['Quads'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Squeeze the quad at the top','Two-second hold at lockout','Control down, no swinging']},
+ seatcalf:{n:'Seated Calf Raise',m:['Soleus'],s:'3 × 12–15',l:'controlled',tempo:[3,1,3,0],cues:['Bent knee targets the deep soleus — key for running','Slow tempo, full pain-free range','High reps, controlled; add load gradually']},
+ dbbench:{n:'DB Bench Press',m:['Chest','Triceps'],s:'4 × 8–10',l:'',tempo:[3,0,1,0],cues:['Shoulder blades pinned down and back','Lower to mid-chest with control','Press up and slightly together']},
+ incdb:{n:'Incline DB Press',m:['Upper Chest'],s:'3 × 10',l:'30°',tempo:[3,0,1,0],cues:['Bench at about 30 degrees','Elbows at ~45 degrees, not flared','Stretch at the bottom, drive up']},
+ cablefly:{n:'Cable Fly',m:['Chest'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Constant soft bend in the elbow','Hug the arms together, squeeze','Slow and controlled stretch']},
+ dips:{n:'Dips',m:['Chest','Triceps'],s:'3 × 10',l:'BW',tempo:[2,0,1,0],cues:['Slight forward lean for chest bias','Lower to a comfortable stretch','Press to full lockout']},
+ pushdown:{n:'Triceps Pushdown',m:['Triceps'],s:'3 × 12',l:'',tempo:[2,1,2,0],cues:['Pin the elbows to your sides','Full extension, squeeze the triceps','Control the rope back up']},
+ pulldown:{n:'Lat Pulldown',m:['Lats'],s:'4 × 10',l:'',tempo:[2,1,2,0],cues:['Drive the elbows down and back','Pull to the upper chest','Feel the lats, not the biceps']},
+ row:{n:'Barbell Row',m:['Back'],s:'3 × 8',l:'',tempo:[2,0,1,0],cues:['Hinge to ~45 degrees, flat back','Row to the lower ribs','Squeeze the shoulder blades']},
+ cablerow:{n:'Seated Cable Row',m:['Mid-back'],s:'3 × 12',l:'',tempo:[2,1,2,0],cues:['Tall chest, do not round','Pull to the navel, elbows close','Stretch the back at the front']},
+ facepull:{n:'Face Pull',m:['Rear Delts','Traps'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Pull the rope toward the eyes','Rotate the hands back at the end','Light load, posture focus']},
+ dbcurl:{n:'DB Curl',m:['Biceps'],s:'3 × 12',l:'',tempo:[2,0,2,0],cues:['Elbows pinned at the sides','No swinging the torso','Slow the negative']},
+ ohp:{n:'Overhead Press',m:['Shoulders'],s:'4 × 8',l:'',tempo:[2,0,1,0],cues:['Brace the core, ribs down','Press in a straight line up','Lock out, head through the window']},
+ latraise:{n:'Lateral Raise',m:['Side Delts'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Lead with the elbows','Raise to shoulder height only','Slow down, no swing']},
+ reardelt:{n:'Rear Delt Fly',m:['Rear Delts'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Hinge forward, soft elbows','Spread wide and back','Squeeze the rear delts']},
+ shrug:{n:'DB Shrug',m:['Traps'],s:'3 × 15',l:'',tempo:[1,2,1,0],cues:['Shrug straight up to the ears','Two-second hold at the top','No rolling — straight up and down']},
+ hammer:{n:'Hammer Curl',m:['Biceps','Forearms'],s:'3 × 12',l:'',tempo:[2,0,2,0],cues:['Neutral grip, thumbs up','Elbows pinned, no swing','Control the negative']},
+ easy_r:{n:'Easy Run',m:['Aerobic base'],s:'Zone 2',l:'8:45–9:15/mi',tempo:[0,0,0,0],cues:['Conversational pace — you can talk in full sentences','Builds the aerobic engine that carries the marathon','Most weekly miles live here — keep it honestly easy']},
+ long_r:{n:'Long Run',m:['Endurance'],s:'time on feet',l:'8:30–9:30/mi',tempo:[0,0,0,0],cues:['Start slow; fuel before you head out and every 30–40 min','Builds fatigue resistance for the back half of 26.2','Finish strong, not crawling — this is race-day rehearsal']},
+ tempo_r:{n:'Tempo Run',m:['Lactate threshold'],s:'comfortably hard',l:'7:30–7:45/mi',tempo:[0,0,0,0],cues:['A big lever on your marathon pace','Hard but repeatable — controlled, not a race','Settle into the rhythm and hold it']},
+ strides_r:{n:'Strides',m:['Neuromuscular'],s:'4–6 × 100m',l:'fast, relaxed',tempo:[0,0,0,0],cues:['Build to ~90% over 100m, then full walk-back recovery','Sharpens turnover without adding fatigue','Stay loose — speed, not strain']},
+ race_r:{n:'Marathon Goal Pace',m:['Goal pace'],s:'8:00/mi',l:'sub-3:30',tempo:[0,0,0,0],cues:['Negative-split: controlled first half','Settle into 8:00/mi by mile 2','Save something for the final 10K']},
+ recov_flow:{n:'Mobility Flow',m:['Full body'],s:'~10 min',l:'easy',tempo:[0,0,0,0],cues:['Move through gentle, full-range motions','Cat-cow, world-greatest-stretch, hip circles','Goal is blood flow, not a stretch session']},
+ recov_hips:{n:'Hip Openers',m:['Hips'],s:'~8 min',l:'',tempo:[0,0,0,0],cues:['Low lunge + pigeon, ~90s per side','Breathe into the tight spots, do not force','Great the day after legs or a long run']},
+ recov_reset:{n:'Post-Run Reset',m:['Legs'],s:'~10 min',l:'',tempo:[0,0,0,0],cues:['Calves, quads, hamstrings, glutes','Hold each ~45s, easy and slow','Finish with legs-up-the-wall, 2 min']},
+ recov_breath:{n:'Breathwork',m:['Recovery'],s:'~5 min',l:'',tempo:[0,0,0,0],cues:['Box breath 4-4-4-4 to settle','Or 4-7-8 to wind down before sleep','Pairs with your evening wind-down after a hard session']}
+};
+var WK={
+ runs:{n:'Running Sessions',win:'How each run builds your sub-3:30 — paces shift with the training phase. Linked from every run on your calendar.',ex:['easy_r','long_r','tempo_r','strides_r','race_r']},
+ strength:{n:'Lower-leg & Runner Strength',win:'Calf and lower-leg durability is the anchor — it protects the joints and the stride. The bigger lifts build the engine that holds goal pace late in the race. Run all of it pain-free; see a professional for any pain that lingers.',ex:['standcalf','seatcalf','copen','rdl','squat','bulgarian']},
+ recovery:{n:'Active Recovery & Mobility',win:'Your active-recovery work — keep blood moving and tissue loose without adding fatigue. Linked from every recovery/mobility day on your calendar.',ex:['recov_flow','recov_hips','recov_reset','recov_breath']}
+};
+var WKORDER=[['runs','Runs'],['strength','Strength'],['recovery','Recovery']];
+var wcur='runs';
+function renderWsel(){document.getElementById('wsel').innerHTML=WKORDER.map(function(o){return '<button class="wsbtn'+(o[0]===wcur?' active':'')+'" data-w="'+o[0]+'">'+o[1]+'</button>';}).join('');}
+function renderWk(){var w=WK[wcur];var h='<div class="wwin">'+w.win+'</div>';
+ h+=w.ex.map(function(id){var e=EX[id];return '<div class="exrow" data-ex="'+id+'"><span class="xn">'+e.n+'</span><span class="xs">'+e.s+(e.l?' · '+e.l:'')+'</span><span class="xa">→</span></div>';}).join('');
+ document.getElementById('wpanel').innerHTML=h;}
+function openEx(id){var e=EX[id];var tot=e.tempo[0]+e.tempo[1]+e.tempo[2]+e.tempo[3];var mapped=e.m.some(function(t){return MMAP[t];});var demo=mapped?'<div class="mfig">'+MUSCLE_SVG+'</div>':'';
+ var tempoHtml=tot>0?'<div class="tempo"><div class="ttrack"><div class="tdot" id="tdot"></div></div><div class="tinfo"><div class="tlbl" id="tlbl">Tempo</div><div class="tsub">'+e.tempo[0]+'s down'+(e.tempo[1]?' · '+e.tempo[1]+'s pause':'')+' · '+e.tempo[2]+'s up</div></div></div>':'';
+ var demoQ=e.n+(/_r$/.test(id)?' running technique':' proper form');
+ var demoLink='<a class="mdemo" href="https://www.google.com/search?q='+encodeURIComponent(demoQ)+'" target="_blank" rel="noopener noreferrer">▶ See a demo ↗</a><div class="mdemo-note">Opens a web search in a new tab — your dashboard stays open behind it.</div>';
+ document.getElementById('exbody').innerHTML='<button class="mclose" onclick="closeEx()">×</button><h3>'+e.n+'</h3><div class="mtags">'+e.m.map(function(x){return '<span class="mtag">'+x+'</span>';}).join('')+'</div>'+demo+'<div class="mspec">'+'<div class="ms">'+'<div class="mk">Sets × Reps</div><div class="mv">'+e.s+'</div></div>'+(e.l?'<div class="ms"><div class="mk">Load</div><div class="mv">'+e.l+'</div></div>':'')+'</div>'+tempoHtml+'<div class="hh">How to perform</div><ul class="mcues">'+e.cues.map(function(c){return '<li>'+c+'</li>';}).join('')+'</ul>'+demoLink;
+ document.getElementById('exmodal').classList.add('show');if(mapped)paintMuscles(e.m);if(tot>0)animTempo(e.tempo);}
+function closeEx(){document.getElementById('exmodal').classList.remove('show');clearTimeout(window._tp);if(window._raf)cancelAnimationFrame(window._raf);}
+function animTempo(t){var dot=document.getElementById('tdot'),lbl=document.getElementById('tlbl');if(!dot)return;
+ var seq=[['Lower',t[0],'bottom'],['Hold',t[1],'bottom'],['Drive',t[2],'top'],['Hold',t[3],'top']];var i=0;
+ (function step(){var it=seq[i];i=(i+1)%seq.length;if(it[1]<=0){step();return;}
+  lbl.textContent=it[0]+' '+it[1]+'s';dot.style.transition='top '+it[1]+'s linear';dot.style.top=(it[2]==='bottom'?'calc(100% - 18px)':'0px');
+  clearTimeout(window._tp);window._tp=setTimeout(step,it[1]*1000);})();}
+renderWsel();renderWk();
+document.getElementById('wsel').addEventListener('click',function(ev){var b=ev.target.closest('[data-w]');if(b){wcur=b.getAttribute('data-w');renderWsel();renderWk();}});
+document.getElementById('wpanel').addEventListener('click',function(ev){var r=ev.target.closest('[data-ex]');if(r)openEx(r.getAttribute('data-ex'));});
+function mapWk(t,label){if(t==='legs'||t==='lift')return 'strength';if(t==='easy'||t==='long'||t==='tempo'||t==='race')return 'runs';if(t==='yoga')return 'recovery';return null;}
+function goWorkout(k){wcur=k;renderWsel();renderWk();var el=document.getElementById('workouts');if(el)el.scrollIntoView({behavior:'smooth'});}
+document.getElementById('wkpanel').addEventListener('click',function(ev){var p=ev.target.closest('[data-wlink]');if(p)goWorkout(p.getAttribute('data-wlink'));});
+var GLOSSARY=[
+ ['Zone 2','Easy, conversational effort (about 60-70% of max HR). Where most of your mileage lives; it builds the aerobic engine.'],
+ ['Tempo run','A comfortably-hard, sustained effort near threshold pace. One of the biggest levers on your marathon pace.'],
+ ['Lactate threshold','The intensity where lactate builds faster than you clear it. Training near it raises the pace you can hold.'],
+ ['VO2max','The max rate your body uses oxygen. Short hard intervals in the peak block push it up.'],
+ ['Periodization','Structuring training into phases (base, build, peak, taper) so fitness peaks on race day.'],
+ ['Taper','The pre-race drop in volume while intensity stays. Feeling a little sluggish in taper is normal and expected.'],
+ ['Negative split','Running the second half faster than the first; the smart way to race a marathon.'],
+ ['Glycogen','Stored carbohydrate in muscle and liver, your main fuel for hard running. Periodized carbs keep it topped for quality days.'],
+ ['Concurrent training','Training strength and endurance together. Spacing them (legs away from key runs) limits the interference effect.'],
+ ['RDL','Romanian deadlift, a hip-hinge that builds hamstrings and glutes with a flat back.'],
+ ['Eccentric','The lowering phase of a movement — the slow "down" of your calf raises. Controlled eccentrics build calf and tendon resilience.'],
+ ['Lift tempo','The speed of a rep, written down-pause-up in seconds. The animation in each exercise paces it for you.'],
+ ['Cadence','Steps per minute when running; about 170-180 is an efficient target.'],
+ ['DOMS','Delayed-onset muscle soreness, the 24-48h ache after hard or new training. It eases as you adapt.'],
+ ['Strides','Short ~100m accelerations to about 90% with full recovery; sharpen turnover without fatigue.'],
+ ['Carb loading','Eating extra carbohydrate in the 1–3 days before a long run or race so muscle glycogen is full and you don\'t run out of fuel late.'],
+ ['Time on feet','On long runs, total duration matters more than pace. Running slow to stay out longer builds the endurance 26.2 miles demands.'],
+ ['Down week','A planned ~30–40% drop in volume every 3–4 weeks. Adaptation happens during the easier week — it is part of the plan, not a setback.'],
+ ['Training load','How much you ask of the body week to week. We keep weekly increases gradual and avoid big single-run spikes — the simplest way to stay healthy through a marathon build.']
+];
+function openGloss(){document.getElementById('gbody').innerHTML='<button class="mclose" onclick="closeGloss()">×</button><h3>Your glossary</h3><div class="gsub">Every term in your plan, in plain language.</div>'+GLOSSARY.map(function(g){return '<div class="gterm"><b>'+g[0]+'</b><p>'+g[1]+'</p></div>';}).join('');document.getElementById('gmodal').classList.add('show');}
+function closeGloss(){document.getElementById('gmodal').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeEx();closeGloss();}});
+var MOVE_BODY='<line id="f-neck" x1="50" y1="29" x2="50" y2="38"/><line id="f-torso" x1="50" y1="38" x2="50" y2="82"/><line id="f-uarm" x1="50" y1="38" x2="50" y2="58"/><line id="f-forearm" x1="50" y1="58" x2="50" y2="78"/><line id="f-thigh" x1="50" y1="82" x2="50" y2="112"/><line id="f-shin" x1="50" y1="112" x2="50" y2="142"/><circle id="f-head" cx="50" cy="20" r="9"/>';
+var STAND={head:[50,20],sh:[50,38],el:[50,58],hand:[50,78],hip:[50,82],knee:[50,112],foot:[50,142]};
+var MOVES={
+ squat:{b:{hip:[50,100],knee:[63,110],sh:[48,57],head:[47,40],el:[60,60],hand:[76,57]},dur:1700},
+ hinge:{b:{sh:[70,66],head:[80,60],hip:[47,84],knee:[50,110],el:[72,84],hand:[74,102]},dur:1700},
+ calf:{b:{head:[50,14],sh:[50,32],el:[50,52],hand:[50,72],hip:[50,76],knee:[50,106]},dur:900},
+ hold:{b:{hip:[50,85]},dur:2200},
+ legcurl:{b:{foot:[63,120]},dur:1400},
+ legext:{b:{foot:[74,116]},dur:1300},
+ hpress:{a:{el:[55,50],hand:[54,56]},b:{el:[60,52],hand:[82,52]},dur:1100},
+ vpress:{a:{el:[44,46],hand:[52,40]},b:{el:[50,28],hand:[50,12]},dur:1300},
+ vpull:{a:{el:[50,28],hand:[50,12]},b:{el:[45,52],hand:[48,46]},dur:1300},
+ row:{a:{el:[62,54],hand:[82,56]},b:{el:[44,58],hand:[40,72]},dur:1200},
+ curl:{b:{el:[50,58],hand:[58,40]},dur:1100},
+ triext:{a:{el:[50,55],hand:[54,40]},b:{el:[50,55],hand:[54,78]},dur:1100},
+ raise:{b:{el:[66,40],hand:[84,40]},dur:1200},
+ shrug:{b:{sh:[50,33],head:[50,15],el:[50,53],hand:[50,73]},dur:1000},
+ run:{a:{knee:[60,106],foot:[56,134],el:[58,54],hand:[52,68]},b:{knee:[44,114],foot:[44,142],el:[44,54],hand:[48,68]},dur:680},
+ stretch:{b:{sh:[64,62],head:[74,58],el:[66,80],hand:[70,98]},dur:2600}
+};
+var PAT={squat:'squat',hack:'squat',legpress:'squat',bulgarian:'squat',lunge:'squat',rdl:'hinge',standcalf:'calf',seatcalf:'calf',copen:'hold',legcurl:'legcurl',legext:'legext',dbbench:'hpress',incdb:'hpress',cablefly:'hpress',dips:'hpress',pushdown:'triext',pulldown:'vpull',row:'row',cablerow:'row',facepull:'row',dbcurl:'curl',hammer:'curl',ohp:'vpress',latraise:'raise',reardelt:'raise',shrug:'shrug',easy_r:'run',long_r:'run',tempo_r:'run',strides_r:'run',race_r:'run',recov_flow:'stretch',recov_hips:'stretch',recov_reset:'stretch',recov_breath:'hold'};
+function _mp(o){var r={};for(var k in STAND)r[k]=(o&&o[k])?o[k]:STAND[k];return r;}
+function _ll(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
+function _sl(id,a,b){var el=document.getElementById(id);if(el){el.setAttribute('x1',a[0]);el.setAttribute('y1',a[1]);el.setAttribute('x2',b[0]);el.setAttribute('y2',b[1]);}}
+function animMove(key){if(window._raf)cancelAnimationFrame(window._raf);var m=MOVES[key]||MOVES.hold;var A=_mp(m.a),B=_mp(m.b),dur=m.dur||1500,t0=null;
+ function fr(ts){if(!t0)t0=ts;var e=((ts-t0)%dur)/dur;var t=0.5-0.5*Math.cos(e*2*Math.PI);var j={};for(var k in STAND)j[k]=_ll(A[k],B[k],t);
+  var hd=document.getElementById('f-head');if(!hd)return;hd.setAttribute('cx',j.head[0]);hd.setAttribute('cy',j.head[1]);
+  _sl('f-neck',j.head,j.sh);_sl('f-torso',j.sh,j.hip);_sl('f-uarm',j.sh,j.el);_sl('f-forearm',j.el,j.hand);_sl('f-thigh',j.hip,j.knee);_sl('f-shin',j.knee,j.foot);
+  window._raf=requestAnimationFrame(fr);}
+ window._raf=requestAnimationFrame(fr);}
+var MUSCLE_SVG='<svg viewBox="0 0 215 192" xmlns="http://www.w3.org/2000/svg"><circle class="mbase" cx="50" cy="17" r="11"/><rect class="mbase" x="46" y="26" width="8" height="6"/><ellipse class="mz" id="m-delt-l" cx="33" cy="44" rx="9" ry="7"/><ellipse class="mz" id="m-delt-r" cx="67" cy="44" rx="9" ry="7"/><rect class="mz" id="m-chest" x="37" y="40" width="26" height="18" rx="6"/><ellipse class="mz" id="m-bi-l" cx="26" cy="60" rx="6" ry="11"/><ellipse class="mz" id="m-bi-r" cx="74" cy="60" rx="6" ry="11"/><ellipse class="mz" id="m-fore-l" cx="23" cy="84" rx="5" ry="12"/><ellipse class="mz" id="m-fore-r" cx="77" cy="84" rx="5" ry="12"/><rect class="mz" id="m-abs" x="41" y="60" width="18" height="30" rx="5"/><rect class="mz" id="m-quad-l" x="37" y="94" width="12" height="36" rx="6"/><rect class="mz" id="m-quad-r" x="51" y="94" width="12" height="36" rx="6"/><rect class="mz" id="m-calf-fl" x="38" y="134" width="10" height="30" rx="5"/><rect class="mz" id="m-calf-fr" x="52" y="134" width="10" height="30" rx="5"/><text class="mlabel" x="50" y="180" text-anchor="middle">FRONT</text><circle class="mbase" cx="165" cy="17" r="11"/><rect class="mbase" x="161" y="26" width="8" height="6"/><rect class="mz" id="m-traps" x="152" y="34" width="26" height="12" rx="5"/><ellipse class="mz" id="m-rdelt-l" cx="146" cy="46" rx="8" ry="6"/><ellipse class="mz" id="m-rdelt-r" cx="184" cy="46" rx="8" ry="6"/><rect class="mz" id="m-lats" x="151" y="48" width="28" height="26" rx="6"/><ellipse class="mz" id="m-tri-l" cx="140" cy="62" rx="6" ry="11"/><ellipse class="mz" id="m-tri-r" cx="190" cy="62" rx="6" ry="11"/><rect class="mz" id="m-glute" x="152" y="78" width="26" height="17" rx="7"/><rect class="mz" id="m-ham-l" x="152" y="98" width="12" height="32" rx="6"/><rect class="mz" id="m-ham-r" x="166" y="98" width="12" height="32" rx="6"/><rect class="mz" id="m-calf-l" x="153" y="134" width="10" height="30" rx="5"/><rect class="mz" id="m-calf-r" x="167" y="134" width="10" height="30" rx="5"/><text class="mlabel" x="165" y="180" text-anchor="middle">BACK</text></svg>';
+var MMAP={'Quads':['m-quad-l','m-quad-r'],'Glutes':['m-glute'],'Hamstrings':['m-ham-l','m-ham-r'],'Gastrocnemius':['m-calf-l','m-calf-r','m-calf-fl','m-calf-fr'],'Soleus':['m-calf-l','m-calf-r'],'Adductors':['m-quad-l','m-quad-r'],'Core':['m-abs'],'Chest':['m-chest'],'Upper Chest':['m-chest'],'Triceps':['m-tri-l','m-tri-r'],'Lats':['m-lats'],'Back':['m-lats'],'Mid-back':['m-lats'],'Shoulders':['m-delt-l','m-delt-r','m-rdelt-l','m-rdelt-r'],'Side Delts':['m-delt-l','m-delt-r'],'Rear Delts':['m-rdelt-l','m-rdelt-r'],'Biceps':['m-bi-l','m-bi-r'],'Forearms':['m-fore-l','m-fore-r'],'Traps':['m-traps']};
+function paintMuscles(tags){var ids=[];tags.forEach(function(t){if(MMAP[t])ids=ids.concat(MMAP[t]);});document.querySelectorAll('.mfig .mz').forEach(function(el){el.classList.toggle('active',ids.indexOf(el.id)>=0);});}
+var DAILY={client:CONFIG.clientId};
+function seg(ev){var b=ev.target.closest('.sb');if(!b)return;var g=b.parentElement;g.querySelectorAll('.sb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');DAILY[g.getAttribute('data-f')]=b.getAttribute('data-v');}
+function toggleDaily(){var f=document.getElementById('dform');var open=f.style.display!=='none';f.style.display=open?'none':'block';document.getElementById('logbtn').textContent=open?'Log today →':'Close';if(!open){var t=findToday();var d=weeks[t[0]].days[t[1]];document.getElementById('dft').textContent=(d.w&&d.w.length?d.w.map(function(x){return x[1];}).join(' + '):'Rest');}}
+function submitDaily(){DAILY.sleepHrs=document.getElementById('df-sleep').value;DAILY.weight=document.getElementById('df-weight').value;DAILY.notes=document.getElementById('df-notes').value;DAILY.date=new Date().toISOString().slice(0,10);var ENDPOINT=CONFIG.endpoint||'';try{if(ENDPOINT.indexOf('http')===0){fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(DAILY)});}}catch(e){}document.getElementById('dform').innerHTML='<div class="dsuccess">✓ Logged for today. This is what sharpens your weekly tune-up — see you tomorrow.</div>';document.getElementById('logbtn').style.display='none';}
+(function(){var en=document.getElementById('segEnergy');if(en){var h='';for(var i=1;i<=10;i++){h+='<button class="sb" data-v="'+i+'">'+i+'</button>';}en.innerHTML=h;}document.querySelectorAll('.seg').forEach(function(g){g.addEventListener('click',seg);});})();
+function refer(e){e.preventDefault();var link=CONFIG.referLink;var t=$('toast');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(link).then(()=>show(t,'Referral link copied — when a friend registers, you get <b>25% off</b> your month.')).catch(()=>show(t,'Your link: '+link));}else show(t,'Your link: '+link);}
+function show(t,m){t.innerHTML=m;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),4600);}
+</script>
+</body></html>

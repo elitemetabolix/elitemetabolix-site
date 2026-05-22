@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  CLIENT PLAN TEMPLATE
+  ------------------------------------------------------------
+  To make a new client's plan:
+   1) Open the script block near the bottom and edit the CONFIG block
+      (name, brand, links, goal/race date, check-in endpoint).
+   2) Replace the `weeks` array with this client's schedule. Keep
+      each day's `dt` as a real calendar date ('Mon D', 3-letter
+      month) so the Today button lands on the right day.
+   3) The exercise library (EX), glossary, and animations are
+      reusable across clients — usually no edits needed.
+   4) Leave CONFIG.endpoint blank to disable check-in logging,
+      or paste your own POST URL (e.g. a Google Apps Script) to
+      collect responses. Never hard-code a client's private link
+      anywhere else.
+  No real client data should live in this template file.
+  ============================================================
+-->
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Sample · Recomposition on Dialysis · Elite Metabolix</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230A0C10'/%3E%3Ctext x='50' y='52' font-family='Arial' font-weight='200' font-size='44' letter-spacing='6' fill='%23F0852E' text-anchor='middle' dominant-baseline='central'%3EEM%3C/text%3E%3Crect x='28' y='66' width='44' height='3' rx='1.5' fill='%23F0852E'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0C10;--bg2:#0E1117;--surface:#13171F;--card:#171C26;--line:#232a36;--line2:#2c3543;--txt:#ECEFF3;--mut:#9aa4b2;--mut2:#6b7480;--orange:#F0852E;--orange-rgb:240,133,46;--orange-lt:#f7a864;--green:#37B981;--blue:#4F92DE;--red:#E45D54;--lav:#A99BE0;--gold:#ffd24a;--fd:'Fraunces',Georgia,serif;--fb:'Hanken Grotesk',system-ui,sans-serif;--fm:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.glow{position:fixed;border-radius:50%;filter:blur(130px);z-index:0;pointer-events:none;opacity:.34}
+.glow.a{width:520px;height:520px;background:radial-gradient(circle,rgba(var(--orange-rgb),.5),transparent 70%);top:-200px;right:-140px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px;position:relative;z-index:2}
+.mono{font-family:var(--fm);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut2)}
+.signal{display:inline-flex;gap:4px;vertical-align:middle}.signal i{width:7px;height:7px;border-radius:2px;display:block}
+.signal i:nth-child(1){background:var(--orange)}.signal i:nth-child(2){background:var(--green)}.signal i:nth-child(3){background:var(--blue)}.signal i:nth-child(4){background:var(--red)}
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,12,16,.74);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1080px;margin:0 auto;padding:14px 26px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.em-mark{font-family:var(--fb);font-weight:200;font-size:21px;letter-spacing:.12em;color:var(--orange);line-height:1;position:relative;padding-bottom:5px}
+.em-mark::after{content:"";position:absolute;left:8%;right:8%;bottom:0;height:2px;background:var(--orange);border-radius:2px}
+.brand .wm{font-family:var(--fb);font-weight:300;letter-spacing:.2em;font-size:13px;color:var(--txt);text-transform:uppercase}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-right .priv{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);border:1px solid rgba(55,185,129,.35);padding:5px 10px;border-radius:6px}
+.nav-right a{color:var(--mut);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}.nav-right a:hover{color:var(--txt)}
+.today-btn{font-family:var(--fb)!important;font-weight:600!important;font-size:13px!important;background:linear-gradient(135deg,var(--orange),var(--orange-lt));color:#1a0f04!important;padding:8px 16px;border-radius:9px;border:none;cursor:pointer;box-shadow:0 8px 22px rgba(var(--orange-rgb),.32);transition:transform .18s}.today-btn:hover{transform:translateY(-2px)}
+.refer-btn{font-family:var(--fm)!important;font-size:10px!important;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(var(--orange-rgb),.4);padding:7px 11px;border-radius:7px;color:var(--orange)!important;cursor:pointer;text-decoration:none}.refer-btn:hover{background:rgba(var(--orange-rgb),.1)}
+header.hero{padding:54px 0 26px;position:relative}
+.hero-grid{position:absolute;inset:0;z-index:0;opacity:.5;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:58px 58px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%)}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;margin-bottom:16px}
+h1.head{font-family:var(--fd);font-weight:500;font-size:clamp(32px,5.4vw,54px);line-height:1.03;letter-spacing:-.02em}
+h1.head em{font-style:italic;color:var(--orange)}
+.hero-sub{font-size:clamp(15px,1.7vw,17px);color:var(--mut);max-width:60ch;margin-top:16px}
+/* today card */
+.todaycard{margin-top:30px;background:linear-gradient(150deg,rgba(var(--orange-rgb),.1),var(--card));border:1px solid rgba(var(--orange-rgb),.35);border-radius:18px;padding:26px;box-shadow:0 26px 60px rgba(0,0,0,.4)}
+.todaycard .tt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.todaycard .tlab{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange)}
+.todaycard .tdate{font-family:var(--fm);font-size:12px;color:var(--mut2)}
+.todaycard h2{font-family:var(--fd);font-weight:500;font-size:clamp(24px,3vw,32px);line-height:1.1;margin:2px 0 12px}
+.todaycard .wchips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.todaycard .tnote{font-size:14.5px;color:var(--mut);line-height:1.6}
+.todaycard .tpresc{font-size:14px;color:var(--txt);border-left:2px solid var(--orange);padding-left:12px;margin-top:10px}
+.wchip{font-family:var(--fm);font-size:11px;letter-spacing:.04em;padding:6px 12px;border-radius:8px;background:var(--bg2);border:1px solid var(--line);color:var(--txt);display:inline-flex;align-items:center;gap:7px}
+.wchip i{width:7px;height:7px;border-radius:2px;display:block}
+.countdown{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-family:var(--fm);font-size:12px;color:var(--mut2)}
+.countdown b{color:var(--orange);font-size:15px}
+section{padding:38px 0;position:relative}
+.sec-label{display:flex;align-items:center;gap:14px;margin-bottom:8px}.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec-h{font-family:var(--fd);font-weight:500;font-size:clamp(24px,3.2vw,34px);line-height:1.1;letter-spacing:-.015em}
+.sec-intro{color:var(--mut);font-size:15px;max-width:64ch;margin:10px 0 20px}
+/* week nav */
+.weeknav{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin}
+.wkchip{flex:0 0 auto;min-width:104px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;cursor:pointer;transition:all .16s;border-top:3px solid var(--wc,var(--line2))}
+.wkchip:hover{transform:translateY(-3px);border-color:var(--line2)}
+.wkchip.active{border-color:var(--orange);background:rgba(var(--orange-rgb),.08)}
+.wkchip .wn{font-family:var(--fm);font-size:10px;letter-spacing:.06em;color:var(--mut2)}
+.wkchip .wd{font-size:13px;font-weight:600;color:var(--txt);margin:3px 0}
+.wkchip .wt{font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--wc,var(--mut2))}
+/* week panel */
+.wkpanel{margin-top:8px;background:linear-gradient(160deg,var(--surface),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+.wkhead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.wkhead h3{font-family:var(--fd);font-weight:500;font-size:24px}
+.wkhead .wkmeta{font-family:var(--fm);font-size:11px;color:var(--mut2);letter-spacing:.05em;text-align:right}
+.wktype{display:inline-block;font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:10px}
+.wkfocus{font-size:14px;color:var(--mut);line-height:1.6;margin-bottom:12px}
+.wkevents{list-style:none;margin-bottom:18px}.wkevents li{font-size:12.5px;color:var(--mut2);padding:3px 0;display:flex;gap:8px}.wkevents li::before{content:"\2022";color:var(--orange)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.dcard{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 11px;min-height:130px;transition:border-color .15s}
+.dcard.today{border-color:var(--orange);background:rgba(var(--orange-rgb),.07);box-shadow:0 0 0 1px rgba(var(--orange-rgb),.3)}
+.dcard.rest{opacity:.72}
+.dhead{display:flex;align-items:baseline;gap:6px;margin-bottom:9px}
+.dhead .dd{font-family:var(--fm);font-size:11px;color:var(--txt);font-weight:500}.dhead .dt2{font-family:var(--fm);font-size:9px;color:var(--mut2)}
+.todaytag{margin-left:auto;font-family:var(--fm);font-size:8px;letter-spacing:.1em;background:var(--orange);color:#1a0f04;padding:2px 6px;border-radius:4px;font-weight:700}
+.wlist{display:flex;flex-direction:column;gap:6px}
+.wpill{font-size:11.5px;line-height:1.25;color:var(--txt);display:flex;gap:7px;align-items:flex-start}
+.wpill i{flex-shrink:0;width:6px;height:6px;border-radius:2px;display:block;margin-top:5px;background:var(--wc,var(--orange))}
+.dpresc{font-size:11px;color:var(--mut);margin-top:9px;line-height:1.4;border-top:1px solid var(--line);padding-top:8px}
+.dnote{font-size:10.5px;color:var(--mut2);margin-top:7px;line-height:1.4;font-style:italic}
+.dhike{font-size:10.5px;color:var(--green);margin-top:7px;line-height:1.4}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;font-size:10.5px;color:var(--mut2);font-family:var(--fm);letter-spacing:.04em}
+.legend span{display:flex;align-items:center;gap:6px}.legend i{width:8px;height:8px;border-radius:2px;display:block}
+/* fueling + scope */
+.block{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-top:8px}
+.block h3{font-family:var(--fd);font-weight:500;font-size:19px;margin-bottom:12px}
+.block ul{list-style:none}.block li{font-size:14px;color:var(--mut);padding:8px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px}.block li:last-child{border-bottom:none}.block li b{color:var(--txt);font-weight:600;text-align:right}
+.block ul.flow li{display:block;text-align:left;padding:12px 0;line-height:1.6}.block ul.flow li b{display:block;text-align:left;font-weight:600;font-size:13px;letter-spacing:.02em;color:var(--orange-lt);margin-bottom:3px}
+.block ul.meals li{display:flex;justify-content:flex-start;gap:16px;align-items:baseline;padding:11px 0;text-align:left}.block ul.meals .t{flex:0 0 96px;color:var(--orange-lt);font-weight:600;font-size:12.5px;letter-spacing:.03em;white-space:nowrap}.block ul.meals .m{color:var(--mut);font-size:14px;line-height:1.5}.block ul.meals .m b{color:var(--txt);font-weight:600;text-align:left}
+.refs{margin-top:8px}.refs .ref{font-size:12.5px;color:var(--mut);padding:9px 0;border-bottom:1px solid var(--line);line-height:1.5}.refs .ref:last-child{border-bottom:none}.refs .ref b{color:var(--txt);font-weight:600}
+.callout{margin-top:24px;background:linear-gradient(160deg,rgba(79,146,222,.06),var(--card));border:1px solid var(--line2);border-radius:16px;padding:24px;display:flex;gap:18px}
+.callout .ic{flex-shrink:0;width:40px;height:40px;border-radius:11px;background:rgba(79,146,222,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:19px}
+.callout h3{font-family:var(--fd);font-weight:500;font-size:18px;margin-bottom:7px}.callout p{font-size:14px;color:var(--mut);max-width:72ch}
+.actionrow{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fb);font-weight:600;font-size:15px;padding:14px 28px;border-radius:11px;text-decoration:none;cursor:pointer;border:none;background:linear-gradient(135deg,var(--orange),var(--orange-lt));color:#1a0f04;box-shadow:0 12px 34px rgba(var(--orange-rgb),.34);transition:transform .18s}.btn:hover{transform:translateY(-3px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:9px;font-family:var(--fb);font-weight:600;font-size:14px;padding:13px 24px;border-radius:11px;text-decoration:none;cursor:pointer;background:transparent;color:var(--txt);border:1px solid var(--line2);transition:all .2s}.btn-ghost:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:38px 0 60px}
+.foot-top{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.foot-tag{font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--orange)}
+.foot-links{display:flex;gap:20px}.foot-links a{color:var(--mut);text-decoration:none;font-size:13px}.foot-links a:hover{color:var(--txt)}
+.disclaimer{font-size:12px;color:var(--mut2);line-height:1.6;max-width:82ch;border-top:1px solid var(--line);padding-top:18px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--orange);color:var(--txt);padding:14px 22px;border-radius:12px;font-size:14px;z-index:200;opacity:0;transition:all .3s;box-shadow:0 20px 50px rgba(0,0,0,.5);max-width:90vw}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.toast b{color:var(--orange)}
+/* daily check-in (top) */
+.checkcard{background:linear-gradient(150deg,rgba(55,185,129,.1),var(--card));border:1px solid rgba(55,185,129,.3);border-radius:18px;padding:24px;box-shadow:0 24px 56px rgba(0,0,0,.36)}
+.chead{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.clab{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.ctitle{font-family:var(--fd);font-weight:500;font-size:clamp(20px,2.6vw,26px);margin-top:4px}
+.cmetrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+.cm{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:13px 12px;cursor:pointer;transition:border-color .15s}.cm:hover{border-color:var(--green)}
+.cm .cmk{display:block;font-size:13px;font-weight:600;color:var(--txt)}.cm .cmd{display:block;font-family:var(--fm);font-size:10px;color:var(--mut2);margin-top:3px}
+.cnote{font-size:12.5px;color:var(--mut)}
+@media(max-width:860px){.cmetrics{grid-template-columns:repeat(2,1fr)}}
+/* clickable calendar workout links */
+.wpill.wlink{cursor:pointer}.wpill.wlink span{border-bottom:1px dotted var(--line2)}.wpill.wlink:hover span{color:var(--orange);border-color:var(--orange)}
+/* glossary FAB + modal */
+.fab{position:fixed;left:22px;bottom:24px;z-index:120;background:linear-gradient(135deg,var(--orange),var(--orange-lt));color:#1a0f04;border:none;border-radius:30px;padding:13px 20px;font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 14px 34px rgba(var(--orange-rgb),.4);display:flex;align-items:center;gap:8px;transition:transform .18s}.fab:hover{transform:translateY(-3px)}
+.gmodal{position:fixed;inset:0;z-index:310;background:rgba(5,6,9,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}.gmodal.show{display:flex}
+.gcard{background:var(--surface);border:1px solid var(--line2);border-radius:20px;max-width:560px;width:100%;padding:30px;position:relative;box-shadow:0 40px 90px rgba(0,0,0,.6);max-height:86vh;overflow-y:auto}
+.gcard h3{font-family:var(--fd);font-weight:500;font-size:24px;margin-bottom:4px}.gcard .gsub{font-size:13px;color:var(--mut2);margin-bottom:18px}
+.gterm{padding:13px 0;border-bottom:1px solid var(--line)}.gterm:last-child{border-bottom:none}
+.gterm b{font-family:var(--fd);font-weight:500;font-size:16px;color:var(--orange)}.gterm p{font-size:13.5px;color:var(--mut);margin-top:3px;line-height:1.5}
+@media(max-width:860px){.fab{left:14px;bottom:16px;padding:11px 16px}}
+/* animated muscle map */
+.mfig{display:flex;justify-content:center;gap:10px;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:16px}
+.mfig svg{height:188px;width:auto}
+.mfig .mbase{fill:#1b212c}
+.mfig .mz{fill:#2a3340;transition:fill .3s}
+.mfig .mz.active{fill:var(--orange);animation:mpulse 1.4s ease-in-out infinite}
+@keyframes mpulse{0%,100%{opacity:.45}50%{opacity:1}}
+.mfig .mlabel{font-family:var(--fm);font-size:7px;letter-spacing:.1em;fill:var(--mut2)}
+/* movement animation figure */
+.demo{display:flex;gap:20px;justify-content:center;align-items:flex-end;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:16px;margin-bottom:16px;flex-wrap:wrap}
+.dcol{display:flex;flex-direction:column;align-items:center;gap:8px}
+.movesvg{height:182px;width:auto}
+.movesvg line{stroke:var(--orange);stroke-width:5.5;stroke-linecap:round}
+.movesvg circle{fill:var(--orange)}
+.demo .mfig{margin:0;border:none;background:none;padding:0}
+.demo .mfig svg{height:168px}
+.dlbl{font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut2)}
+/* inline daily form */
+.dform{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
+.dfrow{display:flex;align-items:center;gap:14px;padding:9px 0;flex-wrap:wrap}
+.dfl{font-size:13.5px;color:var(--txt);min-width:96px;font-weight:500}.dfl b{color:var(--orange);font-weight:600}
+.dfsub{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.sb{font-family:var(--fm);font-size:12px;padding:6px 11px;border-radius:7px;background:var(--bg2);border:1px solid var(--line);color:var(--mut);cursor:pointer;transition:all .14s}
+.sb:hover{border-color:var(--line2);color:var(--txt)}.sb.on{background:rgba(55,185,129,.16);border-color:var(--green);color:var(--green)}
+.dfi{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:8px 11px;color:var(--txt);font-family:var(--fb);font-size:13px;width:96px}.dfi.wide{width:100%;max-width:340px}
+.dfi:focus{outline:none;border-color:var(--green)}
+.dsuccess{font-size:14.5px;color:var(--green);padding:16px;text-align:center;background:rgba(55,185,129,.08);border:1px solid rgba(55,185,129,.25);border-radius:12px}
+/* nutrition */
+.nwhy{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+.ncard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;border-top:3px solid var(--ac,var(--orange))}
+.ncard .nk{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac,var(--orange));margin-bottom:8px}
+.ncard h4{font-family:var(--fd);font-weight:500;font-size:18px;margin-bottom:7px}
+.ncard p{font-size:13px;color:var(--mut);line-height:1.55}
+.ntargets{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:16px 0}
+.ntargets .nt{background:var(--bg2);padding:16px}
+.ntargets .nt .k{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2)}
+.ntargets .nt .v{font-family:var(--fd);font-size:20px;color:var(--orange);margin-top:5px;line-height:1.1}.ntargets .nt .v small{font-family:var(--fb);font-size:11px;color:var(--mut);display:block;margin-top:3px}
+.ncarb .crow{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}.ncarb .crow:last-child{border-bottom:none}.ncarb .crow b{color:var(--txt)}.ncarb .crow .amt{font-family:var(--fm);font-size:13px;color:var(--orange)}
+.nswaps{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:860px){.nwhy{grid-template-columns:1fr}.ntargets{grid-template-columns:repeat(2,1fr)}.nswaps{grid-template-columns:1fr}}
+/* workouts + exercise modal */
+.wsel{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.wsbtn{font-family:var(--fm);font-size:11px;letter-spacing:.05em;padding:9px 14px;border-radius:9px;background:var(--card);border:1px solid var(--line);color:var(--mut);cursor:pointer;transition:all .16s}
+.wsbtn:hover{border-color:var(--line2);color:var(--txt)}.wsbtn.active{border-color:var(--orange);color:var(--orange);background:rgba(var(--orange-rgb),.08)}
+.wpanel{background:linear-gradient(160deg,var(--surface),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+.wtime{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11px;color:var(--orange);background:rgba(var(--orange-rgb),.08);border:1px solid rgba(var(--orange-rgb),.25);padding:7px 12px;border-radius:8px}
+.wwin{font-size:13px;color:var(--mut2);margin:10px 0 16px;line-height:1.5}
+.exrow{display:flex;align-items:center;gap:14px;padding:14px 14px;border-radius:11px;border:1px solid var(--line);background:var(--bg2);margin-bottom:8px;cursor:pointer;transition:all .16s}
+.exrow:hover{border-color:var(--orange);transform:translateX(3px)}
+.exrow .xn{font-family:var(--fd);font-size:17px;color:var(--txt);flex:1}
+.exrow .xs{font-family:var(--fm);font-size:12px;color:var(--orange);white-space:nowrap}
+.exrow .xa{color:var(--mut2);font-size:16px}
+.modal{position:fixed;inset:0;z-index:300;background:rgba(5,6,9,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.mcard{background:var(--surface);border:1px solid var(--line2);border-radius:20px;max-width:520px;width:100%;padding:30px;position:relative;box-shadow:0 40px 90px rgba(0,0,0,.6);max-height:88vh;overflow-y:auto}
+.mcard h3{font-family:var(--fd);font-weight:500;font-size:26px}
+.mclose{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--mut);font-size:26px;cursor:pointer;line-height:1}.mclose:hover{color:var(--txt)}
+.mtags{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 18px}.mtag{font-family:var(--fm);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--blue);background:rgba(79,146,222,.1);border:1px solid rgba(79,146,222,.25);padding:4px 9px;border-radius:6px}
+.mspec{display:flex;gap:26px;margin-bottom:18px}.mspec .ms .mk{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2)}.mspec .ms .mv{font-family:var(--fd);font-size:22px;color:var(--orange);margin-top:3px}
+.tempo{display:flex;gap:16px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:16px;margin-bottom:18px}
+.ttrack{width:18px;height:92px;background:var(--bg);border:1px solid var(--line2);border-radius:10px;position:relative;flex-shrink:0}
+.tdot{position:absolute;left:1px;top:0;width:14px;height:16px;border-radius:6px;background:linear-gradient(180deg,var(--orange),var(--orange-lt))}
+.tinfo .tlbl{font-family:var(--fd);font-size:19px;color:var(--txt)}.tinfo .tsub{font-size:12.5px;color:var(--mut2);margin-top:4px}
+.mcues{list-style:none}.mcues li{font-size:14px;color:var(--mut);padding:7px 0;display:flex;gap:10px;line-height:1.45}.mcues li::before{content:"";flex-shrink:0;width:5px;height:5px;border-radius:50%;background:var(--orange);margin-top:9px}
+.hh{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut2);margin-bottom:8px}
+.mdemo{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:13px;font-weight:600;color:var(--orange);text-decoration:none;border:1px solid rgba(var(--orange-rgb),.3);padding:10px 16px;border-radius:9px}.mdemo:hover{background:rgba(var(--orange-rgb),.08)}
+.mdemo-note{font-size:11px;color:var(--mut2);margin-top:8px;line-height:1.4}
+.daily{margin-top:24px;background:linear-gradient(160deg,rgba(55,185,129,.06),var(--card));border:1px dashed var(--line2);border-radius:16px;padding:26px;text-align:center}
+.daily h3{font-family:var(--fd);font-weight:500;font-size:20px;margin-bottom:6px}.daily p{font-size:13.5px;color:var(--mut);max-width:62ch;margin:0 auto 16px}
+@media(max-width:860px){.days{grid-template-columns:repeat(2,1fr)}.wsel{overflow-x:auto}.brand .wm{display:none}.nav-right{gap:10px}.nav-right a:not(.today-btn):not(.refer-btn){display:none}}
+
+.ppr{margin-top:8px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.pprow{display:grid;grid-template-columns:128px 1fr;gap:16px;align-items:start;padding:15px 18px;border-bottom:1px solid var(--line);border-left:3px solid var(--tc)}
+.pprow:last-child{border-bottom:none}
+.pprow .tier{font-weight:700;font-size:13.5px;color:var(--tc);line-height:1.3}
+.pprow .tier small{display:block;font-weight:500;font-size:11.5px;color:var(--mut2);margin-top:3px}
+.pprow .desc{font-size:14px;color:var(--txt);line-height:1.55}
+.pprow .desc .hl{color:var(--mut)}
+@media(max-width:560px){.pprow{grid-template-columns:1fr;gap:6px}}
+</style></head>
+<body>
+<div class="glow a"></div>
+<nav><div class="nav-in">
+  <a class="brand" href="https://elitemetabolixhq.com/"><span class="em-mark">E&nbsp;M</span><span class="wm">Elite&nbsp;Metabolix</span></a>
+  <div class="nav-right"><span class="priv">● Private</span><a href="https://elitemetabolixhq.com/">Home</a><a href="#cal">Plan</a><a href="#workouts">Training</a><a href="#nutrition">Nutrition</a><span class="refer-btn" style="cursor:default">Sample</span><button class="today-btn" onclick="goToday()">● Today</button></div>
+</div></nav>
+
+<header class="hero"><div class="hero-grid"></div><div class="wrap">
+  <div class="eyebrow"><span class="signal"><i></i><i></i><i></i><i></i></span><span class="mono" id="eyebrowGoal">Your Build · Metabolic Recomposition · 20-week block</span></div>
+  <h1 class="head" id="greet">Welcome back, Client. <em>Keep moving.</em></h1>
+  <p class="hero-sub">A 24-week resistance-training and recomposition plan, built around a dialysis schedule (Tue / Thu / Sat). The aim: build lean muscle and bone, trim visceral fat, and improve insulin sensitivity — safely, within the limits your kidney care requires. The <b>Today</b> button always lands on today’s session.</p>
+  <div class="todaycard" id="todayCard"></div>
+</div></header>
+
+<div style="background:rgba(228,93,84,.09);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap" style="padding:14px 0;font-size:13px;color:var(--mut);line-height:1.6"><b style="color:var(--red)">A sample — not a program you can buy.</b> This is a de-identified example of a research-informed plan built for one individual together with their nephrology team. It’s educational, not medical advice. Resistance training, fluid, potassium, and phosphate changes for someone on dialysis are unsafe without clearance from that person’s own care team. Please don’t self-apply it.</div></div>
+
+<div style="background:rgba(108,168,230,.08);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap" style="padding:16px 0;font-size:13.5px;color:var(--mut);line-height:1.6"><b style="color:var(--blue)">⚕ Read this first.</b> This dashboard organizes the evidence from your research so you can have a sharper conversation with your <b>nephrologist, renal dietitian, and pharmacist</b>. It’s educational — it does <b>not</b> prescribe, and it does <b>not</b> set or change any dialysis order, medication, or binder dose. Clear any new training or diet step with your care team before you start. If their guidance ever differs from anything here, follow your team.</div></div>
+
+<section id="checkin" style="padding-top:24px"><div class="wrap">
+  <div class="checkcard">
+    <div class=" chead"><div><div class="clab">● Daily check-in · 30 seconds</div><div class="ctitle">How did today go?</div></div><button class="btn" id="logbtn" onclick="toggleDaily()">Log today →</button></div>
+    <div class="cmetrics">
+      <div class="cm"><span class="cmk">Today</span><span class="cmd">dialysis / lift / rest</span></div>
+      <div class="cm"><span class="cmk">AM weight</span><span class="cmd">fluid (IDWG)</span></div>
+      <div class="cm"><span class="cmk">Energy</span><span class="cmd">tap 1–10</span></div>
+      <div class="cm"><span class="cmk">Protein + binders</span><span class="cmd">on target?</span></div>
+      <div class="cm"><span class="cmk">Fluid</span><span class="cmd">within limit?</span></div>
+    </div>
+    <div class="cnote"><b style="color:var(--red)">Hold training and contact your care team</b> if any of these apply: pre-dialysis K⁺ over 6.0, BP over 180 or under 90, new joint or bone pain or fracture symptoms, or post-dialysis fatigue lasting beyond ~8 hours. <b style="color:var(--green)">Your data is private. We never sell it, ever.</b></div>
+    <div class="dform" id="dform" style="display:none">
+      <div class="dfrow"><span class="dfl">Today</span><div class="seg" data-f="day"><button class="sb" data-v="dialysis">dialysis</button><button class="sb" data-v="lift">lifting</button><button class="sb" data-v="rest">rest / light</button></div></div>
+      <div class="dfrow"><span class="dfl">AM weight</span><input class="dfi" id="df-weight" type="number" step="0.1" placeholder="lb, before breakfast"></div>
+      <div class="dfrow"><span class="dfl">BP</span><input class="dfi wide" id="df-bp" type="text" placeholder="e.g. 128/78 — optional, off the fistula arm"></div>
+      <div class="dfrow"><span class="dfl">Energy</span><div class="seg" data-f="energy" id="segEnergy"></div></div>
+      <div class="dfrow"><span class="dfl">Sleep</span><div class="dfsub"><input class="dfi" id="df-sleep" type="number" min="0" max="14" step="0.5" placeholder="hrs"><div class="seg" data-f="sleepq"><button class="sb" data-v="good">good</button><button class="sb" data-v="ok">ok</button><button class="sb" data-v="poor">poor</button></div></div></div>
+      <div class="dfrow"><span class="dfl">Training <b id="dft" style="display:none"></b></span><div class="seg" data-f="training"><button class="sb" data-v="done">done</button><button class="sb" data-v="modified">modified</button><button class="sb" data-v="skipped">skipped / n.a.</button></div></div>
+      <div class="dfrow"><span class="dfl">Protein</span><div class="seg" data-f="protein"><button class="sb" data-v="on">hit target</button><button class="sb" data-v="under">under</button></div></div>
+      <div class="dfrow"><span class="dfl">Binders</span><div class="seg" data-f="binders"><button class="sb" data-v="all">all meals</button><button class="sb" data-v="some">some</button><button class="sb" data-v="missed">missed</button></div></div>
+      <div class="dfrow"><span class="dfl">Fluid</span><div class="seg" data-f="fluid"><button class="sb" data-v="within">within limit</button><button class="sb" data-v="over">over</button></div></div>
+      <div class="dfrow"><span class="dfl">Notes</span><input class="dfi wide" id="df-notes" type="text" placeholder="post-HD recovery time, cramps, swelling, anything to flag"></div>
+      <button class="btn" onclick="submitDaily()" style="margin-top:8px">Submit check-in ✓</button>
+    </div>
+  </div>
+</div></section>
+
+<section id="cal"><div class="wrap">
+  <div class="sec-label"><span class="mono">The Plan · Week by Week</span></div>
+  <h2 class="sec-h">24 weeks, around your dialysis week.</h2>
+  <p class="sec-intro">Your week is fixed around dialysis on <b>Tuesday, Thursday, and Saturday</b>. Resistance training lands on the non-dialysis days — Monday, Wednesday, Friday — when you’re euvolemic and electrolytes have re-equilibrated. Dialysis days are rest and recovery. Sunday stays deliberately light because you’re anuric and the long potassium gap runs until Tuesday. Loads progress every ~4 weeks. Tap a week, then any day.</p>
+  <div class="weeknav" id="weeknav"></div>
+  <div class="wkpanel" id="wkpanel"></div>
+  <div class="legend" id="legend"></div>
+</div></section>
+
+<section id="nutrition"><div class="wrap">
+  <div class="sec-label"><span class="mono">Nutrition · Built for your kidneys</span></div>
+  <h2 class="sec-h">Eating for muscle without overloading your labs.</h2>
+  <p class="sec-intro">Three constraints shape every choice: enough protein to build muscle, low enough phosphorus and potassium to stay safe, and fluid within your limit. The reasoning is below — your renal dietitian and nephrology team set your exact numbers, and this is built to support that, not replace it.</p>
+  <div class="nwhy">
+    <div class="ncard" style="--ac:var(--red)"><div class="nk">Body comp</div><h4>Recomposition, with a floor</h4><p>Build lean mass and trim visceral fat — but there’s a hard floor: in dialysis, very low body fat is linked to <em>higher</em> mortality (the “obesity paradox”). Don’t drive body fat below ~15%. Waist circumference (under ~90 cm) is a better target than the scale, and calories stay around 2,300 (~25 kcal/kg) — going lower triggers muscle breakdown.</p></div>
+    <div class="ncard" style="--ac:var(--blue)"><div class="nk">Protein vs phosphate</div><h4>High-quality, low-phosphate protein</h4><p>Aim for the protein target your renal dietitian sets (around 1.0–1.2 g/kg). Choose low-PPR sources — phosphorus per gram of protein. Egg whites are unbeatable (PPR ~1–2); unprocessed chicken, beef, and fish sit at ~8–12; a specially formulated low-phosphorus whey isolate works too. Boiling or pressure-cooking meat and discarding the water cuts phosphorus by roughly half.</p></div>
+    <div class="ncard" style="--ac:var(--green)"><div class="nk">Potassium &amp; fluid</div><h4>Anuric — so K⁺ and fluid stay tight</h4><p>You clear nothing between sessions, so potassium and fluid both have to stay controlled. Favor lower-potassium foods, leach high-K⁺ vegetables, and keep fluid inside your daily allowance. Your AM weight is the fluid gauge — a steady number means steady IDWG.</p></div>
+  </div>
+  <h3 style="font-family:var(--fd);font-weight:500;font-size:20px;margin:22px 0 2px">Daily targets <span style="font-size:12px;color:var(--mut2)">(your team sets the exact numbers)</span></h3>
+  <div class="ntargets">
+    <div class="nt"><div class="k">Protein</div><div class="v">~1.0–1.2<small>g/kg · spread evenly</small></div></div>
+    <div class="nt"><div class="k">Calories</div><div class="v">~2,300<small>floor — don't go lower</small></div></div>
+    <div class="nt"><div class="k">Phosphorus</div><div class="v">low<small>binder-assisted</small></div></div>
+    <div class="nt"><div class="k">K⁺ / fluid</div><div class="v">per team<small>tight — you're anuric</small></div></div>
+  </div>
+  <div class="block"><h3>Protein, by phosphate load (PPR)</h3>
+  <div class="ppr">
+    <div class="pprow" style="--tc:var(--green)"><div class="tier">Tier 1<small>lead here</small></div><div class="desc">Egg whites (PPR ~1–2) · unprocessed chicken, beef, fish (~8–12) · a specially formulated low-phosphorus whey isolate.</div></div>
+    <div class="pprow" style="--tc:var(--orange)"><div class="tier">Tier 2<small>in moderation</small></div><div class="desc">Legumes and lentils <span class="hl">— phytate-bound phosphorus is less absorbed, but stay portion-aware.</span></div></div>
+    <div class="pprow" style="--tc:var(--red)"><div class="tier">Avoid</div><div class="desc">Processed and phosphate-additive foods, plus dairy-heavy proteins <span class="hl">— additive phosphorus is nearly 100% absorbed.</span></div></div>
+  </div>
+  <p style="font-size:12.5px;color:var(--mut2);margin-top:12px;line-height:1.55">Cooking trick: boiling or pressure-cooking sliced meat and discarding the water removes about half the phosphorus while keeping the protein.</p></div>
+  <div class="nswaps">
+    <div class="block"><h3>Renal-smart swaps</h3><ul>
+      <li>Protein anchor <b>→ egg whites, fresh fish / chicken</b></li>
+      <li>Whole-grain (high P/K) <b>→ white rice / white bread</b></li>
+      <li>Potatoes <b>→ leached / double-boiled, smaller portion</b></li>
+      <li>Processed meats &amp; namkeen <b>→ fresh, unprocessed</b></li>
+      <li>Cook with <b>→ olive oil (calorie-dense, P/K-neutral)</b></li>
+      <li>Binders <b>→ Renvela with each protein meal, as prescribed</b></li>
+    </ul></div>
+    <div class="block"><h3>Why white carbs here</h3><ul class="flow">
+      <li><b>This is the opposite of generic advice</b>For most people, whole grains win. On a renal diet, refined white rice and bread are often the safer pick — less phosphorus and potassium — and you need the calories without the mineral load.</li>
+      <li><b>Calories protect muscle</b>Clean fats and white carbs hit the ~2,300 kcal floor without raising phosphate or potassium. Under-eating, not over-eating, is the bigger threat to your lean mass.</li>
+    </ul></div>
+  </div>
+  </div></section>
+
+<section><div class="wrap">
+  <div class="sec-label"><span class="mono">Quick reference · around dialysis</span></div>
+  <div class="block">
+    <h3>Eating &amp; meds around your sessions</h3>
+    <ul class="flow">
+      <li><b>Protein, evenly spread</b>Dialysis blunts the muscle-building response to a meal (anabolic resistance), and a session removes ~10–17 g of amino acids. Spreading protein across the day — and pairing it with training — beats one big serving.</li>
+      <li><b>Protein during the run</b>If your unit allows it, egg whites or a low-phosphorus whey during the first part of dialysis offsets those amino-acid losses. Confirm with your team before doing this.</li>
+      <li><b>Binders, as prescribed</b>Renvela with each phosphorus-containing meal; tenapanor before meals as its label specifies (typically the first and last meal of the day), and never right before a dialysis session. This plan reinforces your existing prescription; it does not set or change doses. That’s your nephrologist and pharmacist.</li>
+      <li><b>Fluid &amp; your AM weight</b>Spread your fluid allowance through the day and weigh each morning. Large interdialytic weight gain means harder fluid removal and more post-dialysis fatigue.</li>
+    </ul>
+  </div>
+  <div class="callout"><div class="ic">⚕</div><div>
+    <h3>This is for the conversation, not the prescription.</h3>
+    <p>Everything here organizes published evidence so you can talk it through with your <b>nephrologist, renal dietitian, and pharmacist</b>. It does not diagnose, set or change any medication, binder, or dialysis order, or replace your clinicians. Get cleared before starting anything new — and if a clinician’s guidance differs from anything here, follow your clinician.</p>
+  </div></div>
+  <div class="actionrow">
+    <a class="btn-ghost" id="reqTweak" href="#" target="_blank" rel="noopener">✎ Request a tweak</a>
+    
+    <button class="btn" onclick="goToday()">● Jump to Today</button>
+  </div>
+</div></section>
+
+<section id="safety"><div class="wrap">
+  <div class="sec-label"><span class="mono">Training safely on dialysis</span></div>
+  <h2 class="sec-h">The rules that keep this safe.</h2>
+  <p class="sec-intro">Resistance training is shown to be safe and effective in hemodialysis — within boundaries. These are the boundaries. Read them with your nephrology team and treat them as non-negotiable.</p>
+  <div class="block"><ul class="flow">
+    <li><b>Get cleared first</b>Before progressive loading: a baseline DXA, PTH confirmed within the KDIGO target (2–9× the upper limit of normal), and calcium / phosphate / alkaline phosphatase well-controlled. Cardiac screening per your team’s judgment.</li>
+    <li><b>The load ceiling</b>3 sets × 8–12 reps at RPE 7–8 (~70–80% 1RM), with controlled lifting and lowering. No maximal singles, no explosive or ballistic lifting — fracture and tendon-rupture risk is elevated in CKD-MBD, and true heavy strength work has not been studied in dialysis.</li>
+    <li><b>Protect the fistula arm</b>No weight-bearing, heavy gripping, blood-pressure cuffs, or tourniquets on the access arm — ever. Use chest-supported and cable movements so you can train the back without gripping hard. Your vascular surgeon’s rules override these.</li>
+    <li><b>Timing around dialysis</b>Train on non-dialysis days. Avoid heavy lifting right after a session — hypovolemia, low potassium, arrhythmia risk, and deep fatigue stack up post-run. Wednesday and Friday fall the day after dialysis, when you’re freshly cleared — the safest windows. Monday falls at the end of the long weekend gap, when fluid and potassium are highest, so confirm with your team whether to keep, lighten, or move that session. The best day relative to dialysis is individual and isn’t fully settled in the evidence.</li>
+    <li><b>The anuric weekend gap</b>Keep Sunday genuinely light. Muscle breakdown releases potassium you can’t clear until Tuesday’s session, so heavy work into that gap is a real arrhythmia risk.</li>
+    <li><b>Stop signs — hold and call your team</b>Pre-dialysis K⁺ over 6.0 mEq/L · BP over 180 or under 90 mmHg · new joint or bone pain or fracture symptoms · severe post-dialysis fatigue lasting beyond ~8 hours.</li>
+  </ul></div>
+</div></section>
+
+<section id="workouts"><div class="wrap">
+  <div class="sec-label"><span class="mono">Workouts · Tap any exercise</span></div>
+  <h2 class="sec-h">The training, the safe way.</h2>
+  <p class="sec-intro">Lower, Push, and Pull sessions on your non-dialysis days. Every set sits in the 8–12 rep range at RPE 7–8 — hard but never maximal — with controlled, dynamic movements that are bone-protective. Tap any exercise for sets, a tempo animation, form cues, and a demo. Pulls are chest-supported or cable-based to keep load off your fistula arm.</p>
+  <div class="wsel" id="wsel"></div>
+  <div class="wpanel" id="wpanel"></div>
+</div></section>
+
+<section id="refs"><div class="wrap">
+  <div class="sec-label"><span class="mono">Evidence · bring this to your team</span></div>
+  <h2 class="sec-h">Selected references.</h2>
+  <p class="sec-intro">The training and safety parameters here come from the dialysis-exercise literature in your research brief — the sources to put in front of your nephrologist. None of this is medical advice.</p>
+  <div class="block refs">
+    <div class="ref"><b>AHA Scientific Statement.</b> Paluch AE, et al. Resistance Exercise Training in Individuals With and Without Cardiovascular Disease: 2023 Update. <i>Circulation.</i> 2024;149(3):e217–e231. doi:10.1161/CIR.0000000000001189.</div>
+    <div class="ref"><b>Cochrane review.</b> Bernier-Jean A, et al. Exercise Training for Adults Undergoing Maintenance Dialysis. <i>Cochrane Database Syst Rev.</i> 2022;1:CD014653. doi:10.1002/14651858.CD014653.</div>
+    <div class="ref"><b>Systematic review (RT in MHD).</b> Zhao Q, et al. Best Evidence for Resistance Exercise in Maintenance Hemodialysis Patients. <i>PLoS One.</i> 2024;19(12):e0309798. doi:10.1371/journal.pone.0309798.</div>
+    <div class="ref"><b>Intradialytic RT timing (RCT).</b> Bingölbali Ö, Oğuz S. What Is the Optimal Timing for Intradialytic Resistance Exercise? <i>Arch Phys Med Rehabil.</i> 2026. doi:10.1016/j.apmr.2026.03.013.</div>
+    <div class="ref"><b>Network meta-analysis.</b> Hu H, et al. Effects of Different Exercises on Physical Function, Dialysis Adequacy, and QoL in MHD. <i>Am J Nephrol.</i> 2023;54(9-10):379–390. doi:10.1159/000532109.</div>
+    <div class="ref"><b>Exercise physiology in HD.</b> McGuire S, et al. Cardiopulmonary and Metabolic Physiology During Hemodialysis and Inter/Intradialytic Exercise. <i>J Appl Physiol.</i> 2021;130(4):1033–1042. doi:10.1152/japplphysiol.00888.2020.</div>
+    <div class="ref"><b>Scoping review.</b> Lambert K, et al. Physical Activity and Exercise Recommendations for People Receiving Dialysis. <i>PLoS One.</i> 2022;17(4):e0267290. doi:10.1371/journal.pone.0267290.</div>
+    <div class="ref"><b>Meta-analysis.</b> Sheng K, et al. Intradialytic Exercise in Hemodialysis Patients. <i>Am J Nephrol.</i> 2014;40(5):478–490. doi:10.1159/000368722.</div>
+  </div>
+  <p style="font-size:12px;color:var(--mut2);margin-top:10px">Full citation list — including the South Asian body-composition and protein–phosphate sources — is in your research brief. Want any pulled as PDFs? Just ask.</p>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="foot-top"><a class="brand" href="https://elitemetabolixhq.com/"><span class="em-mark">E&nbsp;M</span><span class="wm">Elite&nbsp;Metabolix</span></a><div class="foot-links"><a href="https://elitemetabolixhq.com/">Home</a><a href="#cal">Plan</a><a href="#workouts">Training</a></div><span class="foot-tag">Train smart · Compound the gains</span></div>
+  <p class="disclaimer"><b style="color:var(--green)">We will never sell your data — ever.</b> A sample of a research-informed plan built for one individual together with their medical team — not medical care, and not a self-serve program. Resistance, fluid, potassium, and phosphate changes for someone on dialysis require clearance from their own nephrology team. It organizes published evidence so you can discuss it with your nephrology team, renal dietitian, and pharmacist. It does not diagnose, prescribe, or set or change any medication, binder, or dialysis order, and it does not replace your clinicians. Get cleared before starting anything new; if a clinician’s guidance differs from anything here, follow your clinician.</p>
+</div></footer>
+<div class="modal" id="exmodal" onclick="if(event.target===this)closeEx()"><div class="mcard" id="exbody"></div></div>
+<button class="fab" onclick="openGloss()">📖 Glossary</button>
+<div class="gmodal" id="gmodal" onclick="if(event.target===this)closeGloss()"><div class="gcard" id="gbody"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const weeks=[
+  {num:1,type:'found',dates:'May 18–May 24',phase:'Foundation',miles:'HD Tu/Th/Sa',current:true,
+   focus:'Foundation — learn the lifts and lock in the 8–12 range at RPE 7–8. Get cleared by your nephrology team first: baseline DXA, and PTH within the KDIGO target (2–9× ULN). For now, consistency is the only goal.',
+   days:[
+    {d:'Mon',dt:'May 18', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'May 19', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'May 20', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'May 21', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'May 22', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'May 23', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'May 24', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:2,type:'found',dates:'May 25–May 31',phase:'Foundation',miles:'HD Tu/Th/Sa',
+   focus:'Foundation — learn the lifts and lock in the 8–12 range at RPE 7–8. Get cleared by your nephrology team first: baseline DXA, and PTH within the KDIGO target (2–9× ULN). For now, consistency is the only goal.',
+   days:[
+    {d:'Mon',dt:'May 25', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'May 26', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'May 27', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'May 28', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'May 29', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'May 30', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'May 31', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:3,type:'found',dates:'Jun 1–Jun 7',phase:'Foundation',miles:'HD Tu/Th/Sa',
+   focus:'Foundation — learn the lifts and lock in the 8–12 range at RPE 7–8. Get cleared by your nephrology team first: baseline DXA, and PTH within the KDIGO target (2–9× ULN). For now, consistency is the only goal.',
+   days:[
+    {d:'Mon',dt:'Jun 1', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Jun 2', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Jun 3', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Jun 4', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Jun 5', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Jun 6', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Jun 7', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:4,type:'found',dates:'Jun 8–Jun 14',phase:'Foundation',miles:'HD Tu/Th/Sa',
+   focus:'Foundation — learn the lifts and lock in the 8–12 range at RPE 7–8. Get cleared by your nephrology team first: baseline DXA, and PTH within the KDIGO target (2–9× ULN). For now, consistency is the only goal.',
+   days:[
+    {d:'Mon',dt:'Jun 8', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Jun 9', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Jun 10', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Jun 11', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Jun 12', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Jun 13', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Jun 14', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:5,type:'found',dates:'Jun 15–Jun 21',phase:'Foundation',miles:'HD Tu/Th/Sa',
+   focus:'Foundation — learn the lifts and lock in the 8–12 range at RPE 7–8. Get cleared by your nephrology team first: baseline DXA, and PTH within the KDIGO target (2–9× ULN). For now, consistency is the only goal.',
+   days:[
+    {d:'Mon',dt:'Jun 15', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Jun 16', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Jun 17', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Jun 18', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Jun 19', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Jun 20', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Jun 21', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:6,type:'found',dates:'Jun 22–Jun 28',phase:'Foundation',miles:'HD Tu/Th/Sa',
+   focus:'Foundation — learn the lifts and lock in the 8–12 range at RPE 7–8. Get cleared by your nephrology team first: baseline DXA, and PTH within the KDIGO target (2–9× ULN). For now, consistency is the only goal.',
+   days:[
+    {d:'Mon',dt:'Jun 22', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Jun 23', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Jun 24', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Jun 25', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Jun 26', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Jun 27', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Jun 28', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:7,type:'build',dates:'Jun 29–Jul 5',phase:'Build',miles:'HD Tu/Th/Sa',
+   focus:'Build — progressive overload: add ~5% load once you can hit 12 reps across all sets on a lift, then drop back into the range. Reassess every 4 weeks. Protein and binder adherence keep pace with the training.',
+   days:[
+    {d:'Mon',dt:'Jun 29', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Jun 30', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Jul 1', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Jul 2', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Jul 3', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Jul 4', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Jul 5', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:8,type:'build',dates:'Jul 6–Jul 12',phase:'Build',miles:'HD Tu/Th/Sa',
+   focus:'Build — progressive overload: add ~5% load once you can hit 12 reps across all sets on a lift, then drop back into the range. Reassess every 4 weeks. Protein and binder adherence keep pace with the training.',
+   days:[
+    {d:'Mon',dt:'Jul 6', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Jul 7', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Jul 8', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Jul 9', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Jul 10', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Jul 11', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Jul 12', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:9,type:'build',dates:'Jul 13–Jul 19',phase:'Build',miles:'HD Tu/Th/Sa',
+   focus:'Build — progressive overload: add ~5% load once you can hit 12 reps across all sets on a lift, then drop back into the range. Reassess every 4 weeks. Protein and binder adherence keep pace with the training.',
+   days:[
+    {d:'Mon',dt:'Jul 13', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Jul 14', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Jul 15', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Jul 16', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Jul 17', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Jul 18', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Jul 19', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:10,type:'build',dates:'Jul 20–Jul 26',phase:'Build',miles:'HD Tu/Th/Sa',
+   focus:'Build — progressive overload: add ~5% load once you can hit 12 reps across all sets on a lift, then drop back into the range. Reassess every 4 weeks. Protein and binder adherence keep pace with the training.',
+   days:[
+    {d:'Mon',dt:'Jul 20', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Jul 21', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Jul 22', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Jul 23', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Jul 24', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Jul 25', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Jul 26', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:11,type:'build',dates:'Jul 27–Aug 2',phase:'Build',miles:'HD Tu/Th/Sa',
+   focus:'Build — progressive overload: add ~5% load once you can hit 12 reps across all sets on a lift, then drop back into the range. Reassess every 4 weeks. Protein and binder adherence keep pace with the training.',
+   days:[
+    {d:'Mon',dt:'Jul 27', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Jul 28', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Jul 29', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Jul 30', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Jul 31', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Aug 1', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Aug 2', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:12,type:'build',dates:'Aug 3–Aug 9',phase:'Build',miles:'HD Tu/Th/Sa',
+   focus:'Build — progressive overload: add ~5% load once you can hit 12 reps across all sets on a lift, then drop back into the range. Reassess every 4 weeks. Protein and binder adherence keep pace with the training.',
+   days:[
+    {d:'Mon',dt:'Aug 3', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Aug 4', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Aug 5', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Aug 6', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Aug 7', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Aug 8', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Aug 9', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:13,type:'prog',dates:'Aug 10–Aug 16',phase:'Progress',miles:'HD Tu/Th/Sa',
+   focus:'Progress — keep adding load inside the 8–12 range; no maximal singles. Bone and lean-mass benefits compound past the 24-week mark, so the long game matters. Monthly labs (albumin, prealbumin, nPCR, phosphate, PTH) with nephrology are the safety check.',
+   days:[
+    {d:'Mon',dt:'Aug 10', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Aug 11', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Aug 12', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Aug 13', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Aug 14', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Aug 15', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Aug 16', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:14,type:'prog',dates:'Aug 17–Aug 23',phase:'Progress',miles:'HD Tu/Th/Sa',
+   focus:'Progress — keep adding load inside the 8–12 range; no maximal singles. Bone and lean-mass benefits compound past the 24-week mark, so the long game matters. Monthly labs (albumin, prealbumin, nPCR, phosphate, PTH) with nephrology are the safety check.',
+   days:[
+    {d:'Mon',dt:'Aug 17', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Aug 18', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Aug 19', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Aug 20', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Aug 21', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Aug 22', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Aug 23', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:15,type:'prog',dates:'Aug 24–Aug 30',phase:'Progress',miles:'HD Tu/Th/Sa',
+   focus:'Progress — keep adding load inside the 8–12 range; no maximal singles. Bone and lean-mass benefits compound past the 24-week mark, so the long game matters. Monthly labs (albumin, prealbumin, nPCR, phosphate, PTH) with nephrology are the safety check.',
+   days:[
+    {d:'Mon',dt:'Aug 24', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Aug 25', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Aug 26', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Aug 27', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Aug 28', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Aug 29', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Aug 30', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:16,type:'prog',dates:'Aug 31–Sep 6',phase:'Progress',miles:'HD Tu/Th/Sa',
+   focus:'Progress — keep adding load inside the 8–12 range; no maximal singles. Bone and lean-mass benefits compound past the 24-week mark, so the long game matters. Monthly labs (albumin, prealbumin, nPCR, phosphate, PTH) with nephrology are the safety check.',
+   days:[
+    {d:'Mon',dt:'Aug 31', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Sep 1', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Sep 2', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Sep 3', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Sep 4', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Sep 5', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Sep 6', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:17,type:'prog',dates:'Sep 7–Sep 13',phase:'Progress',miles:'HD Tu/Th/Sa',
+   focus:'Progress — keep adding load inside the 8–12 range; no maximal singles. Bone and lean-mass benefits compound past the 24-week mark, so the long game matters. Monthly labs (albumin, prealbumin, nPCR, phosphate, PTH) with nephrology are the safety check.',
+   days:[
+    {d:'Mon',dt:'Sep 7', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Sep 8', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Sep 9', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Sep 10', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Sep 11', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Sep 12', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Sep 13', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:18,type:'prog',dates:'Sep 14–Sep 20',phase:'Progress',miles:'HD Tu/Th/Sa',
+   focus:'Progress — keep adding load inside the 8–12 range; no maximal singles. Bone and lean-mass benefits compound past the 24-week mark, so the long game matters. Monthly labs (albumin, prealbumin, nPCR, phosphate, PTH) with nephrology are the safety check.',
+   days:[
+    {d:'Mon',dt:'Sep 14', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Sep 15', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Sep 16', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Sep 17', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Sep 18', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Sep 19', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Sep 20', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:19,type:'consol',dates:'Sep 21–Sep 27',phase:'Consolidate',miles:'HD Tu/Th/Sa',
+   focus:'Consolidate — solidify the strength and lean-mass gains and settle into a sustainable rhythm. Recheck body composition (DXA or BIA, taken ≥30 min post-dialysis) and waist circumference with your team.',
+   days:[
+    {d:'Mon',dt:'Sep 21', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Sep 22', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Sep 23', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Sep 24', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Sep 25', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Sep 26', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Sep 27', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:20,type:'consol',dates:'Sep 28–Oct 4',phase:'Consolidate',miles:'HD Tu/Th/Sa',
+   focus:'Consolidate — solidify the strength and lean-mass gains and settle into a sustainable rhythm. Recheck body composition (DXA or BIA, taken ≥30 min post-dialysis) and waist circumference with your team.',
+   days:[
+    {d:'Mon',dt:'Sep 28', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Sep 29', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Sep 30', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Oct 1', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Oct 2', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Oct 3', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Oct 4', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:21,type:'consol',dates:'Oct 5–Oct 11',phase:'Consolidate',miles:'HD Tu/Th/Sa',
+   focus:'Consolidate — solidify the strength and lean-mass gains and settle into a sustainable rhythm. Recheck body composition (DXA or BIA, taken ≥30 min post-dialysis) and waist circumference with your team.',
+   days:[
+    {d:'Mon',dt:'Oct 5', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Oct 6', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Oct 7', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Oct 8', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Oct 9', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Oct 10', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Oct 11', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:22,type:'consol',dates:'Oct 12–Oct 18',phase:'Consolidate',miles:'HD Tu/Th/Sa',
+   focus:'Consolidate — solidify the strength and lean-mass gains and settle into a sustainable rhythm. Recheck body composition (DXA or BIA, taken ≥30 min post-dialysis) and waist circumference with your team.',
+   days:[
+    {d:'Mon',dt:'Oct 12', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Oct 13', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Oct 14', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Oct 15', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Oct 16', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Oct 17', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Oct 18', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:23,type:'consol',dates:'Oct 19–Oct 25',phase:'Consolidate',miles:'HD Tu/Th/Sa',
+   focus:'Consolidate — solidify the strength and lean-mass gains and settle into a sustainable rhythm. Recheck body composition (DXA or BIA, taken ≥30 min post-dialysis) and waist circumference with your team.',
+   days:[
+    {d:'Mon',dt:'Oct 19', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Oct 20', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Oct 21', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Oct 22', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Oct 23', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Oct 24', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Oct 25', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]},
+  {num:24,type:'consol',dates:'Oct 26–Nov 1',phase:'Consolidate',miles:'HD Tu/Th/Sa',
+   focus:'Consolidate — solidify the strength and lean-mass gains and settle into a sustainable rhythm. Recheck body composition (DXA or BIA, taken ≥30 min post-dialysis) and waist circumference with your team.',
+   days:[
+    {d:'Mon',dt:'Oct 26', w:[['lift', 'Lower body']], p:'Lower body — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM), controlled eccentric. Note: Monday ends the long weekend gap, so you’re carrying the week’s highest fluid and potassium — keep it controlled, and have your nephrology team confirm whether this is the right day for your hardest session or whether to shift it.', n:'Leg press or goblet squat to lead — no maximal singles, stay in the 8–12 range.'},
+    {d:'Tue',dt:'Oct 27', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. No lifting — heavy work right after HD is off the table: you’re volume-depleted, potassium is low, and fatigue is high, which is an arrhythmia-prone window. Rest, and keep fluids within your limit.', n:'If your unit allows intradialytic protein (egg whites / low-P whey), it offsets amino-acid losses — confirm with your team.'},
+    {d:'Wed',dt:'Oct 28', w:[['lift', 'Push']], p:'Push — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). The day after HD: euvolemic, electrolytes re-equilibrated — your best window to train hard.', n:'Dumbbell pressing over barbell for control. Keep every load and grip off the fistula arm.'},
+    {d:'Thu',dt:'Oct 29', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. Log your post-HD recovery time in the check-in — it\'s a real signal.'},
+    {d:'Fri',dt:'Oct 30', w:[['lift', 'Pull']], p:'Pull — 3 sets × 8–12 reps, RPE 7–8 (~70–80% 1RM). Day after HD again. Chest-supported or cable rows; never grip heavy with the access arm.', n:'Machine/cable pulls let you train the back without loading the fistula.'},
+    {d:'Sat',dt:'Oct 31', w:[['hd', 'Dialysis · early AM']], p:'Dialysis day. Rest. This begins the long weekend gap — your next clearance isn\'t until Tuesday.'},
+    {d:'Sun',dt:'Nov 1', w:[['cardio', 'Easy LISS + mobility']], p:'Deliberately light: 20–40 min easy walk or bike + mobility. Keep it gentle — you\'re anuric and the long K⁺ gap runs to Tuesday, so minimize heavy muscle breakdown today.', n:'No lifting today. Easy aerobic and mobility only.'}
+  ]}
+];
+const TYPE={lift:{c:'var(--blue)'},hd:{c:'var(--lav)'},cardio:{c:'var(--green)'},recovery:{c:'var(--green)'},rest:{c:'var(--mut2)'},yoga:{c:'var(--green)'},legs:{c:'var(--orange)'},easy:{c:'#6ea8e6'},tempo:{c:'var(--orange-lt)'},event:{c:'var(--lav)'}};
+const TW={found:['Foundation','var(--green)'],build:['Build','var(--blue)'],prog:['Progress','var(--orange)'],consol:['Consolidate','var(--lav)']};
+/* ============================================================
+   CONFIG — edit everything in this block per client. Nothing
+   below this block should need changing for a new client except
+   the `weeks` plan array further down.
+   ============================================================ */
+const CONFIG={
+  clientFirst:'there',
+  clientId:'sample',
+  brand:'Elite&nbsp;Metabolix',
+  monogram:'E&nbsp;M',
+  site:'https://elitemetabolixhq.com',
+  goalLabel:'Recomposition on Dialysis',
+  goalShort:'the goal',
+  raceDate:'Nov 1',
+  raceDateLabel:'24-week block',
+  referLink:'https://elitemetabolixhq.com',
+  requestFormUrl:'https://elitemetabolixhq.com',
+  endpoint:''            // sample only — check-ins post nowhere
+};
+function applyConfig(){
+  try{
+    document.title=CONFIG.brand.replace(/&nbsp;/g,' ')+' — Your Build';
+    document.querySelectorAll('.em-mark').forEach(function(e){e.innerHTML=CONFIG.monogram;});
+    document.querySelectorAll('.wm').forEach(function(e){e.innerHTML=CONFIG.brand;});
+    document.querySelectorAll('a[href*="example.com"]').forEach(function(a){
+      a.setAttribute('href', a.getAttribute('href').replace('https://example.com', CONFIG.site));
+    });
+    var g=document.getElementById('greet');
+    if(g) g.innerHTML='A sample dialysis-recomposition build. <em>A real plan is built with your own care team.</em>';
+    var c=document.querySelector('.ctitle');
+    if(c) c.textContent='How did today go, '+CONFIG.clientFirst+'?';
+    var eb=document.getElementById('eyebrowGoal');
+    if(eb) eb.textContent='Sample · '+CONFIG.goalLabel+' · '+CONFIG.raceDateLabel;
+    var ft=document.getElementById('reqTweak');
+    if(ft) ft.setAttribute('href', CONFIG.requestFormUrl);
+  }catch(err){console.warn('applyConfig',err);}
+}
+const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const $=id=>document.getElementById(id);
+function pdt(dt){const a=dt.trim().split(' ');return new Date(2026,MON[a[0]],parseInt(a[1]));}
+const now=new Date(); const todayK=now.getMonth()+'-'+now.getDate();
+function findToday(){for(let wi=0;wi<weeks.length;wi++){const dd=weeks[wi].days;for(let di=0;di<dd.length;di++){const t=pdt(dd[di].dt);if(t.getMonth()+'-'+t.getDate()===todayK)return[wi,di];}}
+  // fallback: the flagged current week
+  let ci=weeks.findIndex(w=>w.current); return [ci<0?2:ci,0];}
+let sel=0;
+function chip(w){return '<span class="wchip"><i style="background:'+(TYPE[w[0]]||{c:'var(--orange)'}).c+'"></i>'+w[1]+'</span>';}
+function renderToday(){
+  const [wi,di]=findToday(); const d=weeks[wi].days[di];
+  const tr=pdt(CONFIG.raceDate); const days=Math.max(0,Math.round((tr-now)/864e5));
+  let html='<div class="tt"><span class="tlab">● Today · '+TW[weeks[wi].type][0]+'</span><span class="tdate">'+d.d+' '+d.dt+' · Week '+weeks[wi].num+'</span></div>';
+  html+='<h2>'+(d.w&&d.w.length?d.w.map(x=>x[1]).join(' + '):'Rest')+'</h2>';
+  if(d.w&&d.w.length){html+='<div class="wchips">'+d.w.map(chip).join('')+'</div>';}
+  if(d.p)html+='<div class="tpresc">'+d.p+'</div>';
+  if(d.n)html+='<div class="tnote">'+d.n+'</div>';
+  html+='<div class="countdown">🏁 <b>'+days+'</b> days to '+CONFIG.goalShort+'</div>';
+  $('todayCard').innerHTML=html;
+}
+function renderNav(){
+  $('weeknav').innerHTML=weeks.map((w,i)=>{const tw=TW[w.type];return '<div class="wkchip'+(i===sel?' active':'')+'" style="--wc:'+tw[1]+'" onclick="sel='+i+';renderWeek();this.scrollIntoView({inline:\'center\',block:\'nearest\',behavior:\'smooth\'})"><div class="wn">Week '+w.num+'</div><div class="wd">'+w.dates+'</div><div class="wt">'+tw[0]+'</div></div>';}).join('');
+}
+function renderWeek(){
+  document.querySelectorAll('.wkchip').forEach((c,i)=>c.classList.toggle('active',i===sel));
+  const w=weeks[sel]; const tw=TW[w.type];
+  let h='<div class="wkhead"><div><span class="wktype" style="background:'+tw[1]+'22;color:'+tw[1]+'">'+tw[0]+' · '+w.phase+'</span><h3>Week '+w.num+' · '+w.dates+'</h3></div><div class="wkmeta">Target<br><span style="font-size:18px;color:var(--orange);font-family:var(--fd)">'+w.miles+' mi</span></div></div>';
+  if(w.focus)h+='<div class="wkfocus">'+w.focus+'</div>';
+  if(w.events&&w.events.length)h+='<ul class="wkevents">'+w.events.map(e=>'<li>'+e+'</li>').join('')+'</ul>';
+  h+='<div class="days">'+w.days.map(d=>{
+    const rest=d.w&&d.w.length===1&&d.w[0][0]==='rest';
+    const _dt=pdt(d.dt);const isT=(_dt.getMonth()+'-'+_dt.getDate())===todayK;
+    let c='<div class="dcard'+(isT?' today':'')+(rest?' rest':'')+'">';
+    c+='<div class="dhead"><span class="dd">'+d.d+'</span><span class="dt2">'+d.dt+'</span>'+(isT?'<span class="todaytag">TODAY</span>':'')+'</div>';
+    c+='<div class="wlist">'+(d.w||[['rest','Rest']]).map(x=>{var lk=mapWk(x[0],x[1]);return '<div class="wpill'+(lk?' wlink':'')+'"'+(lk?' data-wlink="'+lk+'"':'')+' style="--wc:'+(TYPE[x[0]]||{c:'var(--orange)'}).c+'"><i></i><span>'+x[1]+'</span></div>';}).join('')+'</div>';
+    if(d.p)c+='<div class="dpresc">'+d.p+'</div>';
+    if(d.n)c+='<div class="dnote">'+d.n+'</div>';
+    if(d.hike)c+='<div class="dhike">⛰ '+d.hike.name+' — '+d.hike.detail+'</div>';
+    return c+'</div>';
+  }).join('')+'</div>';
+  $('wkpanel').innerHTML=h;
+}
+function goToday(){const [wi]=findToday();sel=wi;renderNav();renderWeek();document.getElementById('cal').scrollIntoView({behavior:'smooth'});}
+$('legend').innerHTML=['lift:Lift','hd:Dialysis','cardio:Easy cardio','recovery:Mobility','rest:Rest'].map(s=>{const[k,l]=s.split(':');return '<span><i style="background:'+TYPE[k].c+'"></i>'+l+'</span>';}).join('');
+applyConfig(); sel=findToday()[0]; renderToday(); renderNav(); renderWeek();
+setTimeout(()=>{const a=document.querySelector('.wkchip.active');if(a)a.scrollIntoView({inline:'center',block:'nearest'});},200);
+/* ---- workout library + exercise modal ---- */
+var EX={
+ liss:{n:'Easy Cardio (LISS)',m:['Cardiovascular'],s:'20–40 min',l:'easy · RPE 3–4',tempo:[0,0,0,0],cues:['Brisk walk or easy stationary bike — you can hold a conversation throughout','Low intensity by design: supports recovery and metabolic health without hemodynamic stress','Keep Sunday’s session especially gentle — you’re anuric, with the long K⁺ gap until Tuesday']},
+ squat:{n:'Back / Goblet Squat',m:['Quads','Glutes'],s:'3 × 8–12',l:'RPE 7–8',tempo:[3,1,1,0],cues:['Brace the trunk hard before you unrack','Sit between the hips, knees track over toes','Drive the floor away to a full lockout']},
+ rdl:{n:'Romanian Deadlift',m:['Hamstrings','Glutes'],s:'3 × 6',l:'@75–80%',tempo:[3,0,1,0],cues:['Soft knees, push the hips straight back','Bar drags up the thighs the whole way','Stop at the hamstring stretch — flat back']},
+ bulgarian:{n:'Bulgarian Split Squat',m:['Quads','Glutes'],s:'3 × 8 / leg',l:'DBs',tempo:[2,0,1,0],cues:['Weight through the front heel','Drop straight down, torso tall','Controlled descent, no bounce']},
+ standcalf:{n:'Standing Calf Raise',m:['Gastrocnemius'],s:'4 × 12',l:'heavy',tempo:[2,1,1,0],cues:['Full stretch at the bottom','Pause and squeeze at the very top','Deliberate tempo, no bouncing']},
+ copen:{n:'Copenhagen Plank',m:['Adductors','Core'],s:'3 × 20s / side',l:'hold',tempo:[0,0,0,0],cues:['Top leg on the bench, body in a line','Squeeze the inner thigh to hold','Build time before adding leverage']},
+ legpress:{n:'Leg Press',m:['Quads','Glutes'],s:'4 × 10',l:'',tempo:[2,0,1,0],cues:['Feet shoulder-width, mid-platform','Lower to about 90 degrees at the knee','Do not slam the lockout']},
+ hack:{n:'Hack Squat',m:['Quads'],s:'3 × 10',l:'',tempo:[3,0,1,0],cues:['Controlled deep descent','Drive through the whole foot','Lower back flat on the pad']},
+ lunge:{n:'Walking Lunge',m:['Quads','Glutes'],s:'3 × 12 / leg',l:'DBs',tempo:[2,0,1,0],cues:['Long stride, vertical front shin','Push through the front heel to stand','Tall posture, steady cadence']},
+ legcurl:{n:'Lying Leg Curl',m:['Hamstrings'],s:'3 × 12',l:'',tempo:[2,1,2,0],cues:['Curl with the hamstring, not momentum','Pause at peak contraction','Slow the negative fully']},
+ legext:{n:'Leg Extension',m:['Quads'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Squeeze the quad at the top','Two-second hold at lockout','Control down, no swinging']},
+ seatcalf:{n:'Seated Calf Raise',m:['Soleus'],s:'3 × 15',l:'',tempo:[2,1,1,0],cues:['Bent knee targets the deep soleus','Full stretch, full squeeze','Slow tempo, high reps']},
+ dbbench:{n:'DB Bench Press',m:['Chest','Triceps'],s:'4 × 8–10',l:'',tempo:[3,0,1,0],cues:['Shoulder blades pinned down and back','Lower to mid-chest with control','Press up and slightly together']},
+ incdb:{n:'Incline DB Press',m:['Upper Chest'],s:'3 × 10',l:'30°',tempo:[3,0,1,0],cues:['Bench at about 30 degrees','Elbows at ~45 degrees, not flared','Stretch at the bottom, drive up']},
+ cablefly:{n:'Cable Fly',m:['Chest'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Constant soft bend in the elbow','Hug the arms together, squeeze','Slow and controlled stretch']},
+ dips:{n:'Dips',m:['Chest','Triceps'],s:'3 × 10',l:'BW',tempo:[2,0,1,0],cues:['Slight forward lean for chest bias','Lower to a comfortable stretch','Press to full lockout']},
+ pushdown:{n:'Triceps Pushdown',m:['Triceps'],s:'3 × 12',l:'',tempo:[2,1,2,0],cues:['Pin the elbows to your sides','Full extension, squeeze the triceps','Control the rope back up']},
+ pulldown:{n:'Lat Pulldown',m:['Lats'],s:'4 × 10',l:'',tempo:[2,1,2,0],cues:['Drive the elbows down and back','Pull to the upper chest','Feel the lats, not the biceps']},
+ row:{n:'Barbell Row',m:['Back'],s:'3 × 8',l:'',tempo:[2,0,1,0],cues:['Hinge to ~45 degrees, flat back','Row to the lower ribs','Squeeze the shoulder blades']},
+ cablerow:{n:'Seated Cable Row',m:['Mid-back'],s:'3 × 12',l:'',tempo:[2,1,2,0],cues:['Tall chest, do not round','Pull to the navel, elbows close','Stretch the back at the front']},
+ facepull:{n:'Face Pull',m:['Rear Delts','Traps'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Pull the rope toward the eyes','Rotate the hands back at the end','Light load, posture focus']},
+ dbcurl:{n:'DB Curl',m:['Biceps'],s:'3 × 12',l:'',tempo:[2,0,2,0],cues:['Elbows pinned at the sides','No swinging the torso','Slow the negative']},
+ ohp:{n:'Overhead Press',m:['Shoulders'],s:'4 × 8',l:'',tempo:[2,0,1,0],cues:['Brace the core, ribs down','Press in a straight line up','Lock out, head through the window']},
+ latraise:{n:'Lateral Raise',m:['Side Delts'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Lead with the elbows','Raise to shoulder height only','Slow down, no swing']},
+ reardelt:{n:'Rear Delt Fly',m:['Rear Delts'],s:'3 × 15',l:'',tempo:[2,1,2,0],cues:['Hinge forward, soft elbows','Spread wide and back','Squeeze the rear delts']},
+ shrug:{n:'DB Shrug',m:['Traps'],s:'3 × 15',l:'',tempo:[1,2,1,0],cues:['Shrug straight up to the ears','Two-second hold at the top','No rolling — straight up and down']},
+ hammer:{n:'Hammer Curl',m:['Biceps','Forearms'],s:'3 × 12',l:'',tempo:[2,0,2,0],cues:['Neutral grip, thumbs up','Elbows pinned, no swing','Control the negative']},
+ easy_r:{n:'Easy Run',m:['Aerobic base'],s:'Zone 2',l:'conversational',tempo:[0,0,0,0],cues:['Nose-breathing pace — you can hold a conversation','Builds the aerobic engine: mitochondria and capillaries','Most weekly miles live here — keep it honestly easy']},
+ long_r:{n:'Long Run',m:['Endurance'],s:'time on feet',l:'easy',tempo:[0,0,0,0],cues:['Slow and steady; fuel before you head out','Builds fatigue resistance for the back half of the 10K','Finish strong, not crawling']},
+ tempo_r:{n:'Tempo Run',m:['Lactate threshold'],s:'comfortably hard',l:'~9:00/mi',tempo:[0,0,0,0],cues:['The single biggest lever on your 10K time','Hard but repeatable — controlled, not a sprint','Find the rhythm and settle in']},
+ strides_r:{n:'Strides',m:['Neuromuscular'],s:'4–8 × 100m',l:'fast, relaxed',tempo:[0,0,0,0],cues:['Build to ~90% over 100m, then full recovery','Sharpens turnover without adding fatigue','Stay loose — speed, not strain']},
+ race_r:{n:'Race / Goal Pace',m:['Goal pace'],s:'8:02/mi',l:'sub-50',tempo:[0,0,0,0],cues:['Negative-split: controlled first half','Settle into goal pace by mile 2','Empty the tank over the final 2 miles']},
+ recov_flow:{n:'Mobility Flow',m:['Full body'],s:'~10 min',l:'easy',tempo:[0,0,0,0],cues:['Move through gentle, full-range motions','Cat-cow, world-greatest-stretch, hip circles','Goal is blood flow, not a stretch session']},
+ recov_hips:{n:'Hip Openers',m:['Hips'],s:'~8 min',l:'',tempo:[0,0,0,0],cues:['Low lunge + pigeon, ~90s per side','Breathe into the tight spots, do not force','Great the day after legs or a long run']},
+ recov_reset:{n:'Post-Run Reset',m:['Legs'],s:'~10 min',l:'',tempo:[0,0,0,0],cues:['Calves, quads, hamstrings, glutes','Hold each ~45s, easy and slow','Finish with legs-up-the-wall, 2 min']},
+ recov_breath:{n:'Breathwork',m:['Recovery'],s:'~5 min',l:'',tempo:[0,0,0,0],cues:['Box breath 4-4-4-4 to settle','Or 4-7-8 to wind down before sleep','Pairs with your post-shift routine']}
+};
+var WK={
+ lower:{n:'Lower Body — Quads · Hamstrings · Glutes · Calves',win:'The biggest muscle mass and glucose sink in the body. Lead with leg press or a controlled goblet/back squat, then a hinge, single-leg, and calves. 3 × 8–12 at RPE 7–8 (~70–80% 1RM), dynamic concentric-eccentric — never maximal singles.',ex:['legpress','squat','rdl','lunge','legcurl','legext','standcalf']},
+ push:{n:'Push — Chest · Shoulders · Triceps',win:'Dumbbell pressing over barbell for control and safety. 3 × 8–12 at RPE 7–8. Keep every load and grip off the fistula arm.',ex:['dbbench','incdb','ohp','cablefly','pushdown','latraise']},
+ pull:{n:'Pull — Back · Biceps',win:'Chest-supported and cable pulls so you can train the back hard without gripping heavy on the access arm. 3 × 8–12 at RPE 7–8.',ex:['pulldown','cablerow','row','facepull','dbcurl','hammer']},
+ cardio:{n:'Easy Cardio (LISS)',win:'Low-intensity steady-state only — a brisk walk or easy bike. Supports recovery and metabolic health without the hemodynamic stress of intervals. Kept light, especially Sunday into the long dialysis gap.',ex:['liss']},
+ recovery:{n:'Recovery & Mobility',win:'Gentle mobility and down-regulation. Useful on dialysis days once you’ve recovered, and any day you feel under-recovered.',ex:['recov_flow','recov_hips','recov_reset','recov_breath']}
+};
+var WKORDER=[['lower','Lower'],['push','Push'],['pull','Pull'],['cardio','Cardio'],['recovery','Recovery']];
+var wcur='lower';
+function renderWsel(){document.getElementById('wsel').innerHTML=WKORDER.map(function(o){return '<button class="wsbtn'+(o[0]===wcur?' active':'')+'" data-w="'+o[0]+'">'+o[1]+'</button>';}).join('');}
+function renderWk(){var w=WK[wcur];var h='<div class="wwin">'+w.win+'</div>';
+ h+=w.ex.map(function(id){var e=EX[id];return '<div class="exrow" data-ex="'+id+'"><span class="xn">'+e.n+'</span><span class="xs">'+e.s+(e.l?' · '+e.l:'')+'</span><span class="xa">→</span></div>';}).join('');
+ document.getElementById('wpanel').innerHTML=h;}
+function openEx(id){var e=EX[id];var tot=e.tempo[0]+e.tempo[1]+e.tempo[2]+e.tempo[3];var mapped=e.m.some(function(t){return MMAP[t];});var demo=mapped?'<div class="mfig">'+MUSCLE_SVG+'</div>':'';
+ var tempoHtml=tot>0?'<div class="tempo"><div class="ttrack"><div class="tdot" id="tdot"></div></div><div class="tinfo"><div class="tlbl" id="tlbl">Tempo</div><div class="tsub">'+e.tempo[0]+'s down'+(e.tempo[1]?' · '+e.tempo[1]+'s pause':'')+' · '+e.tempo[2]+'s up</div></div></div>':'';
+ var demoQ=e.n+(/_r$/.test(id)?' running technique':' proper form');
+ var demoLink='<a class="mdemo" href="https://www.google.com/search?q='+encodeURIComponent(demoQ)+'" target="_blank" rel="noopener noreferrer">▶ See a demo ↗</a><div class="mdemo-note">Opens a web search in a new tab — your dashboard stays open behind it.</div>';
+ document.getElementById('exbody').innerHTML='<button class="mclose" onclick="closeEx()">×</button><h3>'+e.n+'</h3><div class="mtags">'+e.m.map(function(x){return '<span class="mtag">'+x+'</span>';}).join('')+'</div>'+demo+'<div class="mspec">'+'<div class="ms">'+'<div class="mk">Sets × Reps</div><div class="mv">'+e.s+'</div></div>'+(e.l?'<div class="ms"><div class="mk">Load</div><div class="mv">'+e.l+'</div></div>':'')+'</div>'+tempoHtml+'<div class="hh">How to perform</div><ul class="mcues">'+e.cues.map(function(c){return '<li>'+c+'</li>';}).join('')+'</ul>'+demoLink;
+ document.getElementById('exmodal').classList.add('show');if(mapped)paintMuscles(e.m);if(tot>0)animTempo(e.tempo);}
+function closeEx(){document.getElementById('exmodal').classList.remove('show');clearTimeout(window._tp);if(window._raf)cancelAnimationFrame(window._raf);}
+function animTempo(t){var dot=document.getElementById('tdot'),lbl=document.getElementById('tlbl');if(!dot)return;
+ var seq=[['Lower',t[0],'bottom'],['Hold',t[1],'bottom'],['Drive',t[2],'top'],['Hold',t[3],'top']];var i=0;
+ (function step(){var it=seq[i];i=(i+1)%seq.length;if(it[1]<=0){step();return;}
+  lbl.textContent=it[0]+' '+it[1]+'s';dot.style.transition='top '+it[1]+'s linear';dot.style.top=(it[2]==='bottom'?'calc(100% - 18px)':'0px');
+  clearTimeout(window._tp);window._tp=setTimeout(step,it[1]*1000);})();}
+renderWsel();renderWk();
+document.getElementById('wsel').addEventListener('click',function(ev){var b=ev.target.closest('[data-w]');if(b){wcur=b.getAttribute('data-w');renderWsel();renderWk();}});
+document.getElementById('wpanel').addEventListener('click',function(ev){var r=ev.target.closest('[data-ex]');if(r)openEx(r.getAttribute('data-ex'));});
+function mapWk(t,label){if(t==='lift'){if(/Lower|Leg/i.test(label))return 'lower';if(/Push/i.test(label))return 'push';if(/Pull/i.test(label))return 'pull';return 'lower';}if(t==='cardio')return 'cardio';if(t==='yoga'||t==='recovery')return 'recovery';return null;}
+function goWorkout(k){wcur=k;renderWsel();renderWk();var el=document.getElementById('workouts');if(el)el.scrollIntoView({behavior:'smooth'});}
+document.getElementById('wkpanel').addEventListener('click',function(ev){var p=ev.target.closest('[data-wlink]');if(p)goWorkout(p.getAttribute('data-wlink'));});
+var GLOSSARY=[
+ ['ESRD','End-Stage Renal Disease — kidney function low enough to require dialysis or transplant.'],
+ ['Hemodialysis (HD)','Machine-based blood filtering that does the kidneys’ clearance work, here Tuesday / Thursday / Saturday.'],
+ ['Anuric','Producing little or no urine — so dialysis is your only route to clear potassium and fluid. This is why the Sat→Tue gap and Sunday’s light day matter.'],
+ ['AV fistula (AVF)','Surgically joined artery and vein used as the dialysis access. Protect it: no loads, heavy gripping, BP cuffs, or tourniquets on that arm — ever.'],
+ ['IDWG','Interdialytic weight gain — the fluid you put on between sessions. Your AM weight trend tracks it; large swings strain the heart.'],
+ ['Ultrafiltration (UF)','Fluid removed during a dialysis run. Big UF volumes leave you hypovolemic and fatigued afterward — part of why heavy lifting post-HD is avoided.'],
+ ['Obesity paradox','In dialysis, very low body fat (<~12–15%) is linked to higher mortality. The goal is recomposition with a floor — not driving fat as low as possible.'],
+ ['Body recomposition','Gaining lean muscle while reducing visceral/ectopic fat — the right framing here, rather than pure weight loss.'],
+ ['Sarcopenia','Pathologic muscle loss. Prevalence is high in Asian male HD patients, which is exactly why resistance training is functional medicine here, not optional.'],
+ ['Resistance training (RT)','Lifting to build/preserve muscle. In HD it’s shown safe and effective within bounds, and is bone-protective over ≥24 weeks.'],
+ ['RPE','Rate of perceived exertion (1–10). This plan lives at RPE 7–8 — hard but not maximal.'],
+ ['1-RM','One-rep max. We deliberately never train here — maximal/ballistic lifting raises fracture and tendon-rupture risk in CKD-MBD.'],
+ ['Dynamic (concentric-eccentric)','Lifting and lowering under control. Preferred over isometrics for bone benefit.'],
+ ['LISS','Low-intensity steady-state cardio — easy walking/cycling. The only cardio mode here; intervals are avoided for hemodynamic safety.'],
+ ['GLUT4','Muscle’s glucose transporter. Resistance training raises GLUT4 and glucose uptake independent of insulin — bypassing uremic insulin resistance.'],
+ ['Insulin resistance (IR)','Blunted glucose uptake for a given insulin level. You carry two drivers — South Asian phenotype + uremia — which this plan targets together.'],
+ ['CKD-MBD','Chronic Kidney Disease–Mineral & Bone Disorder — the calcium/phosphate/PTH/bone axis that shapes safe training loads.'],
+ ['PTH','Parathyroid hormone. Confirm it’s within the KDIGO target before progressing loads.'],
+ ['Phosphorus (Phos)','Mineral that builds up in ESRD. Managed by food choice, cooking method, and binders — not by cutting protein too far.'],
+ ['Potassium (K⁺)','Electrolyte cleared only by your dialysis since you’re anuric. High K⁺ is an arrhythmia risk — the reason for low-K⁺ food choices and a light Sunday.'],
+ ['PPR','Phosphorus-to-protein ratio (mg P per g protein). Lower is better: egg whites ~1–2, unprocessed meat/fish ~8–12, additives/processed = avoid.'],
+ ['Sevelamer (Renvela)','A phosphate binder taken with phosphorus-containing meals. It binds phosphate in the gut and does not impair protein absorption. Dose is set by your nephrologist.'],
+ ['Tenapanor (Xphozah)','Reduces intestinal phosphate absorption; taken before meals per its labeling (typically the first and last meal of the day), and not before a dialysis session. Set and timed by your prescriber.'],
+ ['Cinacalcet','A calcimimetic that lowers PTH and is associated with reduced fracture risk — a favorable backdrop for loading bone. Managed by nephrology.'],
+ ['Calcitriol','Active vitamin D used in CKD-MBD to manage PTH and bone. Managed by nephrology.'],
+ ['SZC (Lokelma)','Sodium zirconium cyclosilicate — a potassium binder some patients use. Per your prescriber only.'],
+ ['Protein-energy wasting (PEW)','Combined loss of muscle and energy stores — the thing over-restriction causes. Why the calorie floor and protein target exist.'],
+ ['nPCR','Normalized protein catabolic rate — a lab proxy for whether you’re eating enough protein. Tracked monthly with nephrology.'],
+ ['Albumin','A protein/nutrition status marker; low values flag PEW. Part of the monthly safety check.'],
+ ['Kt/V','Dialysis adequacy index — how well a session clears your blood.'],
+ ['Waist circumference (WC)','A more actionable target here than body-fat % — aim under ~90 cm (IDF threshold for South Asian men).'],
+ ['DXA / BIA','Body-composition scans for tracking lean vs fat mass. BIA should be done ≥30 min post-dialysis for accuracy.'],
+ ['Muscle protein synthesis (MPS)','Building muscle from dietary protein. HD blunts the meal response (anabolic resistance), so spread protein and pair it with training.'],
+ ['Anabolic resistance','A reduced muscle-building response to a meal, seen in HD — countered by adequate protein, even distribution, and resistance training.'],
+ ['KDOQI / KDIGO','The national and international kidney guideline bodies this plan’s targets are drawn from.'],
+ ['MASALA','A South Asian cardiometabolic cohort study informing the body-composition and diet reasoning.'],
+ ['South Asian phenotype','A tendency toward more visceral/ectopic fat and less lean mass at a given BMI — part of why lean-mass-first training matters for you.']
+];
+function openGloss(){document.getElementById('gbody').innerHTML='<button class="mclose" onclick="closeGloss()">×</button><h3>Your glossary</h3><div class="gsub">Every term in your plan, in plain language.</div>'+GLOSSARY.map(function(g){return '<div class="gterm"><b>'+g[0]+'</b><p>'+g[1]+'</p></div>';}).join('');document.getElementById('gmodal').classList.add('show');}
+function closeGloss(){document.getElementById('gmodal').classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeEx();closeGloss();}});
+var MOVE_BODY='<line id="f-neck" x1="50" y1="29" x2="50" y2="38"/><line id="f-torso" x1="50" y1="38" x2="50" y2="82"/><line id="f-uarm" x1="50" y1="38" x2="50" y2="58"/><line id="f-forearm" x1="50" y1="58" x2="50" y2="78"/><line id="f-thigh" x1="50" y1="82" x2="50" y2="112"/><line id="f-shin" x1="50" y1="112" x2="50" y2="142"/><circle id="f-head" cx="50" cy="20" r="9"/>';
+var STAND={head:[50,20],sh:[50,38],el:[50,58],hand:[50,78],hip:[50,82],knee:[50,112],foot:[50,142]};
+var MOVES={
+ squat:{b:{hip:[50,100],knee:[63,110],sh:[48,57],head:[47,40],el:[60,60],hand:[76,57]},dur:1700},
+ hinge:{b:{sh:[70,66],head:[80,60],hip:[47,84],knee:[50,110],el:[72,84],hand:[74,102]},dur:1700},
+ calf:{b:{head:[50,14],sh:[50,32],el:[50,52],hand:[50,72],hip:[50,76],knee:[50,106]},dur:900},
+ hold:{b:{hip:[50,85]},dur:2200},
+ legcurl:{b:{foot:[63,120]},dur:1400},
+ legext:{b:{foot:[74,116]},dur:1300},
+ hpress:{a:{el:[55,50],hand:[54,56]},b:{el:[60,52],hand:[82,52]},dur:1100},
+ vpress:{a:{el:[44,46],hand:[52,40]},b:{el:[50,28],hand:[50,12]},dur:1300},
+ vpull:{a:{el:[50,28],hand:[50,12]},b:{el:[45,52],hand:[48,46]},dur:1300},
+ row:{a:{el:[62,54],hand:[82,56]},b:{el:[44,58],hand:[40,72]},dur:1200},
+ curl:{b:{el:[50,58],hand:[58,40]},dur:1100},
+ triext:{a:{el:[50,55],hand:[54,40]},b:{el:[50,55],hand:[54,78]},dur:1100},
+ raise:{b:{el:[66,40],hand:[84,40]},dur:1200},
+ shrug:{b:{sh:[50,33],head:[50,15],el:[50,53],hand:[50,73]},dur:1000},
+ run:{a:{knee:[60,106],foot:[56,134],el:[58,54],hand:[52,68]},b:{knee:[44,114],foot:[44,142],el:[44,54],hand:[48,68]},dur:680},
+ stretch:{b:{sh:[64,62],head:[74,58],el:[66,80],hand:[70,98]},dur:2600}
+};
+var PAT={squat:'squat',hack:'squat',legpress:'squat',bulgarian:'squat',lunge:'squat',rdl:'hinge',standcalf:'calf',seatcalf:'calf',copen:'hold',legcurl:'legcurl',legext:'legext',dbbench:'hpress',incdb:'hpress',cablefly:'hpress',dips:'hpress',pushdown:'triext',pulldown:'vpull',row:'row',cablerow:'row',facepull:'row',dbcurl:'curl',hammer:'curl',ohp:'vpress',latraise:'raise',reardelt:'raise',shrug:'shrug',easy_r:'run',long_r:'run',tempo_r:'run',strides_r:'run',race_r:'run',recov_flow:'stretch',recov_hips:'stretch',recov_reset:'stretch',recov_breath:'hold'};
+function _mp(o){var r={};for(var k in STAND)r[k]=(o&&o[k])?o[k]:STAND[k];return r;}
+function _ll(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
+function _sl(id,a,b){var el=document.getElementById(id);if(el){el.setAttribute('x1',a[0]);el.setAttribute('y1',a[1]);el.setAttribute('x2',b[0]);el.setAttribute('y2',b[1]);}}
+function animMove(key){if(window._raf)cancelAnimationFrame(window._raf);var m=MOVES[key]||MOVES.hold;var A=_mp(m.a),B=_mp(m.b),dur=m.dur||1500,t0=null;
+ function fr(ts){if(!t0)t0=ts;var e=((ts-t0)%dur)/dur;var t=0.5-0.5*Math.cos(e*2*Math.PI);var j={};for(var k in STAND)j[k]=_ll(A[k],B[k],t);
+  var hd=document.getElementById('f-head');if(!hd)return;hd.setAttribute('cx',j.head[0]);hd.setAttribute('cy',j.head[1]);
+  _sl('f-neck',j.head,j.sh);_sl('f-torso',j.sh,j.hip);_sl('f-uarm',j.sh,j.el);_sl('f-forearm',j.el,j.hand);_sl('f-thigh',j.hip,j.knee);_sl('f-shin',j.knee,j.foot);
+  window._raf=requestAnimationFrame(fr);}
+ window._raf=requestAnimationFrame(fr);}
+var MUSCLE_SVG='<svg viewBox="0 0 215 192" xmlns="http://www.w3.org/2000/svg"><circle class="mbase" cx="50" cy="17" r="11"/><rect class="mbase" x="46" y="26" width="8" height="6"/><ellipse class="mz" id="m-delt-l" cx="33" cy="44" rx="9" ry="7"/><ellipse class="mz" id="m-delt-r" cx="67" cy="44" rx="9" ry="7"/><rect class="mz" id="m-chest" x="37" y="40" width="26" height="18" rx="6"/><ellipse class="mz" id="m-bi-l" cx="26" cy="60" rx="6" ry="11"/><ellipse class="mz" id="m-bi-r" cx="74" cy="60" rx="6" ry="11"/><ellipse class="mz" id="m-fore-l" cx="23" cy="84" rx="5" ry="12"/><ellipse class="mz" id="m-fore-r" cx="77" cy="84" rx="5" ry="12"/><rect class="mz" id="m-abs" x="41" y="60" width="18" height="30" rx="5"/><rect class="mz" id="m-quad-l" x="37" y="94" width="12" height="36" rx="6"/><rect class="mz" id="m-quad-r" x="51" y="94" width="12" height="36" rx="6"/><rect class="mz" id="m-calf-fl" x="38" y="134" width="10" height="30" rx="5"/><rect class="mz" id="m-calf-fr" x="52" y="134" width="10" height="30" rx="5"/><text class="mlabel" x="50" y="180" text-anchor="middle">FRONT</text><circle class="mbase" cx="165" cy="17" r="11"/><rect class="mbase" x="161" y="26" width="8" height="6"/><rect class="mz" id="m-traps" x="152" y="34" width="26" height="12" rx="5"/><ellipse class="mz" id="m-rdelt-l" cx="146" cy="46" rx="8" ry="6"/><ellipse class="mz" id="m-rdelt-r" cx="184" cy="46" rx="8" ry="6"/><rect class="mz" id="m-lats" x="151" y="48" width="28" height="26" rx="6"/><ellipse class="mz" id="m-tri-l" cx="140" cy="62" rx="6" ry="11"/><ellipse class="mz" id="m-tri-r" cx="190" cy="62" rx="6" ry="11"/><rect class="mz" id="m-glute" x="152" y="78" width="26" height="17" rx="7"/><rect class="mz" id="m-ham-l" x="152" y="98" width="12" height="32" rx="6"/><rect class="mz" id="m-ham-r" x="166" y="98" width="12" height="32" rx="6"/><rect class="mz" id="m-calf-l" x="153" y="134" width="10" height="30" rx="5"/><rect class="mz" id="m-calf-r" x="167" y="134" width="10" height="30" rx="5"/><text class="mlabel" x="165" y="180" text-anchor="middle">BACK</text></svg>';
+var MMAP={'Quads':['m-quad-l','m-quad-r'],'Glutes':['m-glute'],'Hamstrings':['m-ham-l','m-ham-r'],'Gastrocnemius':['m-calf-l','m-calf-r','m-calf-fl','m-calf-fr'],'Soleus':['m-calf-l','m-calf-r'],'Adductors':['m-quad-l','m-quad-r'],'Core':['m-abs'],'Chest':['m-chest'],'Upper Chest':['m-chest'],'Triceps':['m-tri-l','m-tri-r'],'Lats':['m-lats'],'Back':['m-lats'],'Mid-back':['m-lats'],'Shoulders':['m-delt-l','m-delt-r','m-rdelt-l','m-rdelt-r'],'Side Delts':['m-delt-l','m-delt-r'],'Rear Delts':['m-rdelt-l','m-rdelt-r'],'Biceps':['m-bi-l','m-bi-r'],'Forearms':['m-fore-l','m-fore-r'],'Traps':['m-traps']};
+function paintMuscles(tags){var ids=[];tags.forEach(function(t){if(MMAP[t])ids=ids.concat(MMAP[t]);});document.querySelectorAll('.mfig .mz').forEach(function(el){el.classList.toggle('active',ids.indexOf(el.id)>=0);});}
+var DAILY={client:CONFIG.clientId};
+function seg(ev){var b=ev.target.closest('.sb');if(!b)return;var g=b.parentElement;g.querySelectorAll('.sb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');DAILY[g.getAttribute('data-f')]=b.getAttribute('data-v');}
+function toggleDaily(){var f=document.getElementById('dform');var open=f.style.display!=='none';f.style.display=open?'none':'block';document.getElementById('logbtn').textContent=open?'Log today →':'Close';if(!open){var t=findToday();var d=weeks[t[0]].days[t[1]];document.getElementById('dft').textContent=(d.w&&d.w.length?d.w.map(function(x){return x[1];}).join(' + '):'Rest');}}
+function submitDaily(){DAILY.sleepHrs=document.getElementById('df-sleep').value;var _st=document.getElementById('df-steps');if(_st)DAILY.steps=_st.value;DAILY.weight=document.getElementById('df-weight').value;var _bp=document.getElementById('df-bp');if(_bp)DAILY.bp=_bp.value;DAILY.notes=document.getElementById('df-notes').value;DAILY.date=new Date().toISOString().slice(0,10);var ENDPOINT=CONFIG.endpoint||'';try{if(ENDPOINT.indexOf('http')===0){fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(DAILY)});}}catch(e){}document.getElementById('dform').innerHTML='<div class="dsuccess">✓ Logged for today. This is what sharpens your weekly tune-up — see you tomorrow.</div>';document.getElementById('logbtn').style.display='none';}
+(function(){var en=document.getElementById('segEnergy');if(en){var h='';for(var i=1;i<=10;i++){h+='<button class="sb" data-v="'+i+'">'+i+'</button>';}en.innerHTML=h;}document.querySelectorAll('.seg').forEach(function(g){g.addEventListener('click',seg);});})();
+function refer(e){if(e)e.preventDefault();}
+function show(t,m){t.innerHTML=m;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),4600);}
+</script>
+</body></html>

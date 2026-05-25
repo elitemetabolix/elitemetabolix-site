@@ -100,7 +100,7 @@
     if (!email || email.indexOf('@') < 1){ msg('Please enter a valid email.', true); return; }
     var btn = $('em-auth-send'); btn.disabled = true; var orig = btn.textContent; btn.textContent = 'Sending…';
     try {
-      var redirect = window.location.origin + window.location.pathname;
+      var redirect = 'https://app.elitemetabolixhq.com/';
       var res = await sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: redirect, shouldCreateUser: false } });
       if (res.error){ msg("We couldn't find an account for that email. Apply for coaching to get started.", true); }
       else { msg('Check your email — we sent you a secure sign-in link.', false); }

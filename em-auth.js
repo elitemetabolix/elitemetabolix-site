@@ -1,13 +1,12 @@
 /* ============================================================
-   Elite Metabolix — shared client login + PWA + mobile menu
+   Elite Metabolix — shared client login + PWA + full-screen menu
    ------------------------------------------------------------
    Add ONE line to the <head> of every page:
        <script src="/em-auth.js" defer></script>
-   It will, on every page automatically:
-     • render a full-screen mobile menu (at <body> level, so iOS
-       backdrop-filter on the nav can't trap it)
-     • add a "Log in" link to your nav
-     • show a magic-link login modal (no passwords)
+   On every page it will automatically:
+     • replace the nav with a wordmark + ☰ that opens a
+       full-screen overlay menu (same on desktop AND mobile)
+     • add a "Log in" entry + magic-link login modal (no passwords)
      • send each logged-in client to THEIR dashboard
      • enable PWA install + register the service worker
    Edit THIS one file to change login/menu behavior site-wide.
@@ -24,7 +23,7 @@
   function el(html){ var t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; }
   function msg(t, isErr){ var m = $('em-auth-msg'); if (m){ m.textContent = t; m.style.color = isErr ? 'var(--red,#E45D54)' : 'var(--green,#37B981)'; } }
 
-  // ---------- 1) PWA: inject head tags + register service worker ----------
+  // ---------- 1) PWA ----------
   function initPWA(){
     var head = document.head;
     function once(sel, node){ if (!document.querySelector(sel)) head.appendChild(node); }
@@ -39,7 +38,7 @@
     }
   }
 
-  // ---------- 2) MOBILE MENU: full-screen overlay rendered at <body> ----------
+  // ---------- 2) FULL-SCREEN MENU (all widths, rendered at <body>) ----------
   function injectMenuCSS(){
     if ($('em-menu-css')) return;
     var s = document.createElement('style');
@@ -47,45 +46,47 @@
     s.textContent = [
       'html.em-open{overflow:hidden!important}',
       '#em-menu{display:none}',
-      '@media(max-width:900px){',
-        'nav .burger{display:block;position:relative;z-index:60;width:44px;height:44px;font-size:21px;line-height:1;border-radius:9px;color:var(--txt,#ECEFF3);transition:color .2s;-webkit-tap-highlight-color:transparent}',
-        'html.em-open .burger{color:var(--orange,#F0852E)}',
+      /* retire the horizontal nav at ALL widths; use the wordmark + burger + overlay */
+      '.nav-links{display:none!important}',
+      'nav .burger{display:block!important;position:relative;z-index:60;width:46px;height:46px;font-size:22px;line-height:1;border-radius:9px;color:var(--txt,#ECEFF3);transition:color .2s;-webkit-tap-highlight-color:transparent}',
+      'html.em-open .burger{color:var(--orange,#F0852E)}',
 
-        '#em-menu{display:flex;position:fixed;inset:0;z-index:40;flex-direction:column;align-items:stretch;',
-          'padding:calc(var(--em-navH,60px) + clamp(20px,3.2vh,34px)) clamp(24px,8vw,46px) calc(env(safe-area-inset-bottom,0px) + 30px);',
-          'background:radial-gradient(125% 42% at 100% 0%,rgba(var(--orange-rgb,240,133,46),.12),transparent 60%),var(--bg,#0A0C10);',
-          'overflow-y:auto;-webkit-overflow-scrolling:touch;',
-          'opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease}',
-        'html.em-open #em-menu{opacity:1;visibility:visible;pointer-events:auto}',
+      '#em-menu{display:flex;position:fixed;inset:0;z-index:40;flex-direction:column;align-items:flex-start;',
+        'padding:calc(var(--em-navH,64px) + clamp(22px,4vh,46px)) clamp(24px,7vw,84px) calc(env(safe-area-inset-bottom,0px) + 34px);',
+        'background:radial-gradient(120% 45% at 100% 0%,rgba(var(--orange-rgb,240,133,46),.12),transparent 60%),var(--bg,#0A0C10);',
+        'overflow-y:auto;-webkit-overflow-scrolling:touch;',
+        'opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s ease,visibility .24s ease}',
+      'html.em-open #em-menu{opacity:1;visibility:visible;pointer-events:auto}',
 
-        '#em-menu a.em-link{font-family:var(--fd,Georgia,serif);font-weight:500;font-size:clamp(26px,7.4vw,34px);',
-          'line-height:1.1;letter-spacing:-.012em;color:var(--txt,#ECEFF3);text-decoration:none;width:max-content;max-width:100%;',
-          'margin:0 0 clamp(15px,2.7vh,24px);position:relative;opacity:0;transform:translateY(10px)}',
-        'html.em-open #em-menu a.em-link{animation:emRise .5s cubic-bezier(.2,.7,.2,1) forwards}',
-        '@keyframes emRise{to{opacity:1;transform:none}}',
-        '#em-menu a.em-link:nth-child(1){animation-delay:.05s}',
-        '#em-menu a.em-link:nth-child(2){animation-delay:.09s}',
-        '#em-menu a.em-link:nth-child(3){animation-delay:.13s}',
-        '#em-menu a.em-link:nth-child(4){animation-delay:.17s}',
-        '#em-menu a.em-link:nth-child(5){animation-delay:.21s}',
-        '#em-menu a.em-link:nth-child(6){animation-delay:.25s}',
-        '#em-menu a.em-link:nth-child(7){animation-delay:.29s}',
-        '#em-menu a.em-link::after{content:"";position:absolute;left:0;bottom:-5px;height:2px;width:0;background:var(--orange,#F0852E);transition:width .28s ease}',
-        '#em-menu a.em-link:active{color:var(--orange,#F0852E)}',
-        '#em-menu a.em-link:active::after{width:100%}',
+      '#em-menu a.em-link{font-family:var(--fd,Georgia,serif);font-weight:500;font-size:clamp(28px,6vw,46px);line-height:1.08;letter-spacing:-.014em;',
+        'color:var(--txt,#ECEFF3);text-decoration:none;width:max-content;max-width:100%;margin:0 0 clamp(14px,2.2vh,20px);position:relative;',
+        'opacity:0;transform:translateY(10px)}',
+      'html.em-open #em-menu a.em-link{animation:emRise .55s cubic-bezier(.2,.7,.2,1) forwards}',
+      '@keyframes emRise{to{opacity:1;transform:none}}',
+      '#em-menu a.em-link:nth-child(1){animation-delay:.05s}',
+      '#em-menu a.em-link:nth-child(2){animation-delay:.09s}',
+      '#em-menu a.em-link:nth-child(3){animation-delay:.13s}',
+      '#em-menu a.em-link:nth-child(4){animation-delay:.17s}',
+      '#em-menu a.em-link:nth-child(5){animation-delay:.21s}',
+      '#em-menu a.em-link:nth-child(6){animation-delay:.25s}',
+      '#em-menu a.em-link:nth-child(7){animation-delay:.29s}',
+      '#em-menu a.em-link::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--orange,#F0852E);transition:width .28s ease}',
+      '#em-menu a.em-link:hover::after,#em-menu a.em-link:active::after{width:100%}',
+      '#em-menu a.em-link:hover,#em-menu a.em-link:active{color:var(--orange,#F0852E)}',
 
-        '#em-menu .em-div{height:1px;width:100%;background:var(--line,#232a36);margin:auto 0 clamp(20px,3vh,26px)}',
-        '#em-menu a.em-apply{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--fb,sans-serif);',
-          'font-weight:600;font-size:15px;background:linear-gradient(135deg,var(--orange,#F0852E),#f5a059);color:#1a0f04;',
-          'border-radius:11px;padding:15px 22px;margin:0 0 14px;text-decoration:none;box-shadow:0 12px 30px rgba(var(--orange-rgb,240,133,46),.30)}',
-        '#em-menu a.em-login{display:inline-flex;align-items:center;justify-content:center;font-family:var(--fb,sans-serif);font-weight:600;',
-          'font-size:14px;color:var(--txt,#ECEFF3);background:transparent;border:1px solid var(--line2,#2c3543);border-radius:11px;',
-          'padding:13px 22px;margin:0 0 18px;text-decoration:none;cursor:pointer}',
-        '#em-menu a.em-manage{font-family:var(--fb,sans-serif);font-size:13px;font-weight:500;text-align:center;color:var(--mut,#9aa4b2);text-decoration:none;margin:0 auto}',
-        '#em-menu .em-foot{font-family:var(--fm,monospace);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut2,#6b7480);text-align:center;margin-top:18px}',
-        '#em-menu .em-foot b{color:var(--green,#37B981);font-weight:500}',
-      '}',
-      '@media(min-width:901px){#em-menu{display:none!important}}'
+      '#em-menu .em-div{height:1px;width:min(86vw,340px);background:var(--line,#232a36);margin:clamp(26px,4vh,40px) 0 clamp(20px,3vh,26px)}',
+      '#em-menu a.em-apply{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--fb,sans-serif);font-weight:600;font-size:15px;',
+        'background:linear-gradient(135deg,var(--orange,#F0852E),#f5a059);color:#1a0f04;border-radius:11px;padding:15px 22px;margin:0 0 14px;',
+        'width:min(86vw,340px);text-decoration:none;box-shadow:0 12px 30px rgba(var(--orange-rgb,240,133,46),.30);transition:transform .18s,box-shadow .18s}',
+      '#em-menu a.em-apply:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(var(--orange-rgb,240,133,46),.42)}',
+      '#em-menu a.em-login{display:inline-flex;align-items:center;justify-content:center;font-family:var(--fb,sans-serif);font-weight:600;font-size:14px;',
+        'color:var(--txt,#ECEFF3);background:transparent;border:1px solid var(--line2,#2c3543);border-radius:11px;padding:13px 22px;margin:0 0 18px;',
+        'width:min(86vw,340px);text-decoration:none;cursor:pointer;transition:border-color .18s,color .18s}',
+      '#em-menu a.em-login:hover{border-color:var(--orange,#F0852E);color:var(--orange,#F0852E)}',
+      '#em-menu a.em-manage{font-family:var(--fb,sans-serif);font-size:13px;font-weight:500;text-align:left;color:var(--mut,#9aa4b2);text-decoration:none;margin:0;transition:color .18s}',
+      '#em-menu a.em-manage:hover{color:var(--txt,#ECEFF3)}',
+      '#em-menu .em-foot{font-family:var(--fm,monospace);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut2,#6b7480);text-align:left;margin-top:20px}',
+      '#em-menu .em-foot b{color:var(--green,#37B981);font-weight:500}'
     ].join('');
     document.head.appendChild(s);
   }
@@ -102,7 +103,6 @@
     function closeMenu(){ document.documentElement.classList.remove('em-open'); burger.textContent = '\u2630'; burger.setAttribute('aria-expanded','false'); }
     function toggle(){ document.documentElement.classList.contains('em-open') ? closeMenu() : openMenu(); }
 
-    // build the overlay once, at <body> level
     if (!$('em-menu')){
       var menu = el('<div id="em-menu" role="dialog" aria-label="Menu"></div>');
       var html = '';
@@ -134,10 +134,7 @@
     burger.setAttribute('aria-expanded','false');
     burger.onclick = function(e){ e.preventDefault(); toggle(); };
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
-    window.addEventListener('resize', function(){
-      if (window.innerWidth > 900) closeMenu();
-      else if (document.documentElement.classList.contains('em-open')) setNavH();
-    });
+    window.addEventListener('resize', function(){ if (document.documentElement.classList.contains('em-open')) setNavH(); });
   }
 
   // ---------- 3) login modal ----------
@@ -175,7 +172,7 @@
     overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
   }
 
-  // ---------- 4) add "Log in" to whichever nav this page has ----------
+  // ---------- 4) add "Log in" into the (now hidden) nav so the overlay builder + modal still work ----------
   function injectNavLink(){
     if ($('em-login-link')) return;
     var nav = document.querySelector('.nav-right') || document.querySelector('.nav-links');

@@ -211,21 +211,72 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
 <style>
 .brandbar{display:flex;align-items:center;justify-content:space-between;max-width:760px;margin:0 auto;padding:22px 20px}
 .brandbar .logo{color:var(--txt);text-decoration:none;display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:18px}
-.bmono{width:30px;height:30px;border-radius:8px;background:var(--green);color:#06281c;display:grid;place-items:center;font-family:var(--fd);font-weight:700;font-size:15px}
+.brandbar .logo .dot{width:9px;height:9px;border-radius:50%;background:var(--orange);box-shadow:0 0 14px var(--orange);display:inline-block}
+.sigfield{margin-top:18px;max-width:440px}
 .brandbar .home{font-family:var(--fm);font-size:12px;color:var(--mut);text-decoration:none;letter-spacing:.04em}
 .brandbar .home:hover{color:var(--txt)}
 .refbanner{display:flex;align-items:center;gap:9px;background:rgba(55,185,129,.12);border:1px solid var(--green);color:var(--green);border-radius:10px;padding:11px 14px;font-size:13.5px;margin-bottom:18px;font-weight:500;line-height:1.4}
 .refbanner .rdot{font-size:9px;line-height:1}
 .afoot{max-width:760px;margin:0 auto;padding:26px 20px 50px;color:var(--mut2);font-size:12.5px;font-family:var(--fm);border-top:1px solid var(--line);text-align:center}
 .afoot a{color:var(--mut)}
+/* scope of services */
+#scope{padding:70px 0 40px}
+.scope-wrap{max-width:880px;margin:0 auto}
+.scope-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+.scope-card{background:linear-gradient(160deg,var(--surface),var(--bg2));border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.scope-card .sc-h{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:9px}
+.scope-card.in .sc-h{color:var(--green)}
+.scope-card.out .sc-h{color:var(--red)}
+.scope-card ul{list-style:none}
+.scope-card li{font-size:14px;color:var(--mut);line-height:1.5;padding:9px 0;border-bottom:1px solid var(--line);display:flex;gap:11px}
+.scope-card li:last-child{border-bottom:none}
+.scope-card li::before{flex-shrink:0;font-family:var(--fm);font-size:13px;margin-top:1px}
+.scope-card.in li::before{content:"\2713";color:var(--green)}
+.scope-card.out li::before{content:"\2715";color:var(--red)}
+.scope-note{font-size:13px;color:var(--mut2);line-height:1.65;margin-top:22px;max-width:84ch;border-left:2px solid var(--line2);padding-left:16px}
+.scope-note b{color:var(--mut)}
+@media(max-width:680px){.scope-grid{grid-template-columns:1fr}}
 </style>
   <script src="/em-auth.js" defer></script>
 </head>
 <body>
 <div class="brandbar">
-  <a class="logo" href="https://elitemetabolixhq.com/"><span class="bmono">EM</span> Elite Metabolix</a>
+  <a class="logo" href="https://elitemetabolixhq.com/"><span class="dot"></span>Elite Metabolix</a>
   <a class="home" href="https://elitemetabolixhq.com/">← back to home</a>
 </div>
+<section id="scope">
+  <div class="wrap">
+    <div class="scope-wrap">
+      <div class="sec-label"><span class="mono">Scope of Services</span></div>
+      <h2 class="sec-h">What this is &mdash; and what it isn't.</h2>
+      <p class="sec-intro">Elite Metabolix is general wellness and performance coaching, grounded in the clinical literature. It is <strong style="color:var(--txt);font-weight:600">not medical care</strong>. Knowing exactly where the line sits protects you and keeps the coaching honest &mdash; please read this before you apply.</p>
+      <div class="scope-grid">
+        <div class="scope-card in">
+          <div class="sc-h"><span>What's included</span></div>
+          <ul>
+            <li>Personalized training and exercise programming</li>
+            <li>Nutrition strategy and general dietary guidance</li>
+            <li>Over-the-counter (OTC) supplement education</li>
+            <li>Sleep and recovery coaching</li>
+            <li>A custom, periodized plan built from your intake and goals &mdash; with the reasoning behind each recommendation</li>
+            <li>Weekly revisions based on your own check-in data, delivered 1:1 and remotely</li>
+          </ul>
+        </div>
+        <div class="scope-card out">
+          <div class="sc-h"><span>Not in scope</span></div>
+          <ul>
+            <li>Not medical care, and not a substitute for your physician or any licensed provider</li>
+            <li>Does not diagnose, treat, cure, or prevent any disease or condition</li>
+            <li>Does not prescribe, furnish, or adjust prescription medication</li>
+            <li>Does not order or interpret lab tests, imaging, or diagnostics &mdash; discuss those with your provider</li>
+            <li>Does not provide medical, mental-health, or emergency services</li>
+          </ul>
+        </div>
+      </div>
+      <p class="scope-note">All recommendations are educational and general in nature. You remain responsible for your own health decisions and agree to <b>obtain clearance from a licensed physician before starting any new exercise, nutrition, or supplement regimen</b> &mdash; particularly if pregnant, nursing, under 18, or managing a medical condition.</p>
+    </div>
+  </div>
+</section>
 <section id="apply">
   <div class="wrap">
     <div class="apply-card">
@@ -270,7 +321,11 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
           <div class="field full"><label>Anything else you want me to know <span class="opt">· optional</span></label><textarea id="f-notes" placeholder="Context, history, what's worked or what hasn't."></textarea></div>
         </div>
         <label class="consent"><input id="f-clear" type="checkbox"><span>I have no medical condition that prevents safe exercise, or I've been cleared by my physician to train.</span></label>
-        <label class="consent"><input id="f-consent" type="checkbox"><span>I understand Elite Metabolix is performance coaching, <b style="color:var(--mut)">not medical care</b>, and I agree to the privacy terms. My information stays <b>private and is never sold.</b></span></label>
+        <label class="consent"><input id="f-consent" type="checkbox"><span>I have read the <a href="#scope" style="color:var(--orange);text-decoration:none;font-weight:600">Scope of Services</a>, understand Elite Metabolix is performance coaching, <b style="color:var(--mut)">not medical care</b>, and I agree to the privacy terms. My information stays <b>private and is never sold.</b></span></label>
+        <div class="field sigfield">
+          <label>Type your full legal name to confirm <span class="opt">· this serves as your signature</span></label>
+          <input id="f-sign" type="text" placeholder="Your full legal name">
+        </div>
         <div class="apply-actions">
           <button class="btn btn-primary" onclick="submitIntake()">Submit application <span class="arr">→</span></button>
           <span class="apply-msg" id="applyMsg"></span>
@@ -284,19 +339,20 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
     </div>
   </div>
 </section>
-<div class="afoot">Private · never sold · © <span id="yr"></span> Elite Metabolix · <a href="https://elitemetabolixhq.com/">elitemetabolixhq.com</a></div>
+<div class="afoot">Private · never sold · © <span id="yr"></span> Elite Metabolix · <a href="#scope">Scope of Services</a> · <a href="https://elitemetabolixhq.com/">elitemetabolixhq.com</a></div>
 <script>
 function submitIntake(){
   var g=function(id){return document.getElementById(id);};
   var req=[['f-name','your name'],['f-email','your email'],['f-goal','a primary goal'],['f-exp','your experience level'],['f-days','days per week'],['f-equip','equipment access']];
   for(var i=0;i<req.length;i++){ if(!g(req[i][0]).value){ g('applyMsg').textContent='Please add '+req[i][1]+'.'; return; } }
   if(!g('f-clear').checked || !g('f-consent').checked){ g('applyMsg').textContent='Please confirm both boxes to continue.'; return; }
+  if(!g('f-sign').value.trim()){ g('applyMsg').textContent='Please type your full legal name to sign.'; return; }
   g('applyMsg').textContent='';
   var payload={ form:'intake',
     name:g('f-name').value, email:g('f-email').value, goal:g('f-goal').value, target:g('f-target').value,
     experience:g('f-exp').value, days:g('f-days').value, equipment:g('f-equip').value, constraints:g('f-constraints').value,
     injuries:g('f-injuries').value, heritage:g('f-heritage').value, diet:g('f-diet').value, notes:((window.__REF)?('[Referred by: '+window.__REF+'] '):'')+g('f-notes').value, ref:(window.__REF||''), referredBy:(window.__REF||''),
-    clearance:'yes', consent:'yes' };
+    clearance:'yes', consent:'yes', scopeVersion:'1.0', signature:g('f-sign').value };
   var ENDPOINT='https://script.google.com/macros/s/AKfycbzosdkuK6u5QKFqH7Lei41mmuk6PSy8nMAIm9dPakMuedbYdwHLCCCb_X5499ooa-6N9A/exec';
   try{ if(ENDPOINT.indexOf('http')===0){ fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)}); } }catch(e){}
   g('applyForm').style.display='none'; g('applyDone').style.display='block';

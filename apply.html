@@ -286,6 +286,12 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
         <h2>Apply for coaching</h2>
         <p class="lead">A few questions so your first plan is built around your real life, not a template. Takes about two minutes. Spots are limited, so this is also how we make sure it's a good fit.</p>
         <div class="fgrid">
+          <div class="field full"><label>Which plan are you applying for?</label><select id="f-plan">
+            <option value="">Help me choose / not sure yet</option>
+            <option value="The Build — one-time">The Build — one-time</option>
+            <option value="Concierge — monthly">Concierge — monthly</option>
+            <option value="Inner Circle — monthly">Inner Circle — monthly</option>
+          </select></div>
           <div class="field"><label>Full name</label><input id="f-name" type="text" placeholder="First and last"></div>
           <div class="field"><label>Email</label><input id="f-email" type="email" placeholder="you@email.com"></div>
           <div class="field"><label>Primary goal</label><select id="f-goal">
@@ -351,7 +357,7 @@ function submitIntake(){
   var payload={ form:'intake',
     name:g('f-name').value, email:g('f-email').value, goal:g('f-goal').value, target:g('f-target').value,
     experience:g('f-exp').value, days:g('f-days').value, equipment:g('f-equip').value, constraints:g('f-constraints').value,
-    injuries:g('f-injuries').value, heritage:g('f-heritage').value, diet:g('f-diet').value, notes:((window.__REF)?('[Referred by: '+window.__REF+'] '):'')+g('f-notes').value, ref:(window.__REF||''), referredBy:(window.__REF||''),
+    injuries:g('f-injuries').value, heritage:g('f-heritage').value, diet:g('f-diet').value, plan:g('f-plan').value, notes:((g('f-plan').value)?('[Plan: '+g('f-plan').value+'] '):'')+((window.__REF)?('[Referred by: '+window.__REF+'] '):'')+g('f-notes').value, ref:(window.__REF||''), referredBy:(window.__REF||''),
     clearance:'yes', consent:'yes', scopeVersion:'1.0', signature:g('f-sign').value };
   var ENDPOINT='https://script.google.com/macros/s/AKfycbzosdkuK6u5QKFqH7Lei41mmuk6PSy8nMAIm9dPakMuedbYdwHLCCCb_X5499ooa-6N9A/exec';
   try{ if(ENDPOINT.indexOf('http')===0){ fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)}); } }catch(e){}
@@ -361,9 +367,13 @@ function submitIntake(){
 </script>
 <script>
 (function(){
-  var r=(new URLSearchParams(location.search).get('ref')||'').trim();
+  var qs=new URLSearchParams(location.search);
+  var r=(qs.get('ref')||'').trim();
   window.__REF=r;
   if(r){ var b=document.getElementById('refBanner'); if(b) b.style.display='flex'; }
+  var planMap={build:'The Build — one-time',concierge:'Concierge — monthly',inner:'Inner Circle — monthly'};
+  var p=(qs.get('plan')||'').trim().toLowerCase();
+  if(planMap[p]){ var sel=document.getElementById('f-plan'); if(sel) sel.value=planMap[p]; }
   var y=document.getElementById('yr'); if(y) y.textContent=new Date().getFullYear();
 })();
 </script>

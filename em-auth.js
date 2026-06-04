@@ -207,15 +207,27 @@
     } catch (e){ msg('Something went wrong. Please try again.', true); }
     btn.disabled = false; btn.textContent = orig;
   }
-  async function routeIfLoggedIn(){
+  // doRedirect=true  -> a fresh sign-in just happened: send them to their dashboard.
+  // doRedirect=false -> ordinary page load: DO NOT bounce. Let logged-in clients
+  //   browse the marketing pages, and just turn the "Log in" entries into a
+  //   "My dashboard" link so they can still jump to their dashboard when they want.
+  async function routeIfLoggedIn(doRedirect){
     if (!sb) return;
     try {
       var s = await sb.auth.getSession();
       var session = s && s.data && s.data.session;
       if (!session) return;
       var q = await sb.from('clients').select('dashboard_url').eq('id', session.user.id).single();
-      if (q.data && q.data.dashboard_url){ window.location.href = q.data.dashboard_url; }
-      else { open(); msg("You're signed in, but your plan is still being built. We'll email you when it's ready.", false); }
+      var url = q.data && q.data.dashboard_url;
+      if (!url){ if (doRedirect){ open(); msg("You're signed in, but your plan is still being built. We'll email you when it's ready.", false); } return; }
+      if (doRedirect){ window.location.href = url; return; }
+      [document.getElementById('em-login-link'), document.querySelector('#em-menu .em-login')].forEach(function(node){
+        if (!node) return;
+        var clone = node.cloneNode(true);          // drops the "open login modal" handler
+        clone.textContent = 'My dashboard \u2192';
+        clone.setAttribute('href', url);
+        node.parentNode.replaceChild(clone, node);
+      });
     } catch (e){ /* stay on page */ }
   }
 
@@ -227,8 +239,8 @@
     initMenu();
     loadSupabase(function(){
       sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      routeIfLoggedIn();
-      sb.auth.onAuthStateChange(function(evt){ if (evt === 'SIGNED_IN') routeIfLoggedIn(); });
+      routeIfLoggedIn(false);
+      sb.auth.onAuthStateChange(function(evt){ if (evt === 'SIGNED_IN') routeIfLoggedIn(true); });
     });
   });
 })();

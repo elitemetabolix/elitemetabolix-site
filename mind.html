@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Elite Metabolix — Mind</title>
-<meta name="description" content="The mental game of performance: focus, pre-competition nerves, stress, sleep, and the routines that make consistency automatic. Performance coaching, not therapy.">
+<meta name="description" content="General mental-wellbeing and mental-performance coaching: focus, stress, sleep, resilience, motivation, and simple practices you can use anywhere. Coaching and education — not therapy.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230A0C10'/%3E%3Ctext x='50' y='52' font-family='Arial' font-weight='200' font-size='44' letter-spacing='6' fill='%23F0852E' text-anchor='middle' dominant-baseline='central'%3EEM%3C/text%3E%3Crect x='28' y='66' width='44' height='3' rx='1.5' fill='%23F0852E'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -76,49 +76,244 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   .nav-right a:first-child{border-top:none}
   .burger{display:block}
 }
-</style>  <script src="/em-auth.js?v=2" defer></script>
+</style>
+<style>
+/* ── Mind page additions ── */
+.grid6{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+@media(max-width:900px){.grid6{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid6{grid-template-columns:1fr}}
+
+/* breathing pacer (the signature element) */
+.breather{background:linear-gradient(160deg,rgba(79,146,222,.10),rgba(55,185,129,.05) 60%,var(--card));border:1px solid var(--line2);border-radius:20px;padding:40px 28px 34px;margin-top:26px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.breather .ring{position:relative;width:210px;height:210px;display:flex;align-items:center;justify-content:center;margin:4px 0 24px}
+.breather .circle{position:absolute;inset:0;margin:auto;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 50% 38%,rgba(79,146,222,.40),rgba(55,185,129,.16));border:1px solid rgba(79,146,222,.55);transform:scale(.58);transition:transform 1s ease-in-out;will-change:transform}
+.breather .ring::after{content:"";position:absolute;inset:0;margin:auto;width:210px;height:210px;border-radius:50%;border:1px dashed rgba(255,255,255,.10)}
+.breather .phase{position:relative;z-index:2;font-family:var(--fd);font-weight:500;font-size:22px;color:var(--txt)}
+.breather .sub{font-size:13.5px;color:var(--mut);max-width:52ch;margin-bottom:20px;line-height:1.6}
+.breather button{font-family:var(--fb);font-weight:600;font-size:14px;color:var(--bg);background:var(--blue);border:none;border-radius:11px;padding:12px 30px;cursor:pointer;transition:opacity .2s,transform .15s}
+.breather button:hover{opacity:.92}.breather button:active{transform:scale(.97)}
+.breather button:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.breather .circle{transition:opacity .8s;transform:scale(.86)}}
+
+/* walk-through step cards */
+.steps-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+@media(max-width:900px){.steps-wrap{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.steps-wrap{grid-template-columns:1fr}}
+.stepcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;transition:transform .2s,border-color .2s}
+.stepcard:hover{transform:translateY(-4px);border-color:var(--line2)}
+.stepcard .sk{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent,var(--blue));margin-bottom:10px}
+.stepcard h3{font-family:var(--fd);font-weight:500;font-size:19px;margin-bottom:6px}
+.stepcard .lead{font-size:13.5px;color:var(--mut);margin-bottom:15px;line-height:1.55}
+.stepcard ol{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px}
+.stepcard ol li{counter-increment:s;position:relative;padding-left:32px;font-size:13.5px;color:var(--txt);line-height:1.5}
+.stepcard ol li::before{content:counter(s);position:absolute;left:0;top:0;width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.05);color:var(--accent,var(--blue));font-family:var(--fm);font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:500}
+
+/* coaching vs therapy clarifier */
+.clarify{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+@media(max-width:840px){.clarify{grid-template-columns:1fr}}
+.clarify .col{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px}
+.clarify .col.is{border-color:rgba(55,185,129,.32)}
+.clarify .col.isnt{border-color:rgba(79,146,222,.30)}
+.clarify .col h3{font-family:var(--fd);font-weight:500;font-size:19px;margin-bottom:16px;display:flex;align-items:center}
+.clarify .col h3 .dot{width:9px;height:9px;border-radius:3px;margin-right:10px}
+.clarify ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.clarify ul li{position:relative;padding-left:25px;font-size:14px;color:var(--mut);line-height:1.5}
+.clarify ul li::before{content:"";position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:2px;background:var(--accent,var(--blue))}
+.clarify-note{margin-top:16px;font-size:14px;color:var(--mut);line-height:1.65;border-left:2px solid var(--orange);padding-left:16px;max-width:80ch}
+.clarify-note b{color:var(--txt)}
+
+/* support resources */
+.res-primary{background:linear-gradient(160deg,rgba(79,146,222,.12),var(--card));border:1px solid rgba(79,146,222,.40);border-radius:18px;padding:28px;margin-top:26px;margin-bottom:18px}
+.res-primary h3{font-family:var(--fd);font-weight:500;font-size:21px;margin-bottom:7px}
+.res-primary p{font-size:14px;color:var(--mut);margin-bottom:20px;max-width:72ch;line-height:1.6}
+.res-sublabel{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut2);margin:26px 0 12px}
+.res-rows{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.012)}
+.res-primary .res-rows{background:rgba(10,12,16,.30);border-color:rgba(79,146,222,.22)}
+.res-row{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:baseline;padding:17px 20px;border-bottom:1px solid var(--line)}
+.res-row:last-child{border-bottom:none}.res-row:hover{background:rgba(255,255,255,.014)}
+.res-row .rn{font-family:var(--fd);font-weight:500;font-size:16px;color:var(--txt);flex:1 1 230px;min-width:200px}
+.res-row .rc{font-family:var(--fm);font-size:14px;color:var(--blue);font-weight:500;flex:0 0 auto}
+.res-row .rc a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(79,146,222,.40);transition:color .2s}
+.res-row .rc a:hover{color:var(--orange-lt)}
+.res-row .rd{flex:1 1 100%;font-size:12.5px;color:var(--mut2);margin-top:3px;line-height:1.5}
+.res-row.big .rc a{font-size:19px;font-weight:600}
+</style>
+<script src="/em-auth.js?v=2" defer></script>
 </head>
 <body>
 <div class="glow a"></div><div class="glow b"></div>
 <nav><div class="nav-in">
   <a class="brand" href="index.html"><span class="em-mark">E&nbsp;M</span><span class="wm">Elite&nbsp;Metabolix</span></a>
   <div class="nav-right"><a href="index.html">Home</a><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html">Yoga</a><a href="mind.html" class="active">Mind</a><a href="apply.html">Apply</a></div></div><button class="burger" onclick="var n=this.parentElement.querySelector('.nav-right');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button>
-</div></nav>
+</nav>
 
 <header class="hero"><div class="hero-grid"></div><div class="wrap">
   <div class="eyebrow"><span class="signal"><i></i><i></i><i></i><i></i></span><span class="mono">Pillar · Mind</span></div>
   <h1 class="head">The mental game is <em>trainable</em>.</h1>
-  <p class="hero-sub">Consistency, focus under pressure, and showing up on the hard days aren't personality — they're <b>skills</b>. Elite Metabolix builds the mental side into your plan: routines, breathwork, and stress tools that make the work repeatable.</p>
+  <p class="hero-sub">Consistency, focus, managing stress, and showing up on the hard days aren't fixed traits you're born with — they're <b>skills you can build</b>. Elite Metabolix weaves the mental side into your plan: simple routines, breathwork, and stress tools that make the good days repeatable and the hard ones easier to get through.</p>
 </div></header>
 
 <section><div class="wrap">
-  <div class="sec-label"><span class="mono">01 — Where The Mind Wins</span></div>
-  <h2 class="sec-h">Four places mindset moves the needle.</h2>
-  <div class="grid3" style="grid-template-columns:repeat(2,1fr);margin-top:26px">
-    <div class="mcard reveal" style="--accent:var(--orange)"><div class="mk">Consistency</div><h3>Showing up</h3><p>The plan only works if it gets done. We design cues, routines, and friction-removal so training survives a bad week — not just a good one.</p></div>
-    <div class="mcard reveal" style="--accent:var(--blue)"><div class="mk">Pressure</div><h3>Race-day nerves</h3><p>Pre-competition arousal is normal and useful — until it isn't. Breath protocols and a rehearsed warm-up routine keep nerves working <em>for</em> you.</p></div>
-    <div class="mcard reveal" style="--accent:var(--green)"><div class="mk">Recovery</div><h3>Stress &amp; sleep</h3><p>Training is stress; so is life. Managing total load — and protecting sleep — is what lets the body actually adapt to the work.</p></div>
-    <div class="mcard reveal" style="--accent:var(--red)"><div class="mk">Focus</div><h3>Attention</h3><p>Simple mindfulness and attentional drills sharpen the ability to stay with an effort, a workout, or a goal when it gets uncomfortable.</p></div>
+  <div class="sec-label"><span class="mono">01 — Where Mindset Moves The Needle</span></div>
+  <h2 class="sec-h">Six places a little mental skill goes a long way.</h2>
+  <p class="sec-intro">The plan only works if you can actually run it — at work, at home, and in training. These are the everyday places mindset shows up.</p>
+  <div class="grid6">
+    <div class="mcard reveal" style="--accent:var(--orange)"><div class="mk">Consistency</div><h3>Showing up</h3><p>The best plan is the one that survives a bad week. We build cues, routines, and friction-removal so your habits hold even when motivation doesn't.</p></div>
+    <div class="mcard reveal" style="--accent:var(--blue)"><div class="mk">Stress &amp; Load</div><h3>Staying steady</h3><p>Work, life, and training all draw from the same battery. Managing total load — and having tools to downshift — keeps stress from running the show.</p></div>
+    <div class="mcard reveal" style="--accent:var(--green)"><div class="mk">Sleep &amp; Recovery</div><h3>Recharging</h3><p>Sleep is where the body adapts and the mind resets. Protecting it is one of the highest-leverage things you can do for how you feel and perform.</p></div>
+    <div class="mcard reveal" style="--accent:var(--red)"><div class="mk">Focus</div><h3>Staying with it</h3><p>Attention is trainable. Simple drills help you stay with a task, a workout, or a goal when it stops being fun.</p></div>
+    <div class="mcard reveal" style="--accent:var(--orange)"><div class="mk">Mood &amp; Motivation</div><h3>Getting going</h3><p>Energy and drive rise and fall. We work on the routines and self-talk that help you start — and keep going — on the days you don't feel like it.</p></div>
+    <div class="mcard reveal" style="--accent:var(--blue)"><div class="mk">Pressure</div><h3>Big moments</h3><p>A presentation, an interview, a race, a hard conversation. A rehearsed routine steadies the nerves so pressure works for you, not against you.</p></div>
   </div>
 </div></section>
 
 <section><div class="wrap">
   <div class="sec-label"><span class="mono">02 — The Toolkit</span></div>
-  <h2 class="sec-h">Practices we program in.</h2>
+  <h2 class="sec-h">The tools we build in.</h2>
+  <p class="sec-intro">Simple, widely-used practices — nothing fancy, nothing you need an app or a subscription for. We pick the few that fit your life and weave them into your plan.</p>
   <div class="tools reveal" style="margin-top:26px">
-    <div class="tool"><div class="tn">01</div><div><h4>Breath protocols</h4><p>Box breathing for focus, physiological sighs to downshift, 4·7·8 to wind down. Seconds to deploy, anywhere. (Shared with the Yoga pillar.)</p></div></div>
-    <div class="tool"><div class="tn">02</div><div><h4>Pre-session &amp; race routines</h4><p>A repeatable sequence that tells your brain "it's time" — reducing decision fatigue and steadying nerves before efforts.</p></div></div>
-    <div class="tool"><div class="tn">03</div><div><h4>Visualization</h4><p>Rehearsing the race, the rep, or the hard mile in detail — a well-supported mental-skills practice for performance.</p></div></div>
-    <div class="tool"><div class="tn">04</div><div><h4>Sleep &amp; stress hygiene</h4><p>Wind-down routines, light/dark timing, and load management — coordinated with the recovery protocol in your plan.</p></div></div>
-    <div class="tool"><div class="tn">05</div><div><h4>Mindfulness &amp; check-ins</h4><p>Brief practices and weekly reflection to notice patterns early and keep training sustainable.</p></div></div>
+    <div class="tool"><div class="tn">01</div><div><h4>Breath protocols</h4><p>Box breathing to steady, the physiological sigh to take the edge off, 4·7·8 to wind down. Seconds to use, anywhere. (Shared with the Yoga pillar.)</p></div></div>
+    <div class="tool"><div class="tn">02</div><div><h4>Grounding &amp; resetting</h4><p>Quick techniques — like a senses-based reset — for the moments your mind is racing and you need to come back to the present.</p></div></div>
+    <div class="tool"><div class="tn">03</div><div><h4>Routines for big moments</h4><p>A repeatable sequence before anything high-stakes that tells your brain "it's time" — cutting decision fatigue and steadying nerves.</p></div></div>
+    <div class="tool"><div class="tn">04</div><div><h4>Visualization &amp; mental rehearsal</h4><p>Running the moment in detail beforehand — a well-supported mental-skills practice used across sport and performance.</p></div></div>
+    <div class="tool"><div class="tn">05</div><div><h4>Sleep &amp; stress hygiene</h4><p>Wind-down routines, light and dark timing, and managing your weekly load — coordinated with the recovery side of your plan.</p></div></div>
+    <div class="tool"><div class="tn">06</div><div><h4>Mindfulness &amp; weekly check-ins</h4><p>Brief practices plus a short reflection each week, so you notice patterns early and keep things sustainable.</p></div></div>
+    <div class="tool"><div class="tn">07</div><div><h4>Noticing &amp; reframing</h4><p>Simple ways to catch unhelpful thinking and choose a steadier response — a general wellbeing skill, not a substitute for therapy.</p></div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-label"><span class="mono">03 — Try It Now</span></div>
+  <h2 class="sec-h">Walk-throughs you can use right now.</h2>
+  <p class="sec-intro">No login, no plan required. These are general wellbeing practices anyone can use. Start with the breathing pacer, then try whichever fits the moment.</p>
+
+  <div class="breather reveal">
+    <div class="ring"><div class="circle" id="breath-circle"></div><div class="phase" id="breath-phase">Press start</div></div>
+    <p class="sub">Box breathing — in for 4, hold for 4, out for 4, hold for 4. Follow the circle: breathe in as it grows, out as it shrinks. Two or three minutes is plenty.</p>
+    <button id="breath-btn" type="button">Start breathing</button>
+  </div>
+
+  <div class="steps-wrap">
+    <div class="stepcard reveal" style="--accent:var(--blue)">
+      <div class="sk">Take the edge off</div><h3>Physiological sigh</h3>
+      <p class="lead">When you feel wound up and need to settle fast.</p>
+      <ol>
+        <li>Breathe in through your nose.</li>
+        <li>At the top, take a second short sip of air in through your nose.</li>
+        <li>Let it all out slowly through your mouth with a long exhale.</li>
+        <li>Repeat 1–3 times. Notice your shoulders drop.</li>
+      </ol>
+    </div>
+    <div class="stepcard reveal" style="--accent:var(--green)">
+      <div class="sk">Wind down</div><h3>4·7·8 breath</h3>
+      <p class="lead">A gentle breath some people use before sleep.</p>
+      <ol>
+        <li>Breathe in through your nose for a count of 4.</li>
+        <li>Hold for a count of 7.</li>
+        <li>Breathe out slowly through your mouth for a count of 8.</li>
+        <li>Repeat for 3–4 rounds. Keep it easy — never strain.</li>
+      </ol>
+    </div>
+    <div class="stepcard reveal" style="--accent:var(--orange)">
+      <div class="sk">Come back to now</div><h3>5·4·3·2·1 grounding</h3>
+      <p class="lead">When your mind is spinning, anchor it with your senses.</p>
+      <ol>
+        <li>Name 5 things you can see.</li>
+        <li>4 things you can feel.</li>
+        <li>3 things you can hear.</li>
+        <li>2 things you can smell.</li>
+        <li>1 thing you can taste — or one slow breath.</li>
+      </ol>
+    </div>
+    <div class="stepcard reveal" style="--accent:var(--red)">
+      <div class="sk">Pause</div><h3>The 3-minute reset</h3>
+      <p class="lead">A short check-in to step out of autopilot.</p>
+      <ol>
+        <li>Minute one — notice what you're thinking, feeling, and sensing right now.</li>
+        <li>Minute two — bring your full attention to your breath.</li>
+        <li>Minute three — widen out to your whole body, then back to your day.</li>
+      </ol>
+    </div>
+    <div class="stepcard reveal" style="--accent:var(--blue)">
+      <div class="sk">Power down</div><h3>Sleep wind-down</h3>
+      <p class="lead">A routine that signals to your body it's time to sleep.</p>
+      <ol>
+        <li>Dim the lights an hour before bed; screens down or on night mode.</li>
+        <li>Same wind-down each night — a shower, a stretch, a few pages.</li>
+        <li>Keep the room cool, dark, and quiet; phone across the room if you can.</li>
+        <li>Can't sleep after ~20 minutes? Get up, do something calm, return when drowsy.</li>
+      </ol>
+    </div>
+    <div class="stepcard reveal" style="--accent:var(--green)">
+      <div class="sk">Check in with yourself</div><h3>Weekly reflection</h3>
+      <p class="lead">A few prompts for a short weekly self check-in.</p>
+      <ol>
+        <li>What went well this week — and why?</li>
+        <li>What drained me, and what can I adjust?</li>
+        <li>One small thing I'll do differently next week.</li>
+      </ol>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-label"><span class="mono">04 — Coaching, Clearly Defined</span></div>
+  <h2 class="sec-h">What this is — and what it isn't.</h2>
+  <p class="sec-intro">We want you in the right kind of support. Here's exactly where the Mind pillar fits.</p>
+  <div class="clarify">
+    <div class="col is reveal" style="--accent:var(--green)">
+      <h3><span class="dot" style="background:var(--green)"></span>What it is</h3>
+      <ul>
+        <li>General mental-performance and wellbeing coaching</li>
+        <li>Habits, routines, focus, stress tools, sleep, and motivation</li>
+        <li>Education and simple practices, built into your plan and weekly check-ins</li>
+        <li>A steady, practical partner for everyday performance</li>
+      </ul>
+    </div>
+    <div class="col isnt reveal" style="--accent:var(--blue)">
+      <h3><span class="dot" style="background:var(--blue)"></span>What it isn't</h3>
+      <ul>
+        <li>Therapy, counseling, or psychological treatment</li>
+        <li>Diagnosis or treatment of any mental-health condition</li>
+        <li>A substitute for care from a licensed professional</li>
+        <li>Crisis or emergency care</li>
+      </ul>
+    </div>
+  </div>
+  <p class="clarify-note">If you're dealing with persistent anxiety or low mood, trauma, disordered eating, substance use, or anything heavier than the day-to-day, that deserves <b>real, licensed support</b> — and the resources below can help you find it.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-label"><span class="mono">If You Need More Support</span></div>
+  <h2 class="sec-h">You don't have to do it alone.</h2>
+  <p class="sec-intro">Free, confidential resources in the United States. You don't have to be in crisis to reach out — and if you are, please use them.</p>
+
+  <div class="res-primary reveal">
+    <h3>In a crisis, reach out right now</h3>
+    <p>If you're thinking about harming yourself or you're in immediate danger, you are not alone and help is available 24/7.</p>
+    <div class="res-rows">
+      <div class="res-row big"><span class="rn">988 Suicide &amp; Crisis Lifeline</span><span class="rc">call or text <a href="tel:988">988</a></span><span class="rd">Free, confidential, 24/7. Veterans press 1; for Spanish, press 2.</span></div>
+      <div class="res-row big"><span class="rn">Crisis Text Line</span><span class="rc"><a href="sms:741741?&body=HOME">text HOME to 741741</a></span><span class="rd">Free, 24/7 text support with a trained crisis counselor.</span></div>
+      <div class="res-row big"><span class="rn">Emergency</span><span class="rc">call <a href="tel:911">911</a></span><span class="rd">For an immediate, life-threatening emergency.</span></div>
+    </div>
+  </div>
+
+  <div class="res-sublabel">More support lines</div>
+  <div class="res-rows reveal">
+    <div class="res-row"><span class="rn">SAMHSA National Helpline</span><span class="rc"><a href="tel:18006624357">1-800-662-4357</a></span><span class="rd">Free, confidential, 24/7 referrals and information for mental health and substance use (English &amp; Spanish).</span></div>
+    <div class="res-row"><span class="rn">Veterans Crisis Line</span><span class="rc">dial <a href="tel:988">988</a>, press 1 · text 838255</span><span class="rd">24/7 support for veterans, service members, and their families.</span></div>
+    <div class="res-row"><span class="rn">The Trevor Project</span><span class="rc"><a href="tel:18664887386">1-866-488-7386</a> · text START to 678678</span><span class="rd">24/7 support for LGBTQ+ young people.</span></div>
+    <div class="res-row"><span class="rn">National Domestic Violence Hotline</span><span class="rc"><a href="tel:18007997233">1-800-799-7233</a> · text START to 88788</span><span class="rd">24/7 confidential support and safety planning.</span></div>
+    <div class="res-row"><span class="rn">National Alliance for Eating Disorders</span><span class="rc"><a href="tel:18666621235">1-866-662-1235</a></span><span class="rd">Therapist-staffed referral line, weekdays 9am–7pm ET. Not a 24/7 crisis line — for crisis, use 988.</span></div>
+    <div class="res-row"><span class="rn">Outside the U.S.</span><span class="rc"><a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a></span><span class="rd">Find a free, confidential helpline in your country. In an emergency, call your local emergency number.</span></div>
   </div>
 </div></section>
 
 <section><div class="wrap">
   <div class="support reveal"><div class="ic">♥</div><div>
-    <h3>Important — this is coaching, not therapy.</h3>
-    <p>The Mind pillar is <b>mental-performance and wellbeing coaching</b>. It is not therapy, counseling, or treatment for any mental-health condition, and it's not a substitute for professional care.</p>
-    <p>If you're struggling — with anxiety, low mood, or anything that feels heavier than the day-to-day — please reach out to a licensed mental-health professional. You deserve real support, and asking for it is a strength. If you're ever in crisis or thinking about harming yourself, contact your local emergency services or a crisis line right away (in the US, call or text <b>988</b>).</p>
+    <h3>This is coaching and education — not therapy.</h3>
+    <p>Elite Metabolix offers performance and wellbeing coaching to clients across the United States. The Mind pillar shares general wellbeing practices and education — it is <b>not therapy, counseling, or psychological or medical care</b>. It does not diagnose, treat, cure, or manage any condition, and it is not a substitute for care from a licensed professional.</p>
+    <p>If you're struggling — with anxiety, low mood, or anything that feels heavier than the day-to-day — please reach out to a licensed mental-health professional in your area. You deserve real support, and asking for it is a strength. If you're ever in crisis or thinking about harming yourself, contact emergency services or call or text <b>988</b> (US) right away.</p>
   </div></div>
 </div></section>
 
@@ -126,7 +321,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   <div class="sec-label"><span class="mono">Keep Exploring</span></div>
   <div class="pillarnav">
     <a class="pcard" href="mobility.html"><div class="pk">Pillar →</div><h3>Yoga &amp; Mobility</h3><p>Movement, breath, and recovery work that keeps the body matching the mind.</p></a>
-    <a class="pcard" href="apply.html"><div class="pk">Get started →</div><h3>Build yours</h3><p>A custom plan with the mental game built in — routines, breath, and stress tools.</p></a>
+    <a class="pcard" href="apply.html"><div class="pk">Get started →</div><h3>Build yours</h3><p>A custom plan with the mental side built in — routines, breath, and stress tools that fit your life.</p></a>
   </div>
 </div></section>
 
@@ -136,8 +331,41 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
     <div class="foot-links"><a href="index.html">Home</a><a href="mobility.html">Yoga</a><a href="mind.html">Mind</a><a href="samples.html">Samples</a></div>
     <span class="foot-tag">Momentum · Keep moving</span>
   </div>
-  <p class="disclaimer">Elite Metabolix provides performance, fitness, and wellbeing coaching. This is not medical or mental-health care and does not diagnose, treat, or manage any condition. If you need mental-health support, please consult a licensed professional; in a crisis, contact emergency services or call/text 988 (US).</p>
+  <p class="disclaimer">Elite Metabolix provides performance, fitness, and wellbeing coaching and education to clients across the United States. The Mind pillar offers general wellbeing information and practices. This is not therapy, counseling, or medical or mental-health care, and it does not diagnose, treat, cure, or manage any condition or substitute for care from a licensed professional. If you need mental-health support, please consult a licensed professional in your area; in a crisis, contact emergency services or call or text 988 (US).</p>
 </div></footer>
 <script>const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));</script>
+<script>
+(function(){
+  var btn=document.getElementById('breath-btn');
+  var circle=document.getElementById('breath-circle');
+  var phase=document.getElementById('breath-phase');
+  if(!btn||!circle||!phase)return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var phases=[
+    {label:'Breathe in',scale:1,dur:4000},
+    {label:'Hold',scale:1,dur:4000},
+    {label:'Breathe out',scale:.58,dur:4000},
+    {label:'Hold',scale:.58,dur:4000}
+  ];
+  var i=0,timer=null,running=false;
+  function step(){
+    var p=phases[i];
+    phase.textContent=p.label;
+    if(!reduce){
+      circle.style.transitionDuration=(p.dur/1000)+'s';
+      circle.style.transform='scale('+p.scale+')';
+    }
+    i=(i+1)%phases.length;
+    timer=setTimeout(step,p.dur);
+  }
+  function start(){running=true;btn.textContent='Stop';i=0;step();}
+  function stop(){
+    running=false;btn.textContent='Start breathing';clearTimeout(timer);
+    phase.textContent='Press start';
+    if(!reduce){circle.style.transitionDuration='1s';circle.style.transform='scale(.58)';}
+  }
+  btn.addEventListener('click',function(){running?stop():start();});
+})();
+</script>
 </body>
 </html>

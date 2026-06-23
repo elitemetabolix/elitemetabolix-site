@@ -294,6 +294,18 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
           </select></div>
           <div class="field"><label>Full name</label><input id="f-name" type="text" placeholder="First and last"></div>
           <div class="field"><label>Email</label><input id="f-email" type="email" placeholder="you@email.com"></div>
+          <div class="field"><label>Age</label><input id="f-age" type="number" min="16" max="99" placeholder="e.g., 34"></div>
+          <div class="field"><label>Biological sex <span class="opt">· for training &amp; nutrition targets</span></label><select id="f-sex">
+            <option value="">Select…</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+          </select></div>
+          <div class="field"><label>Height <span class="opt">· optional</span></label><input id="f-height" type="text" placeholder="e.g., 5'10&quot; or 178 cm"></div>
+          <div class="field"><label>Preferred units</label><select id="f-units">
+            <option>Miles</option>
+            <option>Kilometers</option>
+          </select></div>
           <div class="field"><label>Primary goal</label><select id="f-goal">
             <option value="">Select…</option>
             <option>Endurance / a race</option>
@@ -322,6 +334,10 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
           </select></div>
           <div class="field"><label>Schedule constraints <span class="opt">· optional</span></label><input id="f-constraints" type="text" placeholder="shift work, travel, early mornings…"></div>
           <div class="field full"><label>Injuries or physical limitations <span class="opt">· optional</span></label><textarea id="f-injuries" placeholder="Anything that affects how you move or what you can train safely."></textarea></div>
+          <div class="field full" style="gap:2px;margin-top:2px"><label>Running baseline <span class="opt">· optional — skip if you're not run-focused</span></label></div>
+          <div class="field"><label>Current weekly mileage <span class="opt">· optional</span></label><input id="f-mileage" type="text" placeholder="e.g., 15 mi/wk"></div>
+          <div class="field"><label>Recent longest run <span class="opt">· optional</span></label><input id="f-longrun" type="text" placeholder="e.g., 6 mi"></div>
+          <div class="field full"><label>Recent race time <span class="opt">· optional</span></label><input id="f-race" type="text" placeholder="e.g., 10K in 55:00, or half in 2:05"></div>
           <div class="field"><label>Heritage / cuisine background <span class="opt">· optional</span></label><input id="f-heritage" type="text" placeholder="Helps tailor nutrition to foods you enjoy"></div>
           <div class="field"><label>Dietary preferences <span class="opt">· optional</span></label><input id="f-diet" type="text" placeholder="vegetarian, halal, allergies…"></div>
           <div class="field full"><label>Anything else you want me to know <span class="opt">· optional</span></label><textarea id="f-notes" placeholder="Context, history, what's worked or what hasn't."></textarea></div>
@@ -354,13 +370,31 @@ function submitIntake(){
   if(!g('f-clear').checked || !g('f-consent').checked){ g('applyMsg').textContent='Please confirm both boxes to continue.'; return; }
   if(!g('f-sign').value.trim()){ g('applyMsg').textContent='Please type your full legal name to sign.'; return; }
   g('applyMsg').textContent='';
+  var tz=''; try{ tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''; }catch(e){}
   var payload={ form:'intake',
     name:g('f-name').value, email:g('f-email').value, goal:g('f-goal').value, target:g('f-target').value,
     experience:g('f-exp').value, days:g('f-days').value, equipment:g('f-equip').value, constraints:g('f-constraints').value,
-    injuries:g('f-injuries').value, heritage:g('f-heritage').value, diet:g('f-diet').value, plan:g('f-plan').value, notes:((g('f-plan').value)?('[Plan: '+g('f-plan').value+'] '):'')+((window.__REF)?('[Referred by: '+window.__REF+'] '):'')+g('f-notes').value, ref:(window.__REF||''), referredBy:(window.__REF||''),
+    injuries:g('f-injuries').value, heritage:g('f-heritage').value, diet:g('f-diet').value, plan:g('f-plan').value,
+    age:g('f-age').value, biologicalSex:g('f-sex').value, height:g('f-height').value, units:g('f-units').value,
+    weeklyMileage:g('f-mileage').value, longestRun:g('f-longrun').value, recentRace:g('f-race').value, timezone:tz,
+    notes:((g('f-plan').value)?('[Plan: '+g('f-plan').value+'] '):'')+((window.__REF)?('[Referred by: '+window.__REF+'] '):'')+g('f-notes').value, ref:(window.__REF||''), referredBy:(window.__REF||''),
     clearance:'yes', consent:'yes', scopeVersion:'1.0', signature:g('f-sign').value };
   var ENDPOINT='https://script.google.com/macros/s/AKfycbzosdkuK6u5QKFqH7Lei41mmuk6PSy8nMAIm9dPakMuedbYdwHLCCCb_X5499ooa-6N9A/exec';
   try{ if(ENDPOINT.indexOf('http')===0){ fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)}); } }catch(e){}
+  // Structured copy into Supabase `leads` (publishable key is public by design; RLS allows INSERT only).
+  // Fire-and-forget: never blocks the applicant, and the Apps Script POST above is unaffected if this fails.
+  try{
+    var SB_URL='https://idazmldyntjfqgfbaifu.supabase.co', SB_KEY='sb_publishable_Yftt89TJlR0ES5NZBlCyxg_vPU-KgPQ';
+    var ageNum=parseInt(g('f-age').value,10);
+    var lead={ full_name:payload.name, email:payload.email, goal:payload.goal, experience:payload.experience,
+      days_per_week:payload.days, equipment:payload.equipment, target_event:payload.target, constraints:payload.constraints,
+      injuries:payload.injuries, heritage:payload.heritage, diet:payload.diet, notes:g('f-notes').value,
+      referred_by:payload.referredBy, clearance:true, consent:true, plan:payload.plan, signature:payload.signature,
+      scope_version:'1.0', age:(isFinite(ageNum)?ageNum:null), biological_sex:payload.biologicalSex, height:payload.height,
+      units:payload.units, weekly_mileage:payload.weeklyMileage, longest_run:payload.longestRun, recent_race:payload.recentRace,
+      timezone:payload.timezone, raw:payload };
+    fetch(SB_URL+'/rest/v1/leads',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(lead)});
+  }catch(e){}
   g('applyForm').style.display='none'; g('applyDone').style.display='block';
   document.getElementById('apply').scrollIntoView({behavior:'smooth',block:'center'});
 }

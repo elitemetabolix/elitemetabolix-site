@@ -3,6 +3,10 @@
     {
       "source": "/apply",
       "destination": "/apply.html"
+    },
+    {
+      "source": "/boxing",
+      "destination": "/boxing.html"
     }
   ]
 }

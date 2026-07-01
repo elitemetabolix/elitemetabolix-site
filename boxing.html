@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shadow Boxing — Elite Metabolix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#17130F; --panel:#211B16; --panel-2:#2A231C; --canvas:#EBE3D4;
+    --oxblood:#C1362F; --brass:#C99A3F; --wrap:#9A8B76; --accent:#F0852E;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--ink);color:var(--canvas);font-family:"Barlow",system-ui,sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .bx-wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+  .bx-top{display:flex;align-items:center;justify-content:space-between;padding:22px 0 10px}
+  .bx-mark{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;color:var(--wrap)}
+  .bx-mark b{color:var(--canvas)}
+  .bx-tag{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--brass)}
+  .bx-hero{padding:26px 0 8px}
+  .bx-eyebrow{font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);margin:0 0 12px}
+  .bx-h1{font-family:"Anton",sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(2.7rem,9vw,5.4rem);line-height:.92;letter-spacing:.01em;margin:0;color:var(--canvas)}
+  .bx-h1 .hit{color:var(--accent)}
+  .bx-lede{color:var(--wrap);max-width:46ch;margin:16px 0 0;font-size:1.05rem}
+
+  .card{position:relative;margin:26px 0 8px;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid #ffffff10;box-shadow:0 30px 60px -30px #000, inset 0 1px 0 #ffffff0d}
+  .card::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% -10%, #ffffff0e, transparent 60%)}
+  .card-corner{position:absolute;top:0;right:0;width:0;height:0;border-top:64px solid var(--brass);border-left:64px solid transparent}
+  .card-bell{position:absolute;top:10px;right:12px;z-index:2;color:var(--ink);transform-origin:50% 10%}
+  .card-bell.ring{animation:bell .6s ease}
+  @keyframes bell{0%,100%{transform:rotate(0)}15%{transform:rotate(16deg)}30%{transform:rotate(-13deg)}45%{transform:rotate(9deg)}60%{transform:rotate(-6deg)}}
+
+  .presets{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:18px 16px 6px}
+  .chip{font:600 .82rem/1 "Barlow",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--wrap);background:#ffffff0a;border:1px solid #ffffff1a;border-radius:999px;padding:9px 16px;cursor:pointer;transition:.15s}
+  .chip[aria-pressed="true"]{color:var(--ink);background:var(--brass);border-color:var(--brass)}
+  .chip small{display:block;font-weight:500;letter-spacing:.02em;text-transform:none;opacity:.8;font-size:.72rem;margin-top:2px}
+
+  .builder{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px 18px 4px;max-width:460px;margin:0 auto}
+  @media(min-width:520px){.builder{grid-template-columns:repeat(4,1fr)}}
+  .builder label{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--wrap);display:flex;flex-direction:column;gap:5px}
+  .builder input{font:700 1rem "Barlow";background:#ffffff0c;border:1px solid #ffffff22;color:var(--canvas);border-radius:8px;padding:9px 10px;width:100%}
+
+  .card-head{display:flex;align-items:baseline;justify-content:space-between;padding:14px 22px 0}
+  .round-label{font-family:"Anton",sans-serif;font-size:1.5rem;letter-spacing:.04em;text-transform:uppercase}
+  .round-label small{color:var(--wrap);font-size:.9rem}
+  .phase{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brass)}
+  .phase.rest{color:var(--wrap)}
+
+  .clockwrap{position:relative;width:min(76vw,290px);aspect-ratio:1;margin:8px auto 2px;display:grid;place-items:center}
+  .ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+  .ring-bg{fill:none;stroke:#ffffff14;stroke-width:5}
+  .ring-fg{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;stroke-dasharray:339.292;stroke-dashoffset:0;transition:stroke-dashoffset .95s linear}
+  .clock{font-family:"Anton",sans-serif;font-size:clamp(3rem,13vw,4.7rem);line-height:.9;font-variant-numeric:tabular-nums;letter-spacing:.02em;text-align:center}
+  .clock.warn{color:var(--accent)}
+
+  .combo{min-height:118px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:2px 16px 6px;text-align:center}
+  .combo-nums{font-family:"Anton",sans-serif;font-size:clamp(2.4rem,11vw,4.2rem);line-height:1;letter-spacing:.06em;display:flex;flex-wrap:wrap;gap:.28em;justify-content:center}
+  .combo-nums .punch{color:var(--canvas)}
+  .combo-nums .move{color:var(--brass);font-size:.62em;align-self:center}
+  .combo-names{color:var(--wrap);font-size:.95rem;letter-spacing:.04em;text-transform:uppercase}
+  .combo-rest,.combo-idle{color:var(--wrap);font-size:1.05rem;max-width:36ch}
+  .summary{color:var(--canvas);font-size:1.05rem}
+  .summary b{color:var(--brass)}
+
+  .controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:6px 16px 8px}
+  .btn{font-family:"Barlow",sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;text-transform:uppercase;border:0;border-radius:10px;padding:14px 30px;cursor:pointer;color:#fff;background:var(--accent);transition:transform .06s ease,filter .15s ease}
+  .btn:hover{filter:brightness(1.08)}.btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--canvas);border:1px solid #ffffff2a}
+  .toggles{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:0 16px 22px}
+  .mini{font:600 .78rem/1 "Barlow";letter-spacing:.04em;color:var(--wrap);background:#ffffff08;border:1px solid #ffffff18;border-radius:999px;padding:8px 13px;cursor:pointer;transition:.15s}
+  .mini[aria-pressed="true"]{color:var(--canvas);border-color:var(--brass)}
+  .mini[aria-pressed="false"]{opacity:.5}
+  .btn:focus-visible,.chip:focus-visible,.mini:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+
+  .sec{padding:44px 0 6px}
+  .sec-eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);margin:0 0 6px}
+  .sec-title{font-family:"Anton",sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(1.7rem,5vw,2.6rem);letter-spacing:.02em;margin:0 0 20px}
+  .grid{display:grid;gap:14px}
+  @media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,1fr)}}
+  .tile{background:var(--panel);border:1px solid #ffffff12;border-radius:12px;padding:18px 18px 16px}
+  .tile h3{font-family:"Barlow";font-weight:700;font-size:1.05rem;letter-spacing:.02em;margin:0 0 6px}
+  .tile p{margin:0;color:var(--wrap);font-size:.96rem}
+  .tile ul{margin:8px 0 0;padding-left:18px;color:var(--wrap);font-size:.95rem}.tile li{margin:4px 0}
+  .keycard{background:var(--canvas);color:var(--ink);border-radius:12px;padding:8px 6px}
+  .keyrow{display:flex;align-items:center;gap:14px;padding:12px 14px;border-bottom:1px solid #0000000f}.keyrow:last-child{border-bottom:0}
+  .keynum{font-family:"Anton";font-size:2rem;line-height:1;width:1.4em;text-align:center;color:var(--oxblood)}
+  .keyname{font-weight:700;letter-spacing:.02em}
+  .keydesc{color:#5c5145;font-size:.92rem;margin-left:auto;text-align:right;max-width:20ch}
+  .note{margin:26px 0 0;padding:14px 16px;border-left:3px solid var(--brass);background:#ffffff08;border-radius:0 8px 8px 0;color:var(--wrap);font-size:.9rem}
+  .foot{padding:40px 0 60px;color:#6f6355;font-size:.82rem;line-height:1.6}.foot b{color:var(--wrap)}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="bx-wrap">
+
+  <header class="bx-top">
+    <a class="bx-mark" href="/" style="text-decoration:none"><b>ELITE</b> METABOLIX</a>
+    <div class="bx-tag">Shadow Boxing</div>
+  </header>
+
+  <section class="bx-hero">
+    <p class="bx-eyebrow">Basics &amp; follow-along rounds</p>
+    <h1 class="bx-h1">Throw hands.<br><span class="hit">No bag needed.</span></h1>
+    <p class="bx-lede">Learn the six punches, tighten your stance, then step into a live round — the bell rings, a voice calls the combos, you throw them. Eyes off the screen, hands up.</p>
+  </section>
+
+  <section class="card" aria-label="Shadow boxing round player">
+    <div class="card-corner" aria-hidden="true"></div>
+    <div class="card-bell" id="bell" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1.4 1.4 0 0 1 1.4 1.4v.7a6 6 0 0 1 4.6 5.83V15l1.6 2.2a1 1 0 0 1-.8 1.6H5.6a1 1 0 0 1-.8-1.6L6.4 15V9.93A6 6 0 0 1 11 4.1v-.7A1.4 1.4 0 0 1 12 2Zm0 20a2.6 2.6 0 0 1-2.5-1.9h5A2.6 2.6 0 0 1 12 22Z"/></svg>
+    </div>
+
+    <div class="presets" role="group" aria-label="Choose a workout">
+      <button class="chip" data-preset="beginner" aria-pressed="true">First bell<small>3 × 2:00 · 1:00 rest</small></button>
+      <button class="chip" data-preset="intermediate" aria-pressed="false">Work the bag<small>3 × 3:00 · 1:00 rest</small></button>
+      <button class="chip" data-preset="blitz" aria-pressed="false">2-min blitz<small>1 × 2:00 · quick</small></button>
+      <button class="chip" data-preset="custom" aria-pressed="false">Custom<small>you set it</small></button>
+    </div>
+
+    <div class="builder" id="builder" hidden>
+      <label>Rounds<input type="number" id="inRounds" min="1" max="15" value="3"></label>
+      <label>Work (sec)<input type="number" id="inWork" min="30" max="600" step="10" value="180"></label>
+      <label>Rest (sec)<input type="number" id="inRest" min="0" max="180" step="5" value="60"></label>
+      <label>Combo every (s)<input type="number" id="inInt" min="5" max="60" step="1" value="15"></label>
+    </div>
+
+    <div class="card-head">
+      <div class="round-label"><span id="roundNum">Round 1</span> <small id="roundOf">/ 3</small></div>
+      <div class="phase" id="phase">Ready</div>
+    </div>
+
+    <div class="clockwrap" id="clockwrap">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="ring-bg" cx="60" cy="60" r="54"/>
+        <circle class="ring-fg" id="ring" cx="60" cy="60" r="54"/>
+      </svg>
+      <div class="clock" id="clock">2:00</div>
+    </div>
+
+    <div class="combo" aria-live="polite" aria-atomic="true">
+      <div class="combo-idle" id="comboIdle">Tap start — combos appear here.</div>
+      <div class="combo-nums" id="comboNums" style="display:none"></div>
+      <div class="combo-names" id="comboNames" style="display:none"></div>
+      <div class="combo-rest" id="comboRest" style="display:none"></div>
+      <div class="summary" id="summary" style="display:none"></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="startBtn">Start round</button>
+      <button class="btn ghost" id="resetBtn">Reset</button>
+    </div>
+    <div class="toggles">
+      <button class="mini" id="soundBtn" aria-pressed="true">🔔 Bell</button>
+      <button class="mini" id="voiceBtn" aria-pressed="true">🗣️ Voice</button>
+      <button class="mini" id="comboBtn" aria-pressed="true">🥊 Combos</button>
+    </div>
+  </section>
+  <p class="note">Orthodox stance assumed (left foot forward). Southpaw? Mirror everything — lead becomes your right. The numbering stays the same.</p>
+
+  <section class="sec">
+    <p class="sec-eyebrow">The language</p>
+    <h2 class="sec-title">Punches by the numbers</h2>
+    <div class="keycard">
+      <div class="keyrow"><span class="keynum">1</span><span class="keyname">Jab</span><span class="keydesc">Lead-hand straight. Your range-finder.</span></div>
+      <div class="keyrow"><span class="keynum">2</span><span class="keyname">Cross</span><span class="keydesc">Rear-hand straight. Turn the hip.</span></div>
+      <div class="keyrow"><span class="keynum">3</span><span class="keyname">Lead hook</span><span class="keydesc">Lead hand, elbow level, pivot the foot.</span></div>
+      <div class="keyrow"><span class="keynum">4</span><span class="keyname">Rear hook</span><span class="keydesc">Rear hand hook, rotate through.</span></div>
+      <div class="keyrow"><span class="keynum">5</span><span class="keyname">Lead uppercut</span><span class="keydesc">Lead hand, drive up from the legs.</span></div>
+      <div class="keyrow"><span class="keynum">6</span><span class="keyname">Rear uppercut</span><span class="keydesc">Rear hand, up the middle.</span></div>
+    </div>
+    <p class="note"><b>1-2-3</b> = jab, cross, lead hook. That's the whole shorthand — the voice calls them the same way.</p>
+  </section>
+
+  <section class="sec">
+    <p class="sec-eyebrow">Before you throw</p>
+    <h2 class="sec-title">Fundamentals</h2>
+    <div class="grid two">
+      <div class="tile"><h3>Stance</h3><ul><li>Lead foot forward, feet shoulder-width, slight stagger.</li><li>Weight on the balls of your feet, knees soft.</li><li>Hands up, elbows in, chin tucked behind the lead shoulder.</li></ul></div>
+      <div class="tile"><h3>Guard</h3><ul><li>Gloves at cheekbone height, palms facing you.</li><li>Rear hand glued to the jaw, lead hand a touch forward.</li><li>Punch and it comes right back — never drop to reset.</li></ul></div>
+      <div class="tile"><h3>Footwork</h3><ul><li>Step with the near foot first, drag the other to follow.</li><li>Never cross your feet or bounce flat-footed.</li><li>Small steps. Stay in stance the whole time.</li></ul></div>
+      <div class="tile"><h3>Defense</h3><ul><li><b>Slip</b> — small head move off-center, don't duck low.</li><li><b>Roll</b> — bend at the knees, weave under.</li><li><b>Block / parry</b> — catch or tap the shot, stay tight.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <p class="sec-eyebrow">Make it count</p>
+    <h2 class="sec-title">Shadow boxing, done right</h2>
+    <div class="grid three">
+      <div class="tile"><h3>Warm up first</h3><p>2–3 minutes: loosen shoulders, hips and ankles, then light footwork before the bell.</p></div>
+      <div class="tile"><h3>Snap, don't muscle</h3><p>Throw fast and relaxed. Full extension, snap it back to guard. Breathe out on every punch.</p></div>
+      <div class="tile"><h3>Move between combos</h3><p>Don't stand still. Step, pivot, reset your angle, then fire the next one the voice calls.</p></div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p><b>Heads up:</b> general fitness content, not medical advice. Warm up, keep it pain-free, and check with a physician before starting a new exercise program — stop if you feel dizzy, short of breath, or any sharp pain.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var PRESETS={
+    beginner:{name:"First bell",rounds:3,work:120,rest:60,interval:20,combos:[["1"],["1","1"],["1","2"],["2"],["1","2","reset"],["1","1","2"],["1","2","step"]]},
+    intermediate:{name:"Work the bag",rounds:3,work:180,rest:60,interval:15,combos:[["1","2","3"],["1","1","2"],["1","2","3","2"],["2","3","2"],["1","6","3"],["1","2","slip","2"],["1","2","roll","3"],["1","5","2"]]},
+    blitz:{name:"2-min blitz",rounds:1,work:120,rest:0,interval:10,combos:[["1","2"],["1","2","3"],["3","2"],["1","2","5"],["1","1","2","3"],["2","slip","2"],["1","2","3","2"]]}
+  };
+  var PUNCH={"1":"Jab","2":"Cross","3":"Lead hook","4":"Rear hook","5":"Lead uppercut","6":"Rear uppercut"};
+  var MOVE={"slip":"Slip","roll":"Roll","step":"Step","pivot":"Pivot","reset":"Reset"};
+  var SAY={"1":"one","2":"two","3":"three","4":"four","5":"five","6":"six","slip":"slip","roll":"roll","step":"step","pivot":"pivot","reset":"reset"};
+  var PREP=5, C=339.292;
+
+  var el=function(id){return document.getElementById(id)};
+  var startBtn=el("startBtn"),resetBtn=el("resetBtn"),soundBtn=el("soundBtn"),voiceBtn=el("voiceBtn"),comboBtn=el("comboBtn"),
+      clock=el("clock"),ring=el("ring"),clockwrap=el("clockwrap"),phaseEl=el("phase"),roundNum=el("roundNum"),roundOf=el("roundOf"),
+      comboIdle=el("comboIdle"),comboNums=el("comboNums"),comboNames=el("comboNames"),comboRest=el("comboRest"),summary=el("summary"),
+      bell=el("bell"),builder=el("builder"),inRounds=el("inRounds"),inWork=el("inWork"),inRest=el("inRest"),inInt=el("inInt");
+
+  var presetKey="beginner",phases=[],idx=0,remaining=0,tick=null,running=false,comboClock=0,lastCombo=-1;
+  var soundOn=true,voiceOn=true,callCombos=true,audio=null,wakeLock=null;
+  var roundsDone=0,workElapsed=0,punchCount=0;
+
+  function clamp(n,a,b){n=parseInt(n,10);if(isNaN(n))n=a;return Math.max(a,Math.min(b,n));}
+  function CUR(){
+    if(presetKey==="custom") return {name:"Custom",rounds:clamp(inRounds.value,1,15),work:clamp(inWork.value,30,600),rest:clamp(inRest.value,0,180),interval:clamp(inInt.value,5,60),combos:PRESETS.intermediate.combos};
+    return PRESETS[presetKey];
+  }
+  function fmt(s){s=Math.max(0,s|0);var m=Math.floor(s/60),r=s%60;return m+":"+(r<10?"0":"")+r;}
+
+  function ensureAudio(){if(!audio){try{audio=new (window.AudioContext||window.webkitAudioContext)();}catch(e){audio=null;}}if(audio&&audio.state==="suspended")audio.resume();}
+  function ding(times){
+    if(soundOn&&audio){var t=audio.currentTime;for(var i=0;i<(times||1);i++){var o=audio.createOscillator(),g=audio.createGain(),at=t+i*0.16;o.type="sine";o.frequency.setValueAtTime(880,at);o.frequency.exponentialRampToValueAtTime(560,at+0.28);g.gain.setValueAtTime(0.0001,at);g.gain.exponentialRampToValueAtTime(0.35,at+0.01);g.gain.exponentialRampToValueAtTime(0.0001,at+0.42);o.connect(g);g.connect(audio.destination);o.start(at);o.stop(at+0.45);}}
+    bell.classList.remove("ring");void bell.offsetWidth;bell.classList.add("ring");
+    if(navigator.vibrate)navigator.vibrate(times>1?[90,60,90]:120);
+  }
+  function tickBeep(){if(!soundOn||!audio)return;var t=audio.currentTime,o=audio.createOscillator(),g=audio.createGain();o.type="square";o.frequency.setValueAtTime(1200,t);g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.14,t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+0.11);o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+0.12);}
+  function speak(text){if(!voiceOn||!("speechSynthesis"in window))return;try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.rate=1.12;u.pitch=1;speechSynthesis.speak(u);}catch(e){}}
+
+  async function acquireWake(){try{if("wakeLock"in navigator){wakeLock=await navigator.wakeLock.request("screen");}}catch(e){}}
+  function releaseWake(){try{if(wakeLock){wakeLock.release();wakeLock=null;}}catch(e){}}
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&running)acquireWake();});
+
+  function buildPhases(){var p=CUR();phases=[{type:"prep",dur:PREP,round:1}];for(var r=0;r<p.rounds;r++){phases.push({type:"work",dur:p.work,round:r+1});if(r<p.rounds-1&&p.rest>0)phases.push({type:"rest",dur:p.rest,round:r+1});}}
+
+  function hideAll(){comboIdle.style.display="none";comboNums.style.display="none";comboNames.style.display="none";comboRest.style.display="none";summary.style.display="none";}
+
+  function showCombo(){
+    if(!callCombos){hideAll();comboRest.style.display="block";comboRest.textContent="Freestyle — keep moving and throw.";return;}
+    var pool=CUR().combos,i;do{i=Math.floor(Math.random()*pool.length);}while(pool.length>1&&i===lastCombo);lastCombo=i;
+    var toks=pool[i];comboNums.innerHTML="";
+    toks.forEach(function(tok){var s=document.createElement("span");if(PUNCH[tok]){s.className="punch";s.textContent=tok;punchCount++;}else{s.className="move";s.textContent=(MOVE[tok]||tok).toLowerCase();}comboNums.appendChild(s);});
+    comboNames.textContent=toks.map(function(t){return PUNCH[t]||MOVE[t]||t;}).join(" · ");
+    speak(toks.map(function(t){return SAY[t]||t;}).join(" "));
+    hideAll();comboNums.style.display="flex";comboNames.style.display="block";
+  }
+  function setRest(nextRound){hideAll();comboRest.style.display="block";comboRest.textContent="Breathe. Shake it out. Round "+nextRound+" is coming.";}
+  function setPrep(){hideAll();comboRest.style.display="block";comboRest.textContent="Hands up. Get ready…";}
+
+  function paintRing(){var ph=phases[idx];var frac=ph?remaining/ph.dur:0;ring.style.strokeDashoffset=C*(1-Math.max(0,Math.min(1,frac)));ring.style.stroke=ph?(ph.type==="work"?"var(--accent)":ph.type==="rest"?"var(--brass)":"var(--wrap)"):"var(--accent)";}
+  function render(){clock.textContent=fmt(remaining);clock.classList.toggle("warn",!!(running&&phases[idx]&&phases[idx].type==="work"&&remaining<=10));paintRing();}
+
+  function enterPhase(){
+    var ph=phases[idx];remaining=ph.dur;comboClock=0;lastCombo=-1;
+    if(ph.type==="prep"){phaseEl.textContent="Get ready";phaseEl.classList.remove("rest");roundNum.textContent="Round "+ph.round;roundOf.textContent="/ "+CUR().rounds;setPrep();speak("Get ready");}
+    else if(ph.type==="work"){phaseEl.textContent="Work";phaseEl.classList.remove("rest");roundNum.textContent="Round "+ph.round;roundOf.textContent="/ "+CUR().rounds;showCombo();}
+    else{phaseEl.textContent="Rest";phaseEl.classList.add("rest");setRest(ph.round+1);}
+    render();
+  }
+
+  function step(){
+    var ph=phases[idx];
+    if(ph.type==="prep"&&remaining<=3&&remaining>0){tickBeep();speak(String(remaining));}
+    if((ph.type==="work"||ph.type==="rest")&&remaining<=3&&remaining>0)tickBeep();
+    remaining--;
+    if(remaining<=0){
+      if(ph.type==="work")roundsDone++;
+      idx++;
+      if(idx>=phases.length){finish();return;}
+      var next=phases[idx];
+      if(next.type==="work"){ding(1);if(ph.type==="prep")speak("Box");}
+      else ding(1);
+      enterPhase();return;
+    }
+    if(ph.type==="work"){workElapsed++;if(callCombos){comboClock++;if(comboClock>=CUR().interval){comboClock=0;showCombo();}}}
+    render();
+  }
+
+  function start(){
+    ensureAudio();acquireWake();
+    if(idx>=phases.length)reset();
+    if(!phases.length)buildPhases();
+    if(idx===0&&remaining===0)enterPhase();
+    running=true;startBtn.textContent="Pause";ding(1);
+    clearInterval(tick);tick=setInterval(step,1000);
+  }
+  function pause(){running=false;startBtn.textContent="Resume";clearInterval(tick);releaseWake();if("speechSynthesis"in window)speechSynthesis.cancel();render();}
+  function reset(){
+    running=false;clearInterval(tick);releaseWake();if("speechSynthesis"in window)speechSynthesis.cancel();
+    buildPhases();idx=0;remaining=0;comboClock=0;lastCombo=-1;roundsDone=0;workElapsed=0;punchCount=0;
+    startBtn.textContent="Start round";phaseEl.textContent="Ready";phaseEl.classList.remove("rest");
+    roundNum.textContent="Round 1";roundOf.textContent="/ "+CUR().rounds;
+    remaining=CUR().work;clock.textContent=fmt(remaining);clock.classList.remove("warn");
+    ring.style.strokeDashoffset=0;ring.style.stroke="var(--accent)";
+    hideAll();comboIdle.style.display="block";comboIdle.textContent="Tap start — combos appear here.";
+  }
+  function finish(){
+    running=false;clearInterval(tick);releaseWake();ding(2);speak("Time. Nice work.");
+    phaseEl.textContent="Done";phaseEl.classList.remove("rest");clock.textContent="0:00";clock.classList.remove("warn");
+    ring.style.strokeDashoffset=0;
+    hideAll();summary.style.display="block";
+    summary.innerHTML="🥊 <b>"+roundsDone+"</b> rounds · <b>"+fmt(workElapsed)+"</b> of work"+(callCombos?" · ~<b>"+punchCount+"</b> punches":"")+"<br>Hands stay up.";
+    startBtn.textContent="Go again";
+  }
+
+  startBtn.addEventListener("click",function(){running?pause():start();});
+  resetBtn.addEventListener("click",reset);
+  function toggle(btn,setter){var on=btn.getAttribute("aria-pressed")!=="true";btn.setAttribute("aria-pressed",String(on));setter(on);}
+  soundBtn.addEventListener("click",function(){toggle(soundBtn,function(v){soundOn=v;if(v)ensureAudio();});});
+  voiceBtn.addEventListener("click",function(){toggle(voiceBtn,function(v){voiceOn=v;if(!v&&"speechSynthesis"in window)speechSynthesis.cancel();});});
+  comboBtn.addEventListener("click",function(){toggle(comboBtn,function(v){callCombos=v;if(running&&phases[idx]&&phases[idx].type==="work")showCombo();});});
+
+  Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(chip){
+    chip.addEventListener("click",function(){
+      document.querySelectorAll(".chip").forEach(function(c){c.setAttribute("aria-pressed","false");});
+      chip.setAttribute("aria-pressed","true");presetKey=chip.getAttribute("data-preset");
+      builder.hidden=presetKey!=="custom";reset();
+    });
+  });
+  [inRounds,inWork,inRest,inInt].forEach(function(inp){inp.addEventListener("input",function(){if(presetKey==="custom"&&!running)reset();});});
+
+  if(!("speechSynthesis"in window)){voiceOn=false;voiceBtn.setAttribute("aria-pressed","false");voiceBtn.style.display="none";}
+  reset();
+})();
+</script>
+</body>
+</html>

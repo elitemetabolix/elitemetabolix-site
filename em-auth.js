@@ -240,7 +240,7 @@
     loadSupabase(function(){
       sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       routeIfLoggedIn(false);
-      sb.auth.onAuthStateChange(function(evt){ if (evt === 'SIGNED_IN') routeIfLoggedIn(false); });
+      sb.auth.onAuthStateChange(function(evt){ if (evt === 'SIGNED_IN') routeIfLoggedIn(true); });
     });
   });
 })();

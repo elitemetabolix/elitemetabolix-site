@@ -114,13 +114,30 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
 .fp-done{font-family:var(--fd);font-size:24px;color:var(--green)}
 .fp-hint{font-size:12px;color:var(--mut2);margin-top:14px;font-style:italic}
 </style>
+<style id="em-nav-canon">
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,12,16,.72);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1180px;margin:0 auto;padding:15px 28px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{font-family:var(--fd);font-weight:600;font-size:20px;letter-spacing:.01em;color:var(--txt);text-decoration:none;display:flex;align-items:center;gap:9px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--orange);box-shadow:0 0 14px var(--orange);display:inline-block}
+.nav-links{display:flex;align-items:center;gap:30px}
+.nav-links a{color:var(--mut);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--txt)}
+.nav-links a.active{color:var(--orange)}
+.nav-cta{font-family:var(--fm)!important;font-size:11px!important;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--line2);padding:9px 16px;border-radius:7px;color:var(--txt)!important;transition:all .2s}
+.nav-cta:hover{border-color:var(--orange);color:var(--orange)!important}
+.burger{display:none;background:none;border:none;color:var(--txt);font-size:22px;cursor:pointer}
+@media(max-width:900px){
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 16px 34px rgba(0,0,0,.5);padding:6px 0}
+  .burger{display:block}
+  .nav-links a{padding:14px 28px;font-size:15px;border-top:1px solid rgba(255,255,255,.045)}
+  .nav-links a:first-child{border-top:none}
+  .nav-cta{margin:10px 28px 6px!important;text-align:center}
+}
+</style>
 </head>
 <body>
 <div class="glow a"></div><div class="glow b"></div>
-<nav><div class="nav-in">
-  <a class="brand" href="index.html"><span class="em-mark">E&nbsp;M</span><span class="wm">Elite&nbsp;Metabolix</span></a>
-  <div class="nav-right"><a href="index.html">Home</a><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html" class="active">Yoga</a><a href="boxing.html">Boxing</a><a href="mind.html">Mind</a><a href="apply.html">Apply</a></div></div><button class="burger" onclick="var n=this.parentElement.querySelector('.nav-right');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button>
-</div></nav>
+<nav><div class="nav-in"><a href="index.html" class="brand"><span class="dot"></span>Elite Metabolix</a><div class="nav-links"><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html" class="active">Yoga</a><a href="mind.html">Mind</a><a href="mailto:hello@elitemetabolixhq.com?subject=Manage%20my%20membership" class="nav-cta">Manage Membership</a></div><button class="burger" onclick="var n=document.querySelector('.nav-links');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button></div></nav>
 
 <header class="hero"><div class="hero-grid"></div><div class="wrap">
   <div class="eyebrow"><span class="signal"><i></i><i></i><i></i><i></i></span><span class="mono">Pillar · Yoga &amp; Mobility</span></div>
@@ -174,7 +191,6 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   <div class="sec-label"><span class="mono">Keep Exploring</span></div>
   <div class="pillarnav">
     <a class="pcard" href="mind.html"><div class="pk">Pillar →</div><h3>Mind</h3><p>The mental game: focus, nerves, stress, and the routines that make consistency automatic.</p></a>
-    <a class="pcard" href="boxing.html"><div class="pk">Pillar →</div><h3>Shadow Boxing</h3><p>Six punches, a live round timer, and a voice that calls the combos. Conditioning you can do anywhere.</p></a>
     <a class="pcard" href="apply.html"><div class="pk">Get started →</div><h3>Build yours</h3><p>A custom plan with mobility and breathwork programmed in, refined every week.</p></a>
   </div>
 </div></section>

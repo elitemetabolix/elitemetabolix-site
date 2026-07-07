@@ -87,12 +87,39 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   .burger{display:block}
 }
 </style>  <script src="/em-auth.js?v=2" defer></script>
+
+<style>
+/* --- Yoga flow player --- */
+.flowbtn{margin-top:16px;display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt);background:rgba(var(--orange-rgb),.1);border:1px solid rgba(var(--orange-rgb),.42);padding:10px 15px;border-radius:9px;cursor:pointer;transition:all .18s;width:100%;justify-content:center}
+.flowbtn:hover{background:rgba(var(--orange-rgb),.2);transform:translateY(-2px)}
+.fp-back{position:fixed;inset:0;z-index:200;background:rgba(6,8,12,.88);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:22px}
+.fp-back.open{display:flex}
+.fp{width:100%;max-width:460px;background:linear-gradient(165deg,var(--surface),var(--bg2));border:1px solid var(--line2);border-radius:24px;padding:32px 26px 26px;box-shadow:0 40px 90px rgba(0,0,0,.6);text-align:center;position:relative}
+.fp-x{position:absolute;top:15px;right:18px;background:none;border:none;color:var(--mut);font-size:24px;cursor:pointer;line-height:1}
+.fp-title{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange)}
+.fp-count{font-family:var(--fm);font-size:12px;color:var(--mut2);margin-top:5px}
+.fp-ring{position:relative;width:196px;height:196px;margin:20px auto 6px}
+.fp-ring svg{transform:rotate(-90deg)}
+.fp-ring .bg{fill:none;stroke:var(--line);stroke-width:8}
+.fp-ring .fg{fill:none;stroke:var(--orange);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .95s linear}
+.fp-time{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:46px;color:var(--txt)}
+.fp-move{font-family:var(--fd);font-size:23px;color:var(--txt);margin:8px 0 2px;min-height:1.5em;line-height:1.2}
+.fp-demo{display:inline-block;font-family:var(--fm);font-size:11px;letter-spacing:.06em;color:var(--blue);text-decoration:none;margin-top:4px}
+.fp-demo:hover{text-decoration:underline}
+.fp-next{font-size:13px;color:var(--mut2);margin-top:14px;min-height:1.2em}
+.fp-ctrls{display:flex;gap:10px;justify-content:center;margin-top:20px}
+.fp-ctrls button{font-family:var(--fb);font-weight:600;font-size:14px;padding:12px 22px;border-radius:10px;cursor:pointer;border:1px solid var(--line2);background:var(--card);color:var(--txt);transition:transform .16s}
+.fp-ctrls .primary{background:linear-gradient(135deg,var(--orange),#f5a059);color:#1a0f04;border:none}
+.fp-ctrls button:hover{transform:translateY(-2px)}
+.fp-done{font-family:var(--fd);font-size:24px;color:var(--green)}
+.fp-hint{font-size:12px;color:var(--mut2);margin-top:14px;font-style:italic}
+</style>
 </head>
 <body>
 <div class="glow a"></div><div class="glow b"></div>
 <nav><div class="nav-in">
   <a class="brand" href="index.html"><span class="em-mark">E&nbsp;M</span><span class="wm">Elite&nbsp;Metabolix</span></a>
-  <div class="nav-right"><a href="index.html">Home</a><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html" class="active">Yoga</a><a href="mind.html">Mind</a><a href="apply.html">Apply</a></div></div><button class="burger" onclick="var n=this.parentElement.querySelector('.nav-right');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button>
+  <div class="nav-right"><a href="index.html">Home</a><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html" class="active">Yoga</a><a href="boxing.html">Boxing</a><a href="mind.html">Mind</a><a href="apply.html">Apply</a></div></div><button class="burger" onclick="var n=this.parentElement.querySelector('.nav-right');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button>
 </div></nav>
 
 <header class="hero"><div class="hero-grid"></div><div class="wrap">
@@ -107,13 +134,13 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   <p class="sec-intro">Short, repeatable, and built around training — not a separate hobby to find time for. Each flow is cued inside your plan — tap any move below to see a demo.</p>
   <div class="flows" style="margin-top:26px">
     <div class="flow reveal"><div class="ft"><h3>Pre-Session Activation</h3><span class="dur">8 MIN</span></div><div class="when">Before runs &amp; lifts</div>
-      <ul><li><a class="demo-link" href="https://www.google.com/search?q=World%27s%20greatest%20stretch%20how%20to" target="_blank" rel="noopener noreferrer">World's-greatest-stretch ×5/side</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Leg%20swings%20%E2%80%94%20front%20and%20lateral%20how%20to" target="_blank" rel="noopener noreferrer">Leg swings — front &amp; lateral ×10</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Hip%20opener%20lunge%20with%20reach%20how%20to" target="_blank" rel="noopener noreferrer">Hip-opener lunge with reach</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Ankle%20rocks%20calf%20prep%20how%20to" target="_blank" rel="noopener noreferrer">Ankle rocks + calf prep</a></li><li><a class="demo-link" href="https://www.google.com/search?q=easy%20nasal%20breathing%20build%20how%20to" target="_blank" rel="noopener noreferrer">2 min easy nasal-breathing build</a></li></ul></div>
+      <ul><li><a class="demo-link" href="https://www.youtube.com/results?search_query=World%27s%20greatest%20stretch%20how%20to" target="_blank" rel="noopener noreferrer">World's-greatest-stretch ×5/side</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Leg%20swings%20%E2%80%94%20front%20and%20lateral%20how%20to" target="_blank" rel="noopener noreferrer">Leg swings — front &amp; lateral ×10</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Hip%20opener%20lunge%20with%20reach%20how%20to" target="_blank" rel="noopener noreferrer">Hip-opener lunge with reach</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Ankle%20rocks%20calf%20prep%20how%20to" target="_blank" rel="noopener noreferrer">Ankle rocks + calf prep</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=easy%20nasal%20breathing%20build%20how%20to" target="_blank" rel="noopener noreferrer">2 min easy nasal-breathing build</a></li></ul></div>
     <div class="flow reveal"><div class="ft"><h3>Post-Run Reset</h3><span class="dur">10 MIN</span></div><div class="when">After hard efforts</div>
-      <ul><li><a class="demo-link" href="https://www.google.com/search?q=Downward%20dog%20calf%20pedals%20how%20to" target="_blank" rel="noopener noreferrer">Downward dog → calf pedals</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Low%20lunge%20quad%20reach%20side%20how%20to" target="_blank" rel="noopener noreferrer">Low lunge + quad reach / side</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Pigeon%20for%20hips%20how%20to" target="_blank" rel="noopener noreferrer">Pigeon for hips ×90s/side</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Figure%204%20glute%20release%20how%20to" target="_blank" rel="noopener noreferrer">Figure-4 glute release</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Legs%20up%20the%20wall%20slow%20exhale%20how%20to" target="_blank" rel="noopener noreferrer">Legs-up-the-wall, slow exhale</a></li></ul></div>
+      <ul><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Downward%20dog%20calf%20pedals%20how%20to" target="_blank" rel="noopener noreferrer">Downward dog → calf pedals</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Low%20lunge%20quad%20reach%20side%20how%20to" target="_blank" rel="noopener noreferrer">Low lunge + quad reach / side</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Pigeon%20for%20hips%20how%20to" target="_blank" rel="noopener noreferrer">Pigeon for hips ×90s/side</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Figure%204%20glute%20release%20how%20to" target="_blank" rel="noopener noreferrer">Figure-4 glute release</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Legs%20up%20the%20wall%20slow%20exhale%20how%20to" target="_blank" rel="noopener noreferrer">Legs-up-the-wall, slow exhale</a></li></ul></div>
     <div class="flow reveal"><div class="ft"><h3>Rest-Day Yoga</h3><span class="dur">20 MIN</span></div><div class="when">Off / recovery days</div>
-      <ul><li><a class="demo-link" href="https://www.google.com/search?q=Gentle%20vinyasa%20to%20warm%20tissue%20how%20to" target="_blank" rel="noopener noreferrer">Gentle vinyasa to warm tissue</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Hip%20hamstring%20deep%20holds%20how%20to" target="_blank" rel="noopener noreferrer">Hip + hamstring deep holds</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Thoracic%20rotations%20for%20posture%20how%20to" target="_blank" rel="noopener noreferrer">Thoracic rotations for posture</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Balance%20work%20%28single%20leg%20holds%29%20how%20to" target="_blank" rel="noopener noreferrer">Balance work (single-leg holds)</a></li><li><a class="demo-link" href="https://www.google.com/search?q=guided%20relaxation%20how%20to" target="_blank" rel="noopener noreferrer">5 min guided relaxation</a></li></ul></div>
+      <ul><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Gentle%20vinyasa%20to%20warm%20tissue%20how%20to" target="_blank" rel="noopener noreferrer">Gentle vinyasa to warm tissue</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Hip%20hamstring%20deep%20holds%20how%20to" target="_blank" rel="noopener noreferrer">Hip + hamstring deep holds</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Thoracic%20rotations%20for%20posture%20how%20to" target="_blank" rel="noopener noreferrer">Thoracic rotations for posture</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Balance%20work%20%28single%20leg%20holds%29%20how%20to" target="_blank" rel="noopener noreferrer">Balance work (single-leg holds)</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=guided%20relaxation%20how%20to" target="_blank" rel="noopener noreferrer">5 min guided relaxation</a></li></ul></div>
     <div class="flow reveal"><div class="ft"><h3>Desk &amp; Commute Mobility</h3><span class="dur">5 MIN</span></div><div class="when">Long sitting / drives</div>
-      <ul><li><a class="demo-link" href="https://www.google.com/search?q=Standing%20hip%20flexor%20opener%20how%20to" target="_blank" rel="noopener noreferrer">Standing hip-flexor opener</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Seated%20spinal%20twists%20how%20to" target="_blank" rel="noopener noreferrer">Seated spinal twists</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Calf%20raises%20ankle%20pumps%20how%20to" target="_blank" rel="noopener noreferrer">Calf raises + ankle pumps</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Chest%20and%20shoulder%20doorway%20stretch%20how%20to" target="_blank" rel="noopener noreferrer">Chest &amp; shoulder doorway stretch</a></li><li><a class="demo-link" href="https://www.google.com/search?q=Reset%20breath%206%20slow%20cycles%20how%20to" target="_blank" rel="noopener noreferrer">Reset breath, 6 slow cycles</a></li></ul></div>
+      <ul><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Standing%20hip%20flexor%20opener%20how%20to" target="_blank" rel="noopener noreferrer">Standing hip-flexor opener</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Seated%20spinal%20twists%20how%20to" target="_blank" rel="noopener noreferrer">Seated spinal twists</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Calf%20raises%20ankle%20pumps%20how%20to" target="_blank" rel="noopener noreferrer">Calf raises + ankle pumps</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Chest%20and%20shoulder%20doorway%20stretch%20how%20to" target="_blank" rel="noopener noreferrer">Chest &amp; shoulder doorway stretch</a></li><li><a class="demo-link" href="https://www.youtube.com/results?search_query=Reset%20breath%206%20slow%20cycles%20how%20to" target="_blank" rel="noopener noreferrer">Reset breath, 6 slow cycles</a></li></ul></div>
   </div>
 </div></section>
 
@@ -147,6 +174,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   <div class="sec-label"><span class="mono">Keep Exploring</span></div>
   <div class="pillarnav">
     <a class="pcard" href="mind.html"><div class="pk">Pillar →</div><h3>Mind</h3><p>The mental game: focus, nerves, stress, and the routines that make consistency automatic.</p></a>
+    <a class="pcard" href="boxing.html"><div class="pk">Pillar →</div><h3>Shadow Boxing</h3><p>Six punches, a live round timer, and a voice that calls the combos. Conditioning you can do anywhere.</p></a>
     <a class="pcard" href="apply.html"><div class="pk">Get started →</div><h3>Build yours</h3><p>A custom plan with mobility and breathwork programmed in, refined every week.</p></a>
   </div>
 </div></section>
@@ -160,5 +188,65 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   <p class="disclaimer">Elite Metabolix provides performance, fitness, and nutrition coaching. This is not medical care and does not diagnose, treat, or manage any medical condition. Consult your physician before beginning any exercise or mobility program.</p>
 <p style="margin-top:6px"><a href="/terms.html" style="color:var(--mut,#8a94a3);text-decoration:underline">Terms &amp; Disclaimer</a> &middot; <a href="/privacy.html" style="color:var(--mut,#8a94a3);text-decoration:underline">Privacy</a></p></div></footer>
 <script>const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));</script>
+
+<script>
+(function(){
+  var flows=[].slice.call(document.querySelectorAll('.flow'));
+  if(!flows.length)return;
+  function parseDur(txt){
+    var m;
+    if((m=txt.match(/(\d+)\s*min/i))) return parseInt(m[1],10)*60;
+    if((m=txt.match(/(\d+)\s*s\b/i))) return parseInt(m[1],10);
+    if((m=txt.match(/[\u00d7x]\s*(\d+)\s*s/i))) return parseInt(m[1],10);
+    if((m=txt.match(/[\u00d7x]\s*(\d+)/))){var n=parseInt(m[1],10); if(n>=30) return n;}
+    return 45;
+  }
+  var data=flows.map(function(fl){
+    var title=(fl.querySelector('h3')||{}).textContent||'Flow';
+    var moves=[].slice.call(fl.querySelectorAll('li')).map(function(li){
+      var a=li.querySelector('a');
+      var name=(a?a.textContent:li.textContent).trim();
+      return {name:name, href:a?a.getAttribute('href'):null, dur:parseDur(name)};
+    });
+    return {title:title, moves:moves, card:fl};
+  });
+  var back=document.createElement('div');back.className='fp-back';
+  back.innerHTML='<div class="fp"><button class="fp-x" aria-label="Close">\u00d7</button>'+
+    '<div class="fp-title" id="fpTitle"></div><div class="fp-count" id="fpCount"></div>'+
+    '<div class="fp-ring"><svg viewBox="0 0 200 200"><circle class="bg" cx="100" cy="100" r="90"/><circle class="fg" id="fpFg" cx="100" cy="100" r="90"/></svg><div class="fp-time" id="fpTime">0:00</div></div>'+
+    '<div class="fp-move" id="fpMove"></div><a class="fp-demo" id="fpDemo" target="_blank" rel="noopener noreferrer">Watch demo \u2197</a>'+
+    '<div class="fp-next" id="fpNext"></div>'+
+    '<div class="fp-ctrls"><button id="fpPause" class="primary">Pause</button><button id="fpSkip">Skip</button></div>'+
+    '<div class="fp-hint">Chime + voice cue each move \u00b7 keep your phone nearby</div></div>';
+  document.body.appendChild(back);
+  var C=2*Math.PI*90, fg=back.querySelector('#fpFg'); fg.style.strokeDasharray=C;
+  var elT=back.querySelector('#fpTime'),elM=back.querySelector('#fpMove'),elN=back.querySelector('#fpNext'),
+      elD=back.querySelector('#fpDemo'),elTitle=back.querySelector('#fpTitle'),elCount=back.querySelector('#fpCount'),
+      bPause=back.querySelector('#fpPause'),bSkip=back.querySelector('#fpSkip'),bX=back.querySelector('.fp-x');
+  var cur=null,mi=0,rem=0,tot=0,timer=null,paused=false,done=false;
+  function fmt(s){s=Math.max(0,s|0);var r=s%60;return Math.floor(s/60)+':'+(r<10?'0':'')+r;}
+  function chime(){try{var a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(660,a.currentTime);g.gain.setValueAtTime(.0001,a.currentTime);g.gain.exponentialRampToValueAtTime(.3,a.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.5);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.5);}catch(e){}if(navigator.vibrate)navigator.vibrate(70);}
+  function say(t){if('speechSynthesis' in window){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.rate=1.05;speechSynthesis.speak(u);}catch(e){}}}
+  function render(){elT.textContent=fmt(rem);fg.style.strokeDashoffset=C*(1-(tot?rem/tot:0));}
+  function loadMove(){var mv=cur.moves[mi];rem=mv.dur;tot=mv.dur;done=false;
+    elM.textContent=mv.name;elCount.textContent='Move '+(mi+1)+' of '+cur.moves.length;
+    if(mv.href){elD.style.display='inline-block';elD.href=mv.href;}else{elD.style.display='none';}
+    elN.textContent=cur.moves[mi+1]?('Next: '+cur.moves[mi+1].name):'Last one \u2014 finish strong';
+    render();say(mv.name);chime();}
+  function loop(){if(paused||done)return;rem--;if(rem<0){mi++;if(mi>=cur.moves.length){finish();return;}loadMove();return;}render();}
+  function finish(){done=true;clearInterval(timer);elCount.textContent='';elN.textContent='';elD.style.display='none';
+    elM.innerHTML='<span class="fp-done">Flow complete \u2713</span>';elT.textContent='';fg.style.strokeDashoffset=0;
+    bPause.textContent='Done';say('Flow complete. Nice work.');chime();}
+  function open(f){cur=f;mi=0;paused=false;done=false;bPause.textContent='Pause';elTitle.textContent=f.title;
+    back.classList.add('open');loadMove();clearInterval(timer);timer=setInterval(loop,1000);}
+  function close(){clearInterval(timer);back.classList.remove('open');if('speechSynthesis' in window)speechSynthesis.cancel();}
+  bPause.onclick=function(){if(done){close();return;}paused=!paused;bPause.textContent=paused?'Resume':'Pause';};
+  bSkip.onclick=function(){if(done)return;mi++;if(mi>=cur.moves.length){finish();return;}loadMove();};
+  bX.onclick=close;back.addEventListener('click',function(e){if(e.target===back)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&back.classList.contains('open'))close();});
+  data.forEach(function(f){var b=document.createElement('button');b.className='flowbtn';b.type='button';
+    b.innerHTML='\u25b6 Play flow \u00b7 '+f.moves.length+' moves';b.onclick=function(){open(f);};f.card.appendChild(b);});
+})();
+</script>
 </body>
 </html>

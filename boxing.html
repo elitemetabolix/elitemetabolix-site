@@ -118,6 +118,7 @@
       <button class="chip" data-preset="beginner" aria-pressed="true">First bell<small>3 × 2:00 · 1:00 rest</small></button>
       <button class="chip" data-preset="intermediate" aria-pressed="false">Work the bag<small>3 × 3:00 · 1:00 rest</small></button>
       <button class="chip" data-preset="blitz" aria-pressed="false">2-min blitz<small>1 × 2:00 · quick</small></button>
+      <button class="chip" data-preset="counters" aria-pressed="false">Combos &amp; counters<small>3 × 3:00 · defense</small></button>
       <button class="chip" data-preset="custom" aria-pressed="false">Custom<small>you set it</small></button>
     </div>
 
@@ -196,6 +197,17 @@
     </div>
   </section>
 
+  <section class="sec">
+    <p class="sec-eyebrow">Part of the system</p>
+    <h2 class="sec-title">One piece of a bigger plan</h2>
+    <p class="note" style="margin-top:0">Conditioning rounds like these are the kind we program into an Elite Metabolix plan — alongside your training, mobility, and recovery. Explore the rest:</p>
+    <div class="grid three" style="margin-top:14px">
+      <a class="tile" href="/mobility.html" style="text-decoration:none;display:block"><h3>Yoga &amp; Mobility →</h3><p>Follow-along flows and breathwork that keep you loose and recovering.</p></a>
+      <a class="tile" href="/mind.html" style="text-decoration:none;display:block"><h3>Mind →</h3><p>Focus, nerves, and stress tools — plus a guided breathing pacer.</p></a>
+      <a class="tile" href="/apply.html" style="text-decoration:none;display:block"><h3>Build your plan →</h3><p>Your goal, your schedule, your data — engineered and re-tuned weekly.</p></a>
+    </div>
+  </section>
+
   <footer class="foot">
     <p><b>Heads up:</b> general fitness content, not medical advice. Warm up, keep it pain-free, and check with a physician before starting a new exercise program — stop if you feel dizzy, short of breath, or any sharp pain.</p>
   <p style="margin-top:6px"><a href="/terms.html" style="color:var(--mut,#8a94a3);text-decoration:underline">Terms &amp; Disclaimer</a> &middot; <a href="/privacy.html" style="color:var(--mut,#8a94a3);text-decoration:underline">Privacy</a></p></footer>
@@ -205,9 +217,10 @@
 (function(){
   "use strict";
   var PRESETS={
-    beginner:{name:"First bell",rounds:3,work:120,rest:60,interval:20,combos:[["1"],["1","1"],["1","2"],["2"],["1","2","reset"],["1","1","2"],["1","2","step"]]},
-    intermediate:{name:"Work the bag",rounds:3,work:180,rest:60,interval:15,combos:[["1","2","3"],["1","1","2"],["1","2","3","2"],["2","3","2"],["1","6","3"],["1","2","slip","2"],["1","2","roll","3"],["1","5","2"]]},
-    blitz:{name:"2-min blitz",rounds:1,work:120,rest:0,interval:10,combos:[["1","2"],["1","2","3"],["3","2"],["1","2","5"],["1","1","2","3"],["2","slip","2"],["1","2","3","2"]]}
+    beginner:{name:"First bell",rounds:3,work:120,rest:60,interval:20,combos:[["1"],["1","1"],["1","2"],["2"],["1","2","reset"],["1","1","2"],["1","2","step"],["1","2","3"],["2","3"],["1","6"],["1","2","pivot"]]},
+    intermediate:{name:"Work the bag",rounds:3,work:180,rest:60,interval:15,combos:[["1","2","3"],["1","1","2"],["1","2","3","2"],["2","3","2"],["1","6","3"],["1","2","slip","2"],["1","2","roll","3"],["1","5","2"],["1","2","5","2"],["3","4"],["1","2","3","4"],["2","5","3"],["1","1","2","3","2"]]},
+    counters:{name:"Combos & counters",rounds:3,work:180,rest:60,interval:14,combos:[["1","2","slip","2"],["slip","2","3"],["1","2","roll","3"],["roll","3","2"],["1","2","pivot","1"],["2","slip","1","2"],["1","6","2","roll","2"],["step","1","2"],["1","2","3","roll","3"],["slip","1","2"]]},
+    blitz:{name:"2-min blitz",rounds:1,work:120,rest:0,interval:10,combos:[["1","2"],["1","2","3"],["3","2"],["1","2","5"],["1","1","2","3"],["2","slip","2"],["1","2","3","2"],["1","2","3","2","1"],["5","6"]]}
   };
   var PUNCH={"1":"Jab","2":"Cross","3":"Lead hook","4":"Rear hook","5":"Lead uppercut","6":"Rear uppercut"};
   var MOVE={"slip":"Slip","roll":"Roll","step":"Step","pivot":"Pivot","reset":"Reset"};

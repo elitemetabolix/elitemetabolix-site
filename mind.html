@@ -139,12 +139,19 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
 .res-row.big .rc a{font-size:19px;font-weight:600}
 </style>
 <script src="/em-auth.js?v=2" defer></script>
+
+<style>
+.bp-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 0 2px}
+.bp-tab{font-family:var(--fm);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:9px 14px;border-radius:8px;cursor:pointer;background:var(--card);border:1px solid var(--line2);color:var(--mut);transition:transform .16s,color .16s,border-color .16s,background .16s}
+.bp-tab:hover{color:var(--txt);transform:translateY(-1px)}
+.bp-tab[aria-pressed="true"]{background:rgba(var(--orange-rgb),.14);border-color:rgba(var(--orange-rgb),.5);color:var(--orange)}
+</style>
 </head>
 <body>
 <div class="glow a"></div><div class="glow b"></div>
 <nav><div class="nav-in">
   <a class="brand" href="index.html"><span class="em-mark">E&nbsp;M</span><span class="wm">Elite&nbsp;Metabolix</span></a>
-  <div class="nav-right"><a href="index.html">Home</a><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html">Yoga</a><a href="mind.html" class="active">Mind</a><a href="apply.html">Apply</a></div></div><button class="burger" onclick="var n=this.parentElement.querySelector('.nav-right');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button>
+  <div class="nav-right"><a href="index.html">Home</a><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html">Yoga</a><a href="boxing.html">Boxing</a><a href="mind.html" class="active">Mind</a><a href="apply.html">Apply</a></div></div><button class="burger" onclick="var n=this.parentElement.querySelector('.nav-right');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button>
 </nav>
 
 <header class="hero"><div class="hero-grid"></div><div class="wrap">
@@ -188,8 +195,8 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   <p class="sec-intro">No login, no plan required. These are general wellbeing practices anyone can use. Start with the breathing pacer, then try whichever fits the moment.</p>
 
   <div class="breather reveal">
-    <div class="ring"><div class="circle" id="breath-circle"></div><div class="phase" id="breath-phase">Press start</div></div>
-    <p class="sub">Box breathing — in for 4, hold for 4, out for 4, hold for 4. Follow the circle: breathe in as it grows, out as it shrinks. Two or three minutes is plenty.</p>
+    <div class="ring"><div class="circle" id="breath-circle"></div><div class="phase" id="breath-phase">Press start</div></div><div class="bp-tabs" role="group" aria-label="Breathing pattern"><button class="bp-tab" type="button" data-pat="box" aria-pressed="true">Box</button><button class="bp-tab" type="button" data-pat="sigh" aria-pressed="false">Physiological sigh</button><button class="bp-tab" type="button" data-pat="478" aria-pressed="false">4·7·8</button></div>
+    <p class="sub" id="breath-sub">Box breathing — in for 4, hold for 4, out for 4, hold for 4. Follow the circle: breathe in as it grows, out as it shrinks. Two or three minutes is plenty.</p>
     <button id="breath-btn" type="button">Start breathing</button>
   </div>
 
@@ -321,6 +328,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   <div class="sec-label"><span class="mono">Keep Exploring</span></div>
   <div class="pillarnav">
     <a class="pcard" href="mobility.html"><div class="pk">Pillar →</div><h3>Yoga &amp; Mobility</h3><p>Movement, breath, and recovery work that keeps the body matching the mind.</p></a>
+    <a class="pcard" href="boxing.html"><div class="pk">Pillar →</div><h3>Shadow Boxing</h3><p>A live round timer with a voice that calls the combos — a fast way to burn off stress with your hands up.</p></a>
     <a class="pcard" href="apply.html"><div class="pk">Get started →</div><h3>Build yours</h3><p>A custom plan with the mental side built in — routines, breath, and stress tools that fit your life.</p></a>
   </div>
 </div></section>
@@ -339,32 +347,29 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
   var btn=document.getElementById('breath-btn');
   var circle=document.getElementById('breath-circle');
   var phase=document.getElementById('breath-phase');
+  var sub=document.getElementById('breath-sub');
+  var tabs=[].slice.call(document.querySelectorAll('.bp-tab'));
   if(!btn||!circle||!phase)return;
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var phases=[
-    {label:'Breathe in',scale:1,dur:4000},
-    {label:'Hold',scale:1,dur:4000},
-    {label:'Breathe out',scale:.58,dur:4000},
-    {label:'Hold',scale:.58,dur:4000}
-  ];
-  var i=0,timer=null,running=false;
-  function step(){
-    var p=phases[i];
-    phase.textContent=p.label;
-    if(!reduce){
-      circle.style.transitionDuration=(p.dur/1000)+'s';
-      circle.style.transform='scale('+p.scale+')';
-    }
-    i=(i+1)%phases.length;
-    timer=setTimeout(step,p.dur);
-  }
+  var PAT={
+    box:{sub:"Box breathing \u2014 in 4, hold 4, out 4, hold 4. Follow the circle: in as it grows, out as it shrinks. Two or three minutes is plenty.",
+      ph:[{l:'Breathe in',s:1,d:4000},{l:'Hold',s:1,d:4000},{l:'Breathe out',s:.55,d:4000},{l:'Hold',s:.55,d:4000}]},
+    sigh:{sub:"Physiological sigh \u2014 a full breath in, a short sip more at the top, then a long, slow exhale. The quickest way to take the edge off. Repeat a few times.",
+      ph:[{l:'Breathe in',s:.9,d:2600},{l:'Sip more in',s:1,d:1000},{l:'Long exhale',s:.5,d:6000}]},
+    "478":{sub:"4\u00b77\u00b78 \u2014 in for 4, hold for 7, out for 8. A gentle wind-down some people use before sleep. Keep it easy \u2014 never strain.",
+      ph:[{l:'Breathe in',s:1,d:4000},{l:'Hold',s:1,d:7000},{l:'Breathe out',s:.5,d:8000}]}
+  };
+  var key='box',i=0,timer=null,running=false;
+  function apply(sc,dur){if(!reduce){circle.style.transitionDuration=(dur/1000)+'s';circle.style.transform='scale('+sc+')';}}
+  function step(){var p=PAT[key].ph[i];phase.textContent=p.l;apply(p.s,p.d);i=(i+1)%PAT[key].ph.length;timer=setTimeout(step,p.d);}
   function start(){running=true;btn.textContent='Stop';i=0;step();}
-  function stop(){
-    running=false;btn.textContent='Start breathing';clearTimeout(timer);
-    phase.textContent='Press start';
-    if(!reduce){circle.style.transitionDuration='1s';circle.style.transform='scale(.58)';}
-  }
+  function stop(){running=false;btn.textContent='Start breathing';clearTimeout(timer);phase.textContent='Press start';apply(.55,1000);}
+  function setPattern(k){key=k;if(sub)sub.textContent=PAT[k].sub;
+    tabs.forEach(function(t){t.setAttribute('aria-pressed',t.getAttribute('data-pat')===k?'true':'false');});
+    if(running){clearTimeout(timer);i=0;step();}}
   btn.addEventListener('click',function(){running?stop():start();});
+  tabs.forEach(function(t){t.addEventListener('click',function(){setPattern(t.getAttribute('data-pat'));});});
+  setPattern('box');
 })();
 </script>
 </body>

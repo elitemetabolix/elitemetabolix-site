@@ -113,6 +113,12 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:44px 0 60px}
 .fp-ctrls button:hover{transform:translateY(-2px)}
 .fp-done{font-family:var(--fd);font-size:24px;color:var(--green)}
 .fp-hint{font-size:12px;color:var(--mut2);margin-top:14px;font-style:italic}
+/* embedded animated figure (reuses poses.html engine via iframe, solo mode) */
+.fp-stage{display:none;width:min(86vw,340px);height:300px;margin:4px auto 0}
+.fp-stage.on{display:block}
+.fp-frame{width:100%;height:100%;border:0;background:transparent;pointer-events:none;display:block}
+.fp-back.hasfig .fp-ring{width:104px;height:104px;margin:12px auto 2px}
+.fp-back.hasfig .fp-time{font-size:26px}
 </style>
 <style id="em-nav-canon">
 nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,12,16,.72);border-bottom:1px solid var(--line)}
@@ -229,16 +235,21 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(
   var back=document.createElement('div');back.className='fp-back';
   back.innerHTML='<div class="fp"><button class="fp-x" aria-label="Close">\u00d7</button>'+
     '<div class="fp-title" id="fpTitle"></div><div class="fp-count" id="fpCount"></div>'+
+    '<div class="fp-stage" id="fpStage"><iframe class="fp-frame" id="fpFrame" src="poses.html?solo=1" title="Pose demonstration" tabindex="-1" scrolling="no" loading="eager"></iframe></div>'+
     '<div class="fp-ring"><svg viewBox="0 0 200 200"><circle class="bg" cx="100" cy="100" r="90"/><circle class="fg" id="fpFg" cx="100" cy="100" r="90"/></svg><div class="fp-time" id="fpTime">0:00</div></div>'+
-    '<div class="fp-move" id="fpMove"></div><a class="fp-demo" id="fpDemo" target="_blank" rel="noopener noreferrer">Watch demo \u2197</a>'+
+    '<div class="fp-move" id="fpMove"></div>'+
     '<div class="fp-next" id="fpNext"></div>'+
     '<div class="fp-ctrls"><button id="fpPause" class="primary">Pause</button><button id="fpSkip">Skip</button></div>'+
-    '<div class="fp-hint">Chime cues each move \u00b7 keep your phone nearby</div></div>';
+    '<div class="fp-hint">Animated demo &amp; chime on each move</div></div>';
   document.body.appendChild(back);
   var C=2*Math.PI*90, fg=back.querySelector('#fpFg'); fg.style.strokeDasharray=C;
   var elT=back.querySelector('#fpTime'),elM=back.querySelector('#fpMove'),elN=back.querySelector('#fpNext'),
-      elD=back.querySelector('#fpDemo'),elTitle=back.querySelector('#fpTitle'),elCount=back.querySelector('#fpCount'),
+      elStage=back.querySelector('#fpStage'),elFrame=back.querySelector('#fpFrame'),
+      elTitle=back.querySelector('#fpTitle'),elCount=back.querySelector('#fpCount'),
       bPause=back.querySelector('#fpPause'),bSkip=back.querySelector('#fpSkip'),bX=back.querySelector('.fp-x');
+  var frameReady=false, pendingPose=null;
+  function postPose(id){ pendingPose=id||null; if(id&&frameReady&&elFrame.contentWindow){ try{ elFrame.contentWindow.postMessage({type:'em-pose',id:id},'*'); }catch(e){} } }
+  window.addEventListener('message',function(e){ var d=e&&e.data; if(d&&d.type==='em-solo-ready'){ frameReady=true; if(pendingPose) postPose(pendingPose); } });
   var cur=null,mi=0,rem=0,tot=0,timer=null,paused=false,done=false;
   function fmt(s){s=Math.max(0,s|0);var r=s%60;return Math.floor(s/60)+':'+(r<10?'0':'')+r;}
   function chime(){try{var a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(660,a.currentTime);g.gain.setValueAtTime(.0001,a.currentTime);g.gain.exponentialRampToValueAtTime(.3,a.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.5);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.5);}catch(e){}if(navigator.vibrate)navigator.vibrate(70);}
@@ -246,11 +257,13 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(
   function render(){elT.textContent=fmt(rem);fg.style.strokeDashoffset=C*(1-(tot?rem/tot:0));}
   function loadMove(){var mv=cur.moves[mi];rem=mv.dur;tot=mv.dur;done=false;
     elM.textContent=mv.name;elCount.textContent='Move '+(mi+1)+' of '+cur.moves.length;
-    if(mv.href){elD.style.display='inline-block';elD.href=mv.href;}else{elD.style.display='none';}
+    var pid=mv.href?((mv.href.split('#')[1]||'').toLowerCase()):'';
+    if(pid){elStage.classList.add('on');back.classList.add('hasfig');postPose(pid);}
+    else{elStage.classList.remove('on');back.classList.remove('hasfig');}
     elN.textContent=cur.moves[mi+1]?('Next: '+cur.moves[mi+1].name):'Last one \u2014 finish strong';
     render();chime();}
   function loop(){if(paused||done)return;rem--;if(rem<0){mi++;if(mi>=cur.moves.length){finish();return;}loadMove();return;}render();}
-  function finish(){done=true;clearInterval(timer);elCount.textContent='';elN.textContent='';elD.style.display='none';
+  function finish(){done=true;clearInterval(timer);elCount.textContent='';elN.textContent='';elStage.classList.remove('on');back.classList.remove('hasfig');
     elM.innerHTML='<span class="fp-done">Flow complete \u2713</span>';elT.textContent='';fg.style.strokeDashoffset=0;
     bPause.textContent='Done';chime();}
   function open(f){cur=f;mi=0;paused=false;done=false;bPause.textContent='Pause';elTitle.textContent=f.title;

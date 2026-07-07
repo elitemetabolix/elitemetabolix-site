@@ -262,6 +262,13 @@
     .ov-top{padding:0 18px;}
   }
 </style>
+<style>
+  /* solo player mode: one big figure, chrome hidden — embedded by the flow player */
+  html.em-solo,body.em-solo{background:transparent!important;margin:0;overflow:hidden;height:100%;}
+  body.em-solo>*:not(#emSoloStage){display:none!important;}
+  #emSoloStage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+  #emSoloStage .pose-svg{width:min(92vw,400px);height:auto;}
+</style>
 </head>
 <body>
 
@@ -1063,6 +1070,35 @@
     else if(e.key===" "){ e.preventDefault(); togglePause(); }
     else if(e.key==="ArrowRight") next();
   });
+
+  /* ---------- solo player mode ----------
+     When loaded as poses.html?solo=1 (inside the flow player's iframe), hide the
+     page chrome and render ONE big animated figure. The parent flow player swaps
+     poses via postMessage({type:'em-pose', id}) — no reload, no flicker. Reuses
+     poseSVG() + entrance() exactly like the grid and practice mode. */
+  (function(){
+    if(!/[?&]solo\b/i.test(location.search||'')) return;
+    document.documentElement.classList.add('em-solo');
+    document.body.classList.add('em-solo');
+    var stage=document.createElement('div'); stage.id='emSoloStage';
+    document.body.appendChild(stage);
+    var BYID={}; POSES.forEach(function(p){ BYID[p.id]=p; });
+    var curId=null;
+    function show(id){
+      id=(id||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+      var p=BYID[id]; if(!p||id===curId) return; curId=id;
+      stage.innerHTML=poseSVG(p);
+      var g=stage.querySelector('.figure');
+      if(g) entrance(g, p.id, 60);
+    }
+    var m=(location.search||'').match(/[?&]solo=([a-z0-9]+)/i);
+    if(m) show(m[1]);
+    window.addEventListener('message', function(e){
+      var d=e&&e.data;
+      if(d && d.type==='em-pose' && d.id) show(d.id);
+    });
+    try{ if(window.parent && window.parent!==window) window.parent.postMessage({type:'em-solo-ready'}, '*'); }catch(_){}
+  })();
 })();
 </script>
 <style>.card.em-deeplink{outline:2px solid #F0852E;outline-offset:4px;border-radius:16px;transition:outline .3s}</style>

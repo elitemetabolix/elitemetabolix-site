@@ -264,8 +264,9 @@
   }
 </style>
 <style>
+  /* solo player mode: one big figure, chrome hidden — embedded by the flow player */
   html.em-solo,body.em-solo{background:transparent!important;margin:0;overflow:hidden;height:100%;}
-  body.em-solo>*:not(#emSoloStage){display:none!important;}
+  body.em-solo>*:not(#emSoloStage):not(svg){display:none!important;}
   #emSoloStage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
   #emSoloStage .pose-svg{width:min(92vw,400px);height:auto;}
 </style>
@@ -1238,7 +1239,9 @@
     else if(e.key===" "){ e.preventDefault(); togglePause(); }
     else if(e.key==="ArrowRight") next();
   });
-  /* solo player mode: poses.html?solo=1 renders ONE big figure; parent swaps via postMessage */
+  /* ---------- solo player mode ----------
+     poses.html?solo=1 (inside the flow-player iframe): hide chrome, render ONE
+     big figure, swap via postMessage({type:'em-pose',id}). Reuses poseSVG()+entrance(). */
   (function(){
     if(!/[?&]solo\b/i.test(location.search||'')) return;
     document.documentElement.classList.add('em-solo');
@@ -1266,6 +1269,7 @@
 </script>
 <style>.card.em-deeplink{outline:2px solid #F0852E;outline-offset:4px;border-radius:16px;transition:outline .3s}</style>
 <script>
+/* deep-link: open/scroll to a pose from location.hash (e.g. #pigeon) */
 (function(){
   function go(){
     var h=(location.hash||'').replace(/^#/,'').toLowerCase().replace(/[^a-z0-9]/g,'');

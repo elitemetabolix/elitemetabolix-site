@@ -157,13 +157,13 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(
   <p class="sec-intro">Short, repeatable, and built around training — not a separate hobby to find time for. Each flow is cued inside your plan — tap any move below to see a demo.</p>
   <div class="flows" style="margin-top:26px">
     <div class="flow reveal"><div class="ft"><h3>Pre-Session Activation</h3><span class="dur">8 MIN</span></div><div class="when">Before runs &amp; lifts</div>
-      <ul><li><a class="demo-link" href="poses.html#wgs" target="_blank" rel="noopener noreferrer">World's-greatest-stretch ×5/side</a></li><li>Leg swings — front &amp; lateral ×10</li><li><a class="demo-link" href="poses.html#hipflexorlunge">Hip-opener lunge with reach</a></li><li>Ankle rocks + calf prep</li><li>2 min easy nasal-breathing build</li></ul></div>
+      <ul><li><a class="demo-link" href="poses.html#wgs" target="_blank" rel="noopener noreferrer">World's-greatest-stretch ×5/side</a></li><li>Leg swings — front &amp; lateral ×10</li><li><a class="demo-link" href="poses.html#hipflexorlunge" target="_blank" rel="noopener noreferrer">Hip-opener lunge with reach</a></li><li>Ankle rocks + calf prep</li><li>2 min easy nasal-breathing build</li></ul></div>
     <div class="flow reveal"><div class="ft"><h3>Post-Run Reset</h3><span class="dur">10 MIN</span></div><div class="when">After hard efforts</div>
       <ul><li><a class="demo-link" href="poses.html#downdog" target="_blank" rel="noopener noreferrer">Downward dog → calf pedals</a></li><li><a class="demo-link" href="poses.html#lowlunge" target="_blank" rel="noopener noreferrer">Low lunge + quad reach / side</a></li><li><a class="demo-link" href="poses.html#pigeon" target="_blank" rel="noopener noreferrer">Pigeon for hips ×90s/side</a></li><li><a class="demo-link" href="poses.html#figure4" target="_blank" rel="noopener noreferrer">Figure-4 glute release</a></li><li><a class="demo-link" href="poses.html#legsup" target="_blank" rel="noopener noreferrer">Legs-up-the-wall, slow exhale</a></li></ul></div>
     <div class="flow reveal"><div class="ft"><h3>Rest-Day Yoga</h3><span class="dur">20 MIN</span></div><div class="when">Off / recovery days</div>
-      <ul><li><a class="demo-link" href="poses.html#gentlevinyasa">Gentle vinyasa to warm tissue</a></li><li>Hip + hamstring deep holds</li><li><a class="demo-link" href="poses.html#thoracicrotation">Thoracic rotations for posture</a></li><li>Balance work (single-leg holds)</li><li>5 min guided relaxation</li></ul></div>
+      <ul><li><a class="demo-link" href="poses.html#gentlevinyasa" target="_blank" rel="noopener noreferrer">Gentle vinyasa to warm tissue</a></li><li><a class="demo-link" href="poses.html#pigeon" target="_blank" rel="noopener noreferrer">Hip + hamstring deep holds</a></li><li><a class="demo-link" href="poses.html#thoracicrotation" target="_blank" rel="noopener noreferrer">Thoracic rotations for posture</a></li><li><a class="demo-link" href="poses.html#tree" target="_blank" rel="noopener noreferrer">Balance work (single-leg holds)</a></li><li>5 min guided relaxation</li></ul></div>
     <div class="flow reveal"><div class="ft"><h3>Desk &amp; Commute Mobility</h3><span class="dur">5 MIN</span></div><div class="when">Long sitting / drives</div>
-      <ul><li><a class="demo-link" href="poses.html#standinghipflexor">Standing hip-flexor opener</a></li><li><a class="demo-link" href="poses.html#twist" target="_blank" rel="noopener noreferrer">Seated spinal twists</a></li><li>Calf raises + ankle pumps</li><li><a class="demo-link" href="poses.html#doorwaystretch">Chest &amp; shoulder doorway stretch</a></li><li>Reset breath, 6 slow cycles</li></ul></div>
+      <ul><li><a class="demo-link" href="poses.html#standinghipflexor" target="_blank" rel="noopener noreferrer">Standing hip-flexor opener</a></li><li><a class="demo-link" href="poses.html#twist" target="_blank" rel="noopener noreferrer">Seated spinal twists</a></li><li>Calf raises + ankle pumps</li><li><a class="demo-link" href="poses.html#doorwaystretch" target="_blank" rel="noopener noreferrer">Chest &amp; shoulder doorway stretch</a></li><li>Reset breath, 6 slow cycles</li></ul></div>
   </div>
 </div></section>
 
@@ -235,7 +235,7 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(
   var back=document.createElement('div');back.className='fp-back';
   back.innerHTML='<div class="fp"><button class="fp-x" aria-label="Close">\u00d7</button>'+
     '<div class="fp-title" id="fpTitle"></div><div class="fp-count" id="fpCount"></div>'+
-    '<div class="fp-stage" id="fpStage"><iframe class="fp-frame" id="fpFrame" src="poses.html?solo=1" title="Pose demonstration" tabindex="-1" scrolling="no" loading="eager"></iframe></div>'+
+    '<div class="fp-stage" id="fpStage"><iframe class="fp-frame" id="fpFrame" src="poses.html?solo=1" title="Pose demonstration" tabindex="-1" scrolling="no" loading="eager"></iframe><div class="fp-orb" id="fpOrb" aria-hidden="true"><div class="fp-orb-c"></div><span class="fp-orb-lbl">Breathe</span></div></div>'+
     '<div class="fp-ring"><svg viewBox="0 0 200 200"><circle class="bg" cx="100" cy="100" r="90"/><circle class="fg" id="fpFg" cx="100" cy="100" r="90"/></svg><div class="fp-time" id="fpTime">0:00</div></div>'+
     '<div class="fp-move" id="fpMove"></div>'+
     '<div class="fp-next" id="fpNext"></div>'+
@@ -254,21 +254,27 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(
   function fmt(s){s=Math.max(0,s|0);var r=s%60;return Math.floor(s/60)+':'+(r<10?'0':'')+r;}
   function chime(){try{var a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(660,a.currentTime);g.gain.setValueAtTime(.0001,a.currentTime);g.gain.exponentialRampToValueAtTime(.3,a.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.5);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.5);}catch(e){}if(navigator.vibrate)navigator.vibrate(70);}
   
+  var orbT=null;
+  function isBreath(n){return /breath|nasal|relax|inhale|exhale/i.test(n||'');}
+  function startOrb(){var c=back.querySelector('.fp-orb-c'),l=back.querySelector('.fp-orb-lbl');if(c){c.style.animation='none';void c.offsetWidth;c.style.animation='';}if(l)l.textContent='Breathe in';var inh=true;clearInterval(orbT);orbT=setInterval(function(){inh=!inh;if(l)l.textContent=inh?'Breathe in':'Breathe out';},4000);}
+  function stopOrb(){clearInterval(orbT);orbT=null;}
   function render(){elT.textContent=fmt(rem);fg.style.strokeDashoffset=C*(1-(tot?rem/tot:0));}
   function loadMove(){var mv=cur.moves[mi];rem=mv.dur;tot=mv.dur;done=false;
     elM.textContent=mv.name;elCount.textContent='Move '+(mi+1)+' of '+cur.moves.length;
     var pid=mv.href?((mv.href.split('#')[1]||'').toLowerCase()):'';
-    if(pid){elStage.classList.add('on');back.classList.add('hasfig');postPose(pid);}
-    else{elStage.classList.remove('on');back.classList.remove('hasfig');}
+    stopOrb();
+    if(pid){elStage.classList.add('on');elStage.classList.remove('breath');back.classList.add('hasfig');postPose(pid);}
+    else if(isBreath(mv.name)){elStage.classList.remove('on');elStage.classList.add('breath');back.classList.add('hasfig');startOrb();}
+    else{elStage.classList.remove('on');elStage.classList.remove('breath');back.classList.remove('hasfig');}
     elN.textContent=cur.moves[mi+1]?('Next: '+cur.moves[mi+1].name):'Last one \u2014 finish strong';
     render();chime();}
   function loop(){if(paused||done)return;rem--;if(rem<0){mi++;if(mi>=cur.moves.length){finish();return;}loadMove();return;}render();}
-  function finish(){done=true;clearInterval(timer);elCount.textContent='';elN.textContent='';elStage.classList.remove('on');back.classList.remove('hasfig');
+  function finish(){done=true;clearInterval(timer);elCount.textContent='';elN.textContent='';elStage.classList.remove('on');elStage.classList.remove('breath');stopOrb();back.classList.remove('hasfig');
     elM.innerHTML='<span class="fp-done">Flow complete \u2713</span>';elT.textContent='';fg.style.strokeDashoffset=0;
     bPause.textContent='Done';chime();}
   function open(f){cur=f;mi=0;paused=false;done=false;bPause.textContent='Pause';elTitle.textContent=f.title;
     back.classList.add('open');loadMove();clearInterval(timer);timer=setInterval(loop,1000);}
-  function close(){clearInterval(timer);back.classList.remove('open');}
+  function close(){clearInterval(timer);stopOrb();back.classList.remove('open');}
   bPause.onclick=function(){if(done){close();return;}paused=!paused;bPause.textContent=paused?'Resume':'Pause';};
   bSkip.onclick=function(){if(done)return;mi++;if(mi>=cur.moves.length){finish();return;}loadMove();};
   bX.onclick=close;back.addEventListener('click',function(e){if(e.target===back)close();});
@@ -277,5 +283,15 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(
     b.innerHTML='\u25b6 Play flow \u00b7 '+f.moves.length+' moves';b.onclick=function(){open(f);};f.card.appendChild(b);});
 })();
 </script>
+<style>
+.fp-stage.breath{display:block}
+.fp-stage.breath .fp-frame{display:none}
+.fp-orb{display:none}
+.fp-stage.breath .fp-orb{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%}
+.fp-orb-c{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 50% 42%,rgba(240,133,46,.55),rgba(240,133,46,.14) 60%,rgba(240,133,46,0) 72%);border:1px solid rgba(240,133,46,.35);box-shadow:0 0 40px rgba(240,133,46,.25),inset 0 0 30px rgba(240,133,46,.15);animation:emorb 8s ease-in-out infinite;will-change:transform}
+.fp-orb-lbl{margin-top:16px;font-family:var(--fm,monospace);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--orange,#F0852E);opacity:.85}
+@keyframes emorb{0%{transform:scale(.62)}50%{transform:scale(1)}100%{transform:scale(.62)}}
+@media(prefers-reduced-motion:reduce){.fp-orb-c{animation:none;transform:scale(.85)}}
+</style>
 </body>
 </html>

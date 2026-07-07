@@ -100,6 +100,7 @@
     border-radius:20px;
     padding:20px 20px 24px;
     overflow:hidden;
+    scroll-margin-top:28px;
     transition:border-color .25s ease, transform .25s ease;
   }
   .card:hover{border-color:#3a4757;transform:translateY(-3px);}
@@ -263,9 +264,8 @@
   }
 </style>
 <style>
-  /* solo player mode: one big figure, chrome hidden — embedded by the flow player */
   html.em-solo,body.em-solo{background:transparent!important;margin:0;overflow:hidden;height:100%;}
-  body.em-solo>*:not(#emSoloStage):not(svg){display:none!important;}
+  body.em-solo>*:not(#emSoloStage){display:none!important;}
   #emSoloStage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
   #emSoloStage .pose-svg{width:min(92vw,400px);height:auto;}
 </style>
@@ -458,6 +458,46 @@
       elbowR:{x:138,y:52}, handR:{x:122,y:34},   /* hands meet overhead */
       kneeL:{x:84,y:188}, footL:{x:118,y:172},   /* bent leg: knee out, foot tucked to inner thigh */
       kneeR:{x:129,y:200}, footR:{x:132,y:250}   /* standing leg: straight and tall (slight angle) */
+    },
+    hipflexorlunge:{  /* SIDE: kneeling low-lunge, hips sunk forward, arms overhead + backbend */
+      head:{x:131,y:116,r:12.5}, headBase:{x:129,y:132},
+      shoulders:{x:126,y:150}, pelvis:{x:118,y:202},
+      elbowL:{x:132,y:112}, handL:{x:142,y:78},
+      elbowR:{x:132,y:112}, handR:{x:142,y:78},   /* arms together overhead */
+      kneeR:{x:152,y:210}, footR:{x:150,y:252},   /* front knee stacked over the ankle */
+      kneeL:{x:84,y:250}, footL:{x:44,y:252}       /* back knee down, shin flat on the floor */
+    },
+    standinghipflexor:{  /* SIDE: STANDING split stance, pelvis tucked, tall torso, reach */
+      head:{x:120,y:66,r:12.5}, headBase:{x:120,y:84},
+      shoulders:{x:120,y:102}, pelvis:{x:118,y:166},
+      elbowL:{x:114,y:72}, handL:{x:120,y:40},
+      elbowR:{x:126,y:72}, handR:{x:122,y:40},     /* overhead reach */
+      kneeR:{x:150,y:204}, footR:{x:158,y:252},    /* front knee softly bent */
+      kneeL:{x:86,y:222}, footL:{x:52,y:252}        /* back leg extended, foot planted (standing) */
+    },
+    thoracicrotation:{  /* quadruped open-book — representative open position */
+      head:{x:172,y:170,r:12.5}, headBase:{x:160,y:176},
+      shoulders:{x:150,y:180}, pelvis:{x:98,y:182},
+      elbowL:{x:150,y:206}, handL:{x:150,y:232},   /* support arm planted */
+      elbowR:{x:160,y:150}, handR:{x:172,y:120},   /* top arm opening toward the ceiling */
+      kneeL:{x:96,y:214}, footL:{x:72,y:226},
+      kneeR:{x:102,y:214}, footR:{x:78,y:224}
+    },
+    doorwaystretch:{  /* head-on: goalpost arms, chest opening (lean) */
+      head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+      shoulders:{x:120,y:92}, pelvis:{x:120,y:158},
+      elbowL:{x:88,y:96}, handL:{x:90,y:62},       /* goalpost: elbow at shoulder, forearm up */
+      elbowR:{x:152,y:96}, handR:{x:150,y:62},
+      kneeL:{x:110,y:206}, footL:{x:104,y:252},
+      kneeR:{x:130,y:206}, footR:{x:138,y:252}
+    },
+    gentlevinyasa:{  /* SIDE: representative frame (low lunge) — the pose itself loops */
+      head:{x:121,y:62,r:12.5}, headBase:{x:119,y:80},
+      shoulders:{x:118,y:92}, pelvis:{x:116,y:150},
+      elbowL:{x:128,y:60}, handL:{x:136,y:34},
+      elbowR:{x:128,y:60}, handR:{x:136,y:34},
+      kneeL:{x:78,y:238}, footL:{x:42,y:250},
+      kneeR:{x:152,y:202}, footR:{x:146,y:250}
     }
   };
 
@@ -584,6 +624,40 @@
   };
   const CC_BASE = POSE_J.catcow;  /* all-fours neutral */
 
+  /* --- intermediates for the 5 added figures --- */
+  const HFL_STEP = {  /* stepped one foot forward, upright, back knee still up */
+    head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+    shoulders:{x:120,y:96}, pelvis:{x:118,y:168},
+    elbowL:{x:118,y:132}, handL:{x:116,y:164},
+    elbowR:{x:122,y:132}, handR:{x:120,y:164},
+    kneeR:{x:152,y:200}, footR:{x:156,y:252},
+    kneeL:{x:86,y:214}, footL:{x:58,y:252}
+  };
+  const HFL_KNEEL = {  /* back knee lowered to the floor, hands framing the front foot */
+    head:{x:124,y:80,r:12.5}, headBase:{x:124,y:98},
+    shoulders:{x:124,y:116}, pelvis:{x:120,y:200},
+    elbowL:{x:130,y:150}, handL:{x:140,y:190},
+    elbowR:{x:132,y:150}, handR:{x:142,y:192},
+    kneeR:{x:152,y:210}, footR:{x:150,y:252},
+    kneeL:{x:84,y:250}, footL:{x:44,y:252}
+  };
+  const SHF_SPLIT = {  /* stepped one foot back into a standing split stance, arms low */
+    head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+    shoulders:{x:120,y:96}, pelvis:{x:119,y:164},
+    elbowL:{x:118,y:130}, handL:{x:116,y:162},
+    elbowR:{x:122,y:130}, handR:{x:120,y:162},
+    kneeR:{x:148,y:204}, footR:{x:156,y:252},
+    kneeL:{x:88,y:222}, footL:{x:54,y:252}
+  };
+  const DW_GOAL = {  /* head-on: arms raised into the goalpost, chest neutral */
+    head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+    shoulders:{x:120,y:92}, pelvis:{x:120,y:158},
+    elbowL:{x:92,y:98}, handL:{x:94,y:64},
+    elbowR:{x:148,y:98}, handR:{x:146,y:64},
+    kneeL:{x:112,y:206}, footL:{x:108,y:252},
+    kneeR:{x:128,y:206}, footR:{x:132,y:252}
+  };
+
   /* Step-by-step entry sequences. Each step: l=label, J=joints, c=spine curve,
      d=ms to reach it, h=ms to hold. Standing/balance poses stay head-on;
      depth/reclined poses use a fixed side view (no spin, ever). */
@@ -647,6 +721,31 @@
       {l:"Lie prone, forearms by the chest", J:COB_PRONE, c:0, d:1300, h:500},
       {l:"Lift low — curl the lower back", J:COB_LOW, c:10, d:1400, h:400},
       {l:"Roll up through the spine, chest high", J:POSE_J.cobra, c:22, d:1600, h:900}
+    ],
+    hipflexorlunge: [
+      {l:"Stand tall (side view)", J:SIDE_STAND, c:0, d:1000, h:500},
+      {l:"Step one foot forward", J:HFL_STEP, c:0, d:1400, h:400},
+      {l:"Lower the back knee down", J:HFL_KNEEL, c:0, d:1400, h:400},
+      {l:"Sink the hips, sweep the arms up", J:POSE_J.hipflexorlunge, c:10, d:1700, h:900}
+    ],
+    standinghipflexor: [
+      {l:"Stand tall (side view)", J:SIDE_STAND, c:0, d:1000, h:500},
+      {l:"Step one foot back, split stance", J:SHF_SPLIT, c:0, d:1500, h:500},
+      {l:"Tuck the pelvis, lengthen tall", J:POSE_J.standinghipflexor, c:6, d:1600, h:900}
+    ],
+    thoracicrotation: [
+      {l:"Come to all fours", J:SIDE_STAND, c:0, d:1000, h:400},
+      {l:"Hand behind the head, ready to rotate", J:POSE_J.thoracicrotation, c:0, d:1400, h:600}
+      /* then cycles open<->closed continuously */
+    ],
+    doorwaystretch: [
+      {l:"Stand tall, head-on", J:MTN_FRONT, c:0, d:1000, h:500},
+      {l:"Raise the arms into a goalpost", J:DW_GOAL, c:0, d:1400, h:500},
+      {l:"Lean forward, open the chest", J:POSE_J.doorwaystretch, c:0, d:1400, h:900}
+    ],
+    gentlevinyasa: [
+      {l:"Begin standing tall (side view)", J:SIDE_STAND, c:0, d:1200, h:600}
+      /* then flows Mountain -> Fold -> Lunge -> back, continuously */
     ]
   };
 
@@ -821,8 +920,65 @@
     fig._anim=requestAnimationFrame(loop);
   }
 
-  /* staged, no-spin entry: play through the pose's labeled step sequence,
-     easing into each step and holding briefly, then settle (breathe) or cycle. */
+  /* Thoracic rotation: from all fours, the top arm & gaze open toward the ceiling
+     and close back down — a slow open-book cycle driven by the mid-back. */
+  function startThoracic(fig, hi){
+    fig.style.transform=''; fig.classList.remove('breathing');
+    hideLabel(stepLabelFor(fig));
+    const base=POSE_J.thoracicrotation;
+    const closed={ex:156,ey:202, hx:146,hy:214, headx:170,heady:184, hbx:160,hby:182, cv:-3};
+    const open  ={ex:160,ey:150, hx:174,hy:116, headx:180,heady:150, hbx:162,hby:168, cv:6};
+    if(prefersReduced){ fig.innerHTML=pathFromJoints(base,0,hi); return; }
+    let t0=null;
+    function loop(now){
+      if(t0===null) t0=now;
+      const s=(1-Math.cos((now-t0)/3400*Math.PI))/2;   /* ~6.8s open->closed->open */
+      const J=Object.assign({},base);
+      J.elbowR={x:lp(closed.ex,open.ex,s), y:lp(closed.ey,open.ey,s)};
+      J.handR ={x:lp(closed.hx,open.hx,s), y:lp(closed.hy,open.hy,s)};
+      J.head  ={x:lp(closed.headx,open.headx,s), y:lp(closed.heady,open.heady,s), r:base.head.r};
+      J.headBase={x:lp(closed.hbx,open.hbx,s), y:lp(closed.hby,open.hby,s)};
+      fig.innerHTML=pathFromJoints(J, lp(closed.cv,open.cv,s), hi);
+      fig._anim=requestAnimationFrame(loop);
+    }
+    fig._anim=requestAnimationFrame(loop);
+  }
+
+  /* Gentle Vinyasa: a slow looping flow through Mountain -> Fold -> Lunge -> back,
+     reusing existing pose targets and easing between them. */
+  function startVinyasa(fig, hi){
+    fig.style.transform=''; fig.classList.remove('breathing');
+    hideLabel(stepLabelFor(fig));
+    const KF=[
+      {J:SIDE_STAND,          c:0},    /* Mountain */
+      {J:FF_PROF_MID,         c:0},    /* hinge */
+      {J:POSE_J.forwardfold,  c:-14},  /* Forward Fold */
+      {J:POSE_J.lowlunge,     c:6},    /* Low Lunge */
+      {J:POSE_J.forwardfold,  c:-14}   /* Fold, then loops back up to Mountain */
+    ];
+    if(prefersReduced){ fig.innerHTML=pathFromJoints(POSE_J.lowlunge,6,hi); return; }
+    const MOVE=2400, HOLD=650, SEG=MOVE+HOLD;
+    let t0=null;
+    function loop(now){
+      if(t0===null) t0=now;
+      const t=(now-t0)%(SEG*KF.length);
+      const i=Math.floor(t/SEG), lt=t-i*SEG;
+      const a=KF[i], b=KF[(i+1)%KF.length];
+      let J,c;
+      if(lt<MOVE){ const p=easeInOut(lt/MOVE); J=jointsBetween(a.J,b.J,p); c=lp(a.c,b.c,p); }
+      else { J=b.J; c=b.c; }
+      fig.innerHTML=pathFromJoints(J,c,hi);
+      fig._anim=requestAnimationFrame(loop);
+    }
+    fig._anim=requestAnimationFrame(loop);
+  }
+
+  /* poses whose held position is actually a continuous cycle */
+  const CYCLE = {
+    catcow:           startCatCow,
+    thoracicrotation: startThoracic,
+    gentlevinyasa:    startVinyasa
+  };
   function entrance(fig, poseId, delay){
     const seq=SEQ[poseId]||[{l:"",J:POSE_J[poseId],c:0,d:1200,h:600}];
     const hi=HILITE[poseId];
@@ -830,7 +986,7 @@
     fig.style.transform=''; fig.classList.remove('breathing');
     const labelEl=stepLabelFor(fig);
     if(prefersReduced){
-      if(poseId==="catcow"){ startCatCow(fig, hi); }
+      if(CYCLE[poseId]){ CYCLE[poseId](fig, hi); }
       else { const k=seq[seq.length-1]; fig.innerHTML=pathFromJoints(k.J,k.c,hi); startBreath(fig); }
       hideLabel(labelEl);
       return;
@@ -852,7 +1008,7 @@
       if(segT0===null){
         segT0=now; showLabel(labelEl, seg.step, total, seg.label);
         /* once settled on the final keyframe, reveal the muscle highlight */
-        if(si===segs.length-1 && poseId!=="catcow") fig.innerHTML=pathFromJoints(lastKF.J, lastKF.c, hi);
+        if(si===segs.length-1 && !CYCLE[poseId]) fig.innerHTML=pathFromJoints(lastKF.J, lastKF.c, hi);
       }
       let p=seg.dur>0 ? (now-segT0)/seg.dur : 1; if(p>1) p=1;
       if(seg.type==="move"){
@@ -862,7 +1018,7 @@
       if(p>=1){
         si++; segT0=null;
         if(si>=segs.length){
-          if(poseId==="catcow"){ startCatCow(fig, hi); }
+          if(CYCLE[poseId]){ CYCLE[poseId](fig, hi); }
           else { fig.innerHTML=pathFromJoints(lastKF.J, lastKF.c, hi); startBreath(fig); hideLabel(labelEl); }
           fig._anim=null; return;
         }
@@ -885,7 +1041,12 @@
     {id:"catcow",      name:"Cat\u2013Cow",             cue:"Arch and round with the breath",               hold:32, dur:"4.0s"},
     {id:"twist",       name:"Seated Spinal Twist",      cue:"Lengthen up, rotate, gaze back",               hold:24, dur:"4.2s"},
     {id:"cobra",       name:"Cobra",                    cue:"Lift the chest, shoulders down the back",      hold:20, dur:"4.2s"},
-    {id:"tree",        name:"Tree",                     cue:"Root through one foot, steady gaze, hands overhead", hold:22, dur:"4.4s"}
+    {id:"tree",        name:"Tree",                     cue:"Root through one foot, steady gaze, hands overhead", hold:22, dur:"4.4s"},
+    {id:"hipflexorlunge",    name:"Hip-Opener Lunge with Reach", cue:"Front knee stacked, sink the hips, reach up", hold:24, dur:"4.2s"},
+    {id:"standinghipflexor", name:"Standing Hip-Flexor Opener",   cue:"Split stance, tuck the pelvis, lengthen tall", hold:24, dur:"4.4s"},
+    {id:"thoracicrotation",  name:"Thoracic Rotation",           cue:"Open the chest to the ceiling from the mid-back", hold:30, dur:"4.6s"},
+    {id:"doorwaystretch",    name:"Chest \u0026 Shoulder Doorway Stretch", cue:"Goalpost arms, lean through the chest", hold:22, dur:"4.4s"},
+    {id:"gentlevinyasa",     name:"Gentle Vinyasa",              cue:"A slow flow \u2014 Mountain, Fold, Lunge", hold:36, dur:"4.4s"}
   ];
 
   /* ---------- working-muscle map (data-driven, mirrors the muscle-map pattern) ----------
@@ -896,6 +1057,7 @@
     "glutes":["hip"], "hips":["hip"], "hip flexors":["hip"],
     "spine":["torso"], "back":["torso"], "lower back":["torso"],
     "chest":["torso"], "core":["torso"], "obliques":["torso"], "abs":["torso"],
+    "mid-back":["torso"], "full body":["torso","thighL","thighR","hip"],
     "shoulders":["sleeveL","sleeveR"]
   };
   const POSE_MUSCLES = {
@@ -910,7 +1072,12 @@
     catcow:["spine","core"],
     twist:["obliques","spine"],
     cobra:["chest","spine"],
-    tree:["glutes","ankles","core"]
+    tree:["glutes","ankles","core"],
+    hipflexorlunge:["hip flexors","quads"],
+    standinghipflexor:["hip flexors"],
+    thoracicrotation:["mid-back","spine"],
+    doorwaystretch:["chest","shoulders"],
+    gentlevinyasa:["spine","hips","hamstrings"]
   };
   const HILITE = {};
   Object.keys(POSE_MUSCLES).forEach(function(id){
@@ -936,6 +1103,7 @@
   POSES.forEach(function(p,i){
     const card = document.createElement("article");
     card.className = "card";
+    card.id = p.id;   /* deep-linkable: poses.html#<id> */
     card.innerHTML =
       '<div class="frame"><span class="idx">'+String(i+1).padStart(2,"0")+'</span>'+poseSVG(p)+'<span class="steplabel"></span></div>'+
       '<h3>'+p.name+'</h3>'+
@@ -1070,12 +1238,7 @@
     else if(e.key===" "){ e.preventDefault(); togglePause(); }
     else if(e.key==="ArrowRight") next();
   });
-
-  /* ---------- solo player mode ----------
-     When loaded as poses.html?solo=1 (inside the flow player's iframe), hide the
-     page chrome and render ONE big animated figure. The parent flow player swaps
-     poses via postMessage({type:'em-pose', id}) — no reload, no flicker. Reuses
-     poseSVG() + entrance() exactly like the grid and practice mode. */
+  /* solo player mode: poses.html?solo=1 renders ONE big figure; parent swaps via postMessage */
   (function(){
     if(!/[?&]solo\b/i.test(location.search||'')) return;
     document.documentElement.classList.add('em-solo');
@@ -1103,7 +1266,6 @@
 </script>
 <style>.card.em-deeplink{outline:2px solid #F0852E;outline-offset:4px;border-radius:16px;transition:outline .3s}</style>
 <script>
-/* deep-link: open/scroll to a pose from location.hash (e.g. #pigeon) */
 (function(){
   function go(){
     var h=(location.hash||'').replace(/^#/,'').toLowerCase().replace(/[^a-z0-9]/g,'');

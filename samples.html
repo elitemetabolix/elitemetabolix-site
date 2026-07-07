@@ -195,6 +195,13 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
 .scard p{font-size:13.5px;color:var(--mut);line-height:1.5}
 .scard .open{margin-top:16px;font-size:13px;font-weight:600;color:var(--orange);display:inline-flex;gap:7px;align-items:center}
 .scard.soon{opacity:.62}
+/* --- Premium sample cards --- */
+.scard.live{background:linear-gradient(168deg,var(--card),#0d1218)}
+.scard.live:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:0 18px 42px rgba(0,0,0,.45)}
+.scard .viz{position:relative;height:100px;margin:-24px -24px 18px;border-bottom:1px solid var(--line);overflow:hidden;background:rgba(255,255,255,.02);background:radial-gradient(130% 150% at 18% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 66%), rgba(255,255,255,.015)}
+.scard .viz svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scard .open{transition:gap .18s}
+.scard.live:hover .open{gap:11px}
 @media(max-width:900px){.samples-grid{grid-template-columns:1fr}}
 @media(max-width:900px){
   .nav-links{display:none}.burger{display:block}
@@ -233,6 +240,8 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
     <p class="sec-intro">No two builds are alike. Each is anonymized, research-grounded, and shaped around one person's goal, schedule, body, and life — from a first 10K to training that works alongside a dialysis team. Plans adapt to your physiology, too: cycle-aware, and through perimenopause and menopause. These are the shapes yours could take.</p>
     <div class="samples-grid">
       <a class="scard live" href="sample-endurance.html" style="--accent:var(--orange)">
+        <div class="viz"><svg viewBox="0 0 280 100" preserveAspectRatio="none"><defs><linearGradient id="gvEnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".34"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><path d="M0,86 C50,82 72,54 108,46 C144,38 158,18 190,18 C216,18 230,26 252,34 C264,39 273,44 280,48 L280,100 L0,100 Z" fill="url(#gvEnd)"/><path d="M0,86 C50,82 72,54 108,46 C144,38 158,18 190,18 C216,18 230,26 252,34 C264,39 273,44 280,48" fill="none" stroke="var(--accent)" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg></div>
+        
         <div class="stag"><span>Endurance</span><span class="on">● Live</span></div>
         <h3>Peak Form</h3>
         <div class="goal">Race day · full periodization</div>
@@ -240,6 +249,8 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
         <span class="open">View sample →</span>
       </a>
       <a class="scard live" href="sample-runwalk-10k.html" style="--accent:var(--green)">
+        <div class="viz"><svg viewBox="0 0 280 100" preserveAspectRatio="none"><g fill="var(--accent)"><rect x="6" y="56" width="13" height="30" rx="2"/><rect x="26" y="68" width="13" height="18" rx="2" opacity="0.45"/><rect x="46" y="50" width="13" height="36" rx="2"/><rect x="66" y="66" width="13" height="20" rx="2" opacity="0.45"/><rect x="86" y="44" width="13" height="42" rx="2"/><rect x="106" y="64" width="13" height="22" rx="2" opacity="0.45"/><rect x="126" y="38" width="13" height="48" rx="2"/><rect x="146" y="62" width="13" height="24" rx="2" opacity="0.45"/><rect x="166" y="32" width="13" height="54" rx="2"/><rect x="186" y="60" width="13" height="26" rx="2" opacity="0.45"/><rect x="206" y="26" width="13" height="60" rx="2"/><rect x="226" y="58" width="13" height="28" rx="2" opacity="0.45"/><rect x="246" y="20" width="13" height="66" rx="2"/></g></svg></div>
+        
         <div class="stag"><span>Run / Walk</span><span class="on">● Live</span></div>
         <h3>The Beginner 10K</h3>
         <div class="goal">Couch → 10K · run/walk</div>
@@ -247,6 +258,8 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
         <span class="open">View sample →</span>
       </a>
       <a class="scard live" href="sample-marathon.html" style="--accent:var(--blue)">
+        <div class="viz"><svg viewBox="0 0 280 100" preserveAspectRatio="none"><g fill="var(--accent)"><rect x="8" y="66" width="13" height="20" rx="2"/><rect x="28" y="60" width="13" height="26" rx="2"/><rect x="48" y="54" width="13" height="32" rx="2"/><rect x="68" y="56" width="13" height="30" rx="2"/><rect x="88" y="48" width="13" height="38" rx="2"/><rect x="108" y="42" width="13" height="44" rx="2"/><rect x="128" y="44" width="13" height="42" rx="2"/><rect x="148" y="34" width="13" height="52" rx="2"/><rect x="168" y="26" width="13" height="60" rx="2"/><rect x="188" y="20" width="13" height="66" rx="2"/><rect x="208" y="40" width="13" height="46" rx="2"/><rect x="228" y="54" width="13" height="32" rx="2"/><rect x="248" y="64" width="13" height="22" rx="2"/></g></svg></div>
+        
         <div class="stag"><span>Marathon</span><span class="on">● Live</span></div>
         <h3>The Sub-3:30</h3>
         <div class="goal">26.2 · 21-week plan</div>
@@ -254,6 +267,8 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
         <span class="open">View sample →</span>
       </a>
       <a class="scard live" href="sample-metabolic.html" style="--accent:var(--red)">
+        <div class="viz"><svg viewBox="0 0 280 100" preserveAspectRatio="none"><path d="M0,76 C70,72 150,44 280,22" fill="none" stroke="var(--accent)" stroke-width="2.6" vector-effect="non-scaling-stroke"/><path d="M0,26 C70,32 150,60 280,76" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 4" opacity=".5" vector-effect="non-scaling-stroke"/><circle cx="276" cy="22" r="3.5" fill="var(--accent)"/></svg></div>
+        
         <div class="stag"><span>Metabolic</span><span class="on">● Live</span></div>
         <h3>Recomposition</h3>
         <div class="goal">Lean mass · metabolic health</div>
@@ -261,6 +276,8 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
         <span class="open">View sample →</span>
       </a>
       <a class="scard live" href="sample-renal-recomp.html" style="--accent:var(--lav,#A99BE0)">
+        <div class="viz"><svg viewBox="0 0 280 100" preserveAspectRatio="none"><path d="M0,62 C40,58 62,64 102,60 C142,56 162,62 202,58 C232,55 252,59 280,56" fill="none" stroke="var(--accent)" stroke-width="2.4" opacity=".85" vector-effect="non-scaling-stroke"/><g transform="translate(232,34)" opacity=".9"><path d="M0,-13 L11,-8 L11,2 C11,11 5,16 0,18 C-5,16 -11,11 -11,2 L-11,-8 Z" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/><path d="M-5,1 L-1,6 L6,-4" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></g></svg></div>
+        
         <div class="stag"><span>Renal · special case</span><span class="on">View →</span></div>
         <h3>Recomposition on Dialysis</h3>
         <div class="goal">Movement that works with care</div>
@@ -268,6 +285,8 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
         <span class="open">View sample →</span>
       </a>
       <a class="scard live" href="apply.html" style="--accent:var(--orange)">
+        <div class="viz"><svg viewBox="0 0 280 100" preserveAspectRatio="none"><line x1="0" y1="84" x2="280" y2="84" stroke="var(--accent)" stroke-dasharray="3 6" opacity=".3" vector-effect="non-scaling-stroke"/><path d="M0,70 C60,68 120,60 200,44 C236,37 262,30 280,25" fill="none" stroke="var(--accent)" stroke-width="2.6" vector-effect="non-scaling-stroke"/><circle cx="276" cy="25" r="4" fill="var(--accent)"/><g stroke="var(--accent)" stroke-width="2" opacity=".55" vector-effect="non-scaling-stroke"><line x1="20" y1="62" x2="20" y2="76"/><line x1="13" y1="69" x2="27" y2="69"/></g></svg></div>
+        
         <div class="stag"><span>Yours</span><span class="on">● Open</span></div>
         <h3>Your Build</h3>
         <div class="goal">Engineered around you</div>

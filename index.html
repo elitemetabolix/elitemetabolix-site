@@ -77,7 +77,13 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(
 @media(max-width:680px){.fgrid{grid-template-columns:1fr}}
 
 /* hero */
-header.hero{padding:88px 0 70px;position:relative}
+header.hero{padding:88px 0 70px;position:relative;overflow:hidden}
+.hero-video{position:absolute;inset:0;z-index:0;overflow:hidden;background:#0A0C10}
+.hero-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% 50%}
+.hero-video::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,12,16,.95) 0%,rgba(10,12,16,.80) 34%,rgba(10,12,16,.32) 62%,rgba(10,12,16,.10) 100%),linear-gradient(0deg,rgba(10,12,16,.88) 0%,rgba(10,12,16,0) 44%)}
+header.hero .hero-grid{opacity:.20;z-index:1}
+@media(max-width:840px){.hero-video video{object-position:64% 50%}.hero-video::after{background:linear-gradient(180deg,rgba(10,12,16,.70) 0%,rgba(10,12,16,.40) 38%,rgba(10,12,16,.90) 100%)}}
+@media(prefers-reduced-motion:reduce){.hero-video video{display:none}.hero-video{background:#0A0C10 url(hero-poster.jpg) center/cover no-repeat}}
 .hero-grid{position:absolute;inset:0;z-index:0;opacity:.5;
   background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
   background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%)}
@@ -249,6 +255,12 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
 <nav><div class="nav-in"><a href="index.html" class="brand"><span class="dot"></span>Elite Metabolix</a><div class="nav-links"><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html">Yoga</a><a href="mind.html">Mind</a><a href="mailto:hello@elitemetabolixhq.com?subject=Manage%20my%20membership" class="nav-cta">Manage Membership</a></div><button class="burger" onclick="var n=document.querySelector('.nav-links');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button></div></nav>
 
 <header class="hero">
+  <div class="hero-video" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" poster="hero-poster.jpg">
+      <source src="hero-run.webm" type="video/webm">
+      <source src="hero-run.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="hero-grid"></div>
   <div class="wrap">
     <div class="hero-eyebrow">

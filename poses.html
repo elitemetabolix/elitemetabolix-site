@@ -499,6 +499,30 @@
       elbowR:{x:128,y:60}, handR:{x:136,y:34},
       kneeL:{x:78,y:238}, footL:{x:42,y:250},
       kneeR:{x:152,y:202}, footR:{x:146,y:250}
+    },
+    legswings:{  /* SIDE: stand on one leg; the loop swings the other leg from the hip */
+      head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+      shoulders:{x:120,y:92}, pelvis:{x:120,y:158},
+      elbowL:{x:102,y:118}, handL:{x:92,y:146},
+      elbowR:{x:138,y:118}, handR:{x:148,y:146},
+      kneeR:{x:122,y:206}, footR:{x:126,y:252},
+      kneeL:{x:120,y:206}, footL:{x:120,y:252}
+    },
+    anklerocks:{  /* SIDE: standing; the loop rocks the weight fwd/back over the feet */
+      head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+      shoulders:{x:120,y:92}, pelvis:{x:120,y:158},
+      elbowL:{x:116,y:124}, handL:{x:114,y:156},
+      elbowR:{x:124,y:124}, handR:{x:126,y:156},
+      kneeL:{x:118,y:206}, footL:{x:112,y:252},
+      kneeR:{x:122,y:206}, footR:{x:128,y:252}
+    },
+    calfraises:{  /* SIDE: standing; the loop rises onto the toes and lowers */
+      head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+      shoulders:{x:120,y:92}, pelvis:{x:120,y:158},
+      elbowL:{x:110,y:120}, handL:{x:104,y:150},
+      elbowR:{x:130,y:120}, handR:{x:136,y:150},
+      kneeL:{x:116,y:206}, footL:{x:112,y:252},
+      kneeR:{x:124,y:206}, footR:{x:128,y:252}
     }
   };
 
@@ -747,6 +771,18 @@
     gentlevinyasa: [
       {l:"Begin standing tall (side view)", J:SIDE_STAND, c:0, d:1200, h:600}
       /* then flows Mountain -> Fold -> Lunge -> back, continuously */
+    ],
+    legswings: [
+      {l:"Stand tall (side view)", J:SIDE_STAND, c:0, d:1000, h:400},
+      {l:"Shift onto one leg", J:POSE_J.legswings, c:0, d:1100, h:400}
+    ],
+    anklerocks: [
+      {l:"Stand tall (side view)", J:SIDE_STAND, c:0, d:1000, h:400},
+      {l:"Settle the weight over the feet", J:POSE_J.anklerocks, c:0, d:900, h:400}
+    ],
+    calfraises: [
+      {l:"Stand tall (side view)", J:SIDE_STAND, c:0, d:1000, h:400},
+      {l:"Ready at the feet", J:POSE_J.calfraises, c:0, d:900, h:400}
     ]
   };
 
@@ -974,11 +1010,77 @@
     fig._anim=requestAnimationFrame(loop);
   }
 
+  /* ---------- dynamic drill loops (leg swings / ankle rocks / calf raises) ---------- */
+  function cloneJoints(J){ var o={}; for(var k in J){ o[k]={x:J[k].x,y:J[k].y}; if(J[k].r!=null)o[k].r=J[k].r; } return o; }
+
+  /* Leg swings: stand on one leg, swing the other front<->back as a pendulum from the hip. */
+  function startLegSwings(fig, hi){
+    fig.style.transform=''; fig.classList.remove('breathing'); hideLabel(stepLabelFor(fig));
+    var base=POSE_J.legswings, P=base.pelvis, thL=48, shL=46;
+    if(prefersReduced){ fig.innerHTML=pathFromJoints(base,0,hi); return; }
+    var t0=null;
+    function loop(now){
+      if(t0===null)t0=now;
+      var sp=(1-Math.cos((now-t0)/1500*Math.PI))/2;   /* 0->1->0, ~1.5s each way */
+      var a=lp(2.27,0.96,sp);                          /* thigh angle: back-down -> front-up */
+      var J=cloneJoints(base);
+      J.kneeL={x:P.x+Math.cos(a)*thL, y:P.y+Math.sin(a)*thL};
+      J.footL={x:J.kneeL.x+Math.cos(a)*shL, y:J.kneeL.y+Math.sin(a)*shL};
+      fig.innerHTML=pathFromJoints(J,0,hi);
+      fig._anim=requestAnimationFrame(loop);
+    }
+    fig._anim=requestAnimationFrame(loop);
+  }
+
+  /* Ankle rocks + calf prep: rock the weight forward and back over the feet. */
+  function startAnkleRocks(fig, hi){
+    fig.style.transform=''; fig.classList.remove('breathing'); hideLabel(stepLabelFor(fig));
+    var base=POSE_J.anklerocks;
+    if(prefersReduced){ fig.innerHTML=pathFromJoints(base,0,hi); return; }
+    var t0=null;
+    function loop(now){
+      if(t0===null)t0=now;
+      var sp=(1-Math.cos((now-t0)/1400*Math.PI))/2;   /* ~1.4s back<->forward */
+      var dx=lp(-9,11,sp);
+      var J=cloneJoints(base);
+      J.head.x+=dx; J.headBase.x+=dx; J.shoulders.x+=dx;
+      J.elbowL.x+=dx; J.handL.x+=dx; J.elbowR.x+=dx; J.handR.x+=dx;
+      J.pelvis.x+=dx*0.55; J.kneeL.x+=dx*0.28; J.kneeR.x+=dx*0.28;
+      fig.innerHTML=pathFromJoints(J,0,hi);
+      fig._anim=requestAnimationFrame(loop);
+    }
+    fig._anim=requestAnimationFrame(loop);
+  }
+
+  /* Calf raises + ankle pumps: rise onto the balls of the feet and lower, rhythmically. */
+  function startCalfRaises(fig, hi){
+    fig.style.transform=''; fig.classList.remove('breathing'); hideLabel(stepLabelFor(fig));
+    var base=POSE_J.calfraises;
+    if(prefersReduced){ fig.innerHTML=pathFromJoints(base,0,hi); return; }
+    var t0=null;
+    function loop(now){
+      if(t0===null)t0=now;
+      var sp=(1-Math.cos((now-t0)/1050*Math.PI))/2;   /* ~1.05s up/down */
+      var dy=-14*sp;
+      var J=cloneJoints(base);
+      J.head.y+=dy; J.headBase.y+=dy; J.shoulders.y+=dy; J.pelvis.y+=dy;
+      J.elbowL.y+=dy; J.handL.y+=dy; J.elbowR.y+=dy; J.handR.y+=dy;
+      J.kneeL.y+=dy; J.kneeR.y+=dy;
+      J.footL.y+=dy*0.42; J.footR.y+=dy*0.42;          /* feet rise less -> onto the toes */
+      fig.innerHTML=pathFromJoints(J,0,hi);
+      fig._anim=requestAnimationFrame(loop);
+    }
+    fig._anim=requestAnimationFrame(loop);
+  }
+
   /* poses whose held position is actually a continuous cycle */
   const CYCLE = {
     catcow:           startCatCow,
     thoracicrotation: startThoracic,
-    gentlevinyasa:    startVinyasa
+    gentlevinyasa:    startVinyasa,
+    legswings:        startLegSwings,
+    anklerocks:       startAnkleRocks,
+    calfraises:       startCalfRaises
   };
   function entrance(fig, poseId, delay){
     const seq=SEQ[poseId]||[{l:"",J:POSE_J[poseId],c:0,d:1200,h:600}];
@@ -1047,7 +1149,10 @@
     {id:"standinghipflexor", name:"Standing Hip-Flexor Opener",   cue:"Split stance, tuck the pelvis, lengthen tall", hold:24, dur:"4.4s"},
     {id:"thoracicrotation",  name:"Thoracic Rotation",           cue:"Open the chest to the ceiling from the mid-back", hold:30, dur:"4.6s"},
     {id:"doorwaystretch",    name:"Chest \u0026 Shoulder Doorway Stretch", cue:"Goalpost arms, lean through the chest", hold:22, dur:"4.4s"},
-    {id:"gentlevinyasa",     name:"Gentle Vinyasa",              cue:"A slow flow \u2014 Mountain, Fold, Lunge", hold:36, dur:"4.4s"}
+    {id:"gentlevinyasa",     name:"Gentle Vinyasa",              cue:"A slow flow \u2014 Mountain, Fold, Lunge", hold:36, dur:"4.4s"},
+    {id:"legswings",         name:"Leg Swings",                  cue:"Swing the leg front to back, stay tall", hold:20, dur:"3.0s"},
+    {id:"anklerocks",        name:"Ankle Rocks + Calf Prep",     cue:"Rock forward and back over the feet", hold:20, dur:"3.0s"},
+    {id:"calfraises",        name:"Calf Raises + Ankle Pumps",   cue:"Rise onto the balls of the feet, then lower", hold:20, dur:"3.0s"}
   ];
 
   /* ---------- working-muscle map (data-driven, mirrors the muscle-map pattern) ----------
@@ -1078,7 +1183,10 @@
     standinghipflexor:["hip flexors"],
     thoracicrotation:["mid-back","spine"],
     doorwaystretch:["chest","shoulders"],
-    gentlevinyasa:["spine","hips","hamstrings"]
+    gentlevinyasa:["spine","hips","hamstrings"],
+    legswings:["hip flexors","hamstrings"],
+    anklerocks:["calves","ankles"],
+    calfraises:["calves"]
   };
   const HILITE = {};
   Object.keys(POSE_MUSCLES).forEach(function(id){

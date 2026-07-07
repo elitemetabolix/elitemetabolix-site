@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Elite Metabolix — Yoga Pose System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --orange:#F0852E;
+    --bg:#0A0C10;
+    --surface:#13171F;
+    --surface-2:#171C26;
+    --text:#ECEFF3;
+    --muted:#9AA4B2;
+    --line:#2C3543;
+    --green:#37B981;
+    --blue:#4F92DE;
+    --lavender:#A99BE0;
+    --serif:"Fraunces",Georgia,serif;
+    --sans:"Hanken Grotesk",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  a{color:var(--orange);}
+  a:hover{color:#f6a05c;}
+
+  /* ---------- layout ---------- */
+  .em-yoga{max-width:1200px;margin:0 auto;padding:72px 24px 120px;}
+  .em-head{margin-bottom:56px;max-width:640px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--orange);
+    margin:0 0 18px;
+  }
+  .em-head h1{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:clamp(34px,5vw,56px);
+    line-height:1.05;
+    letter-spacing:-.01em;
+    margin:0 0 18px;
+  }
+  .em-head p{
+    color:var(--muted);
+    font-size:17px;
+    max-width:52ch;
+    margin:0 0 30px;
+  }
+
+  .btn{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:15px;
+    border:none;
+    border-radius:999px;
+    padding:14px 26px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition:transform .18s ease, background .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .btn-primary{
+    background:var(--orange);
+    color:#160b03;
+    box-shadow:0 8px 30px -8px rgba(240,133,46,.6);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px -8px rgba(240,133,46,.7);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--line);
+  }
+  .btn-ghost:hover{border-color:var(--muted);background:var(--surface-2);}
+  .btn .dot{width:8px;height:8px;border-radius:50%;background:currentColor;}
+
+  /* ---------- grid ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:20px;
+  }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:20px 20px 24px;
+    overflow:hidden;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .card:hover{border-color:#3a4757;transform:translateY(-3px);}
+  .card .frame{
+    position:relative;
+    aspect-ratio:1/1;
+    border-radius:14px;
+    background:radial-gradient(120% 90% at 50% 22%, #182029 0%, #10141b 60%, #0d1016 100%);
+    overflow:hidden;
+    margin-bottom:18px;
+  }
+  .pose-svg{width:100%;height:100%;display:block;}
+  .card h3{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:22px;
+    margin:0 0 6px;
+    letter-spacing:-.01em;
+  }
+  .card .cue{color:var(--muted);font-size:14.5px;margin:0;}
+  .card .targets{
+    margin:10px 0 0;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.04em;
+    color:var(--muted);
+  }
+  .card .targets span{
+    color:var(--orange);
+    font-size:9.5px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-right:8px;
+  }
+  .card .idx{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.2em;
+    color:var(--muted);
+    opacity:.6;
+    position:absolute;
+    top:14px;
+    left:14px;
+    z-index:2;
+  }
+  .card .steplabel{
+    position:absolute;
+    left:14px; right:14px; bottom:12px;
+    z-index:3;
+    font-family:var(--sans);
+    font-size:12.5px;
+    color:var(--text);
+    background:rgba(10,12,16,.66);
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:6px 10px;
+    text-align:center;
+    opacity:0;
+    transition:opacity .5s ease;
+    pointer-events:none;
+    backdrop-filter:blur(3px);
+  }
+  .card .steplabel b{color:var(--orange);font-weight:600;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;margin-right:6px;text-transform:uppercase;}
+  .ov-step{
+    font-family:var(--sans);
+    font-size:15px;
+    color:var(--text);
+    text-align:center;
+    min-height:20px;
+    margin:2px 0 6px;
+    opacity:1;
+    transition:opacity .5s ease;
+  }
+  .ov-step b{color:var(--orange);font-weight:600;font-family:var(--mono);font-size:11px;letter-spacing:.14em;margin-right:8px;text-transform:uppercase;}
+  .ov-targets{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.06em;
+    color:var(--muted);
+    text-align:center;
+    margin:10px 0 0;
+  }
+  .ov-targets span{color:var(--orange);font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-right:8px;}
+
+  /* ---------- figure styling (clothed: orange shirt, lime shorts, off-white skin) ---------- */
+  .figure path{
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .figure .sh-torso{stroke:url(#shirtGrad);stroke-width:22;stroke-linecap:round;stroke-linejoin:round;}
+  .figure .sh-sleeve{stroke:url(#shirtGrad);stroke-width:14;}
+  .figure .sh-thigh{stroke:url(#shortsGrad);stroke-width:18;}
+  .figure .sk-shin{stroke:url(#skinGrad);stroke-width:11;}
+  .figure .sk-fore{stroke:url(#skinGrad);stroke-width:10;}
+  .figure .sk-neck{stroke:url(#skinGrad);stroke-width:12;}
+  .figure .sk-head{fill:url(#skinGrad);stroke:none;}
+  .figure .hl{stroke:#F0852E;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.92;filter:drop-shadow(0 0 3px rgba(240,133,46,.9));}
+  .figure .hlf{fill:#F0852E;stroke:none;opacity:.6;filter:drop-shadow(0 0 3px rgba(240,133,46,.8));}
+  .figure .sk-hand{fill:url(#skinGrad);stroke:none;}
+  .figure .sk-foot{fill:url(#skinGrad);stroke:none;}
+  .mat{fill:var(--orange);opacity:.22;}
+  .drop{fill:#000;opacity:.4;filter:url(#soft);}
+
+  .figure{ transform-box:view-box; transform-origin:120px 250px; }
+  @keyframes breathe{
+    0%,100%{transform:scale(1) translateY(0);}
+    50%{transform:scale(1.014) translateY(-2.5px);}
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .figure.breathing{
+      animation:breathe var(--dur,4s) ease-in-out infinite;
+    }
+  }
+
+  /* ---------- practice overlay ---------- */
+  .overlay{
+    position:fixed;inset:0;z-index:50;
+    background:rgba(6,8,11,.86);
+    backdrop-filter:blur(14px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    padding:32px;
+  }
+  .overlay.open{display:flex;}
+  .ov-top{
+    position:absolute;top:24px;left:0;right:0;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:0 32px;
+  }
+  .ov-count{font-family:var(--mono);font-size:12px;letter-spacing:.24em;color:var(--muted);}
+  .ov-close{
+    background:none;border:1px solid var(--line);color:var(--muted);
+    width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:18px;
+    display:flex;align-items:center;justify-content:center;transition:.2s;
+  }
+  .ov-close:hover{color:var(--text);border-color:var(--muted);}
+
+  .stage{position:relative;width:min(60vmin,360px);aspect-ratio:1/1;}
+  .ring-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);}
+  .ring-track{fill:none;stroke:var(--line);stroke-width:5;}
+  .ring-prog{fill:none;stroke:var(--orange);stroke-width:5;stroke-linecap:round;
+    filter:drop-shadow(0 0 8px rgba(240,133,46,.55));}
+  .stage-fig{position:absolute;inset:9%;}
+  .stage-fig .pose-svg{width:100%;height:100%;}
+
+  .ov-name{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(26px,4.4vw,38px);
+    margin:24px 0 8px;text-align:center;letter-spacing:-.01em;
+  }
+  .ov-cue{color:var(--muted);font-size:16px;text-align:center;max-width:34ch;margin:0 0 6px;}
+  .ov-secs{font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--orange);opacity:.8;margin-top:2px;}
+  .ov-controls{display:flex;gap:14px;margin-top:24px;}
+
+  @media (max-width:520px){
+    .em-yoga{padding:48px 16px 90px;}
+    .ov-top{padding:0 18px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- global svg defs (gradients + filters, shared across all pose svgs) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F4F7FA"/>
+      <stop offset="1" stop-color="#DBE3EC"/>
+    </linearGradient>
+    <linearGradient id="shirtGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2C4373"/>
+      <stop offset="1" stop-color="#172544"/>
+    </linearGradient>
+    <linearGradient id="shortsGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#233961"/>
+      <stop offset="1" stop-color="#111D38"/>
+    </linearGradient>
+    <radialGradient id="spot" cx="50%" cy="42%" r="60%">
+      <stop offset="0" stop-color="#F0852E" stop-opacity="0.20"/>
+      <stop offset="55%" stop-color="#F0852E" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#F0852E" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+</svg>
+
+<main class="em-yoga">
+  <header class="em-head">
+    <p class="eyebrow">Elite Metabolix · Mobility &amp; Recovery</p>
+    <h1>The Recovery Flow</h1>
+    <p>Twelve evidence-based poses to unwind tension, restore mobility, and down-regulate after training. Breathe with each figure — or start the guided flow.</p>
+    <button class="btn btn-primary" id="startFlow"><span class="dot"></span> Start flow</button>
+  </header>
+
+  <section class="grid" id="grid"></section>
+</main>
+
+<!-- practice mode overlay -->
+<div class="overlay" id="overlay" aria-hidden="true">
+  <div class="ov-top">
+    <span class="ov-count" id="ovCount">01 / 03</span>
+    <button class="ov-close" id="ovClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="stage">
+    <svg class="ring-svg" viewBox="0 0 320 320">
+      <circle class="ring-track" cx="160" cy="160" r="150"/>
+      <circle class="ring-prog" id="ringProg" cx="160" cy="160" r="150"/>
+    </svg>
+    <div class="stage-fig" id="stageFig"></div>
+  </div>
+  <h2 class="ov-name" id="ovName">Pose</h2>
+  <p class="ov-step" id="ovStep"></p>
+  <p class="ov-cue" id="ovCue">Cue</p>
+  <p class="ov-targets" id="ovTargets"><span>Targets</span> </p>
+  <p class="ov-secs" id="ovSecs">00s</p>
+  <div class="ov-controls">
+    <button class="btn btn-ghost" id="ovPause">Pause</button>
+    <button class="btn btn-ghost" id="ovSkip">Skip</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- skeleton model (viewBox 0 0 240 280, ground ~y252) ----------
+     Every pose is the SAME named joints. We author positions, convert to a
+     bone hierarchy (angles + lengths), and interpolate the ANGLES so limbs
+     rotate around their joints — the way a real body moves — rather than
+     sliding endpoints in straight lines. */
+
+  /* front-facing standing figure — what you see first */
+  const FRONT_STAND = {
+    head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+    shoulders:{x:120,y:92}, pelvis:{x:120,y:158},
+    elbowL:{x:92,y:126},  handL:{x:82,y:158},
+    elbowR:{x:148,y:126}, handR:{x:158,y:158},
+    kneeL:{x:106,y:206},  footL:{x:100,y:252},
+    kneeR:{x:134,y:206},  footR:{x:140,y:252}
+  };
+  /* profile standing figure — the base we bend from after turning */
+  const SIDE_STAND = {
+    head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+    shoulders:{x:120,y:92}, pelvis:{x:120,y:158},
+    elbowL:{x:124,y:126}, handL:{x:122,y:158},
+    elbowR:{x:116,y:126}, handR:{x:118,y:158},
+    kneeL:{x:118,y:206}, footL:{x:112,y:252},
+    kneeR:{x:122,y:206}, footR:{x:128,y:252}
+  };
+
+  const POSE_J = {
+    mountain:{
+      head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+      shoulders:{x:120,y:92}, pelvis:{x:120,y:158},
+      elbowL:{x:123,y:126}, handL:{x:122,y:162},
+      elbowR:{x:117,y:126}, handR:{x:118,y:162},   /* arms resting at sides */
+      kneeL:{x:118,y:206}, footL:{x:113,y:252},
+      kneeR:{x:122,y:206}, footR:{x:129,y:252}
+    },
+    downdog:{
+      head:{x:78,y:176,r:12.5}, headBase:{x:90,y:162},
+      shoulders:{x:100,y:150}, pelvis:{x:132,y:96},
+      elbowL:{x:78,y:196}, handL:{x:52,y:250},
+      elbowR:{x:90,y:198}, handR:{x:68,y:250},
+      kneeL:{x:164,y:172}, footL:{x:190,y:250},
+      kneeR:{x:154,y:176}, footR:{x:174,y:250}
+    },
+    lowlunge:{
+      head:{x:121,y:62,r:12.5}, headBase:{x:119,y:80},
+      shoulders:{x:118,y:92}, pelvis:{x:116,y:150},
+      elbowL:{x:128,y:60}, handL:{x:136,y:34},
+      elbowR:{x:128,y:60}, handR:{x:136,y:34},   /* arms together overhead */
+      kneeL:{x:78,y:238}, footL:{x:42,y:250},    /* back leg, knee low */
+      kneeR:{x:152,y:202}, footR:{x:146,y:250}   /* front leg, knee stacked over ankle */
+    },
+    wgs:{  /* World's Greatest Stretch: deep lunge, rotate, one arm to sky */
+      head:{x:116,y:92,r:12.5}, headBase:{x:118,y:106},
+      shoulders:{x:120,y:116}, pelvis:{x:110,y:172},
+      elbowR:{x:134,y:82}, handR:{x:146,y:48},   /* top arm reaching up */
+      elbowL:{x:120,y:154}, handL:{x:128,y:208},  /* bottom hand to floor */
+      kneeL:{x:68,y:234}, footL:{x:34,y:250},    /* back leg extended */
+      kneeR:{x:150,y:204}, footR:{x:150,y:250}   /* front leg deep bend */
+    },
+    pigeon:{  /* front shin down, back leg extended, deep fold from the hip crease */
+      head:{x:186,y:224,r:12.5}, headBase:{x:174,y:216},
+      shoulders:{x:156,y:206}, pelvis:{x:112,y:206},
+      elbowR:{x:180,y:214}, handR:{x:206,y:228},
+      elbowL:{x:176,y:218}, handL:{x:202,y:230},
+      kneeL:{x:74,y:232}, footL:{x:32,y:244},    /* back leg extended behind */
+      kneeR:{x:150,y:224}, footR:{x:96,y:238}    /* front shin folded on floor */
+    },
+    figure4:{  /* reclined, ankle over knee (knee open to the side), thigh drawn in */
+      head:{x:62,y:210,r:12.5}, headBase:{x:78,y:212},
+      shoulders:{x:94,y:214}, pelvis:{x:150,y:216},
+      elbowL:{x:118,y:200}, handL:{x:144,y:184},  /* hands reach to hold the bottom thigh */
+      elbowR:{x:122,y:198}, handR:{x:148,y:182},
+      kneeR:{x:150,y:148}, footR:{x:128,y:172},   /* bottom leg drawn toward the chest */
+      kneeL:{x:196,y:170}, footL:{x:150,y:150}    /* top leg: knee falls open, ankle on the thigh */
+    },
+    legsup:{  /* reclined, legs vertical */
+      head:{x:68,y:216,r:12.5}, headBase:{x:84,y:217},
+      shoulders:{x:98,y:218}, pelvis:{x:152,y:220},
+      elbowL:{x:126,y:224}, handL:{x:150,y:230},  /* arms rest along floor */
+      elbowR:{x:122,y:226}, handR:{x:146,y:232},
+      kneeL:{x:148,y:150}, footL:{x:144,y:86},    /* legs straight up */
+      kneeR:{x:156,y:150}, footR:{x:160,y:86}
+    },
+    forwardfold:{  /* PROFILE view: hinge at the hips, head hangs, hands to floor */
+      head:{x:140,y:224,r:12.5}, headBase:{x:138,y:210},
+      shoulders:{x:132,y:196}, pelvis:{x:116,y:150},
+      elbowR:{x:140,y:214}, handR:{x:146,y:248},
+      elbowL:{x:136,y:216}, handL:{x:142,y:250},
+      kneeL:{x:118,y:202}, footL:{x:116,y:252},
+      kneeR:{x:122,y:202}, footR:{x:124,y:252}
+    },
+    catcow:{  /* proper all-fours: hands under shoulders, knees under hips, feet back */
+      head:{x:176,y:176,r:12.5}, headBase:{x:164,y:178},
+      shoulders:{x:150,y:180}, pelvis:{x:98,y:182},
+      elbowL:{x:150,y:206}, handL:{x:150,y:232},
+      elbowR:{x:156,y:206}, handR:{x:156,y:232},
+      kneeL:{x:96,y:214}, footL:{x:72,y:226},    /* shins & tops of feet back on floor */
+      kneeR:{x:102,y:214}, footR:{x:78,y:224}
+    },
+    twist:{  /* seated spinal twist: lengthen up, rotate, gaze back */
+      head:{x:98,y:120,r:12.5}, headBase:{x:104,y:135},
+      shoulders:{x:110,y:150}, pelvis:{x:108,y:214},
+      elbowL:{x:96,y:174}, handL:{x:86,y:206},   /* brace arm behind */
+      elbowR:{x:130,y:166}, handR:{x:150,y:180},  /* arm hooks raised knee */
+      kneeL:{x:98,y:228}, footL:{x:146,y:232},    /* bottom leg folded on floor */
+      kneeR:{x:150,y:190}, footR:{x:116,y:236}    /* top leg, knee up, foot planted */
+    },
+    cobra:{  /* prone, lift the chest, legs extended back */
+      head:{x:174,y:172,r:12.5}, headBase:{x:162,y:182},
+      shoulders:{x:146,y:192}, pelvis:{x:92,y:232},
+      elbowL:{x:144,y:214}, handL:{x:150,y:238},
+      elbowR:{x:150,y:214}, handR:{x:156,y:238},
+      kneeL:{x:60,y:238}, footL:{x:28,y:244},
+      kneeR:{x:62,y:240}, footR:{x:32,y:248}
+    },
+    tree:{
+      head:{x:120,y:62,r:12.5}, headBase:{x:121,y:80},
+      shoulders:{x:122,y:92}, pelvis:{x:126,y:150},
+      elbowL:{x:106,y:52}, handL:{x:122,y:34},
+      elbowR:{x:138,y:52}, handR:{x:122,y:34},   /* hands meet overhead */
+      kneeL:{x:84,y:188}, footL:{x:118,y:172},   /* bent leg: knee out, foot tucked to inner thigh */
+      kneeR:{x:129,y:200}, footR:{x:132,y:250}   /* standing leg: straight and tall (slight angle) */
+    }
+  };
+
+  /* ===== neutral starts & intermediate keyframes for staged, no-spin entries ===== */
+  const MTN_FRONT = {  /* head-on standing — the default view */
+    head:{x:120,y:60,r:12.5}, headBase:{x:120,y:80},
+    shoulders:{x:120,y:92}, pelvis:{x:120,y:158},
+    elbowL:{x:100,y:126}, handL:{x:94,y:158},
+    elbowR:{x:140,y:126}, handR:{x:146,y:158},
+    kneeL:{x:110,y:206}, footL:{x:106,y:252},
+    kneeR:{x:130,y:206}, footR:{x:134,y:252}
+  };
+  const TREE_MID = {  /* head-on: rooting down, floating the foot up, arms rising */
+    head:{x:120,y:58,r:12.5}, headBase:{x:120,y:76},
+    shoulders:{x:120,y:92}, pelvis:{x:120,y:157},
+    elbowL:{x:100,y:100}, handL:{x:84,y:98},
+    elbowR:{x:140,y:100}, handR:{x:156,y:98},
+    kneeR:{x:127,y:204}, footR:{x:127,y:252},
+    kneeL:{x:98,y:202}, footL:{x:120,y:216}
+  };
+  const TREE_F = {  /* head-on tree */
+    head:{x:120,y:56,r:12.5}, headBase:{x:120,y:74},
+    shoulders:{x:120,y:90}, pelvis:{x:120,y:156},
+    elbowL:{x:108,y:56}, handL:{x:120,y:34},
+    elbowR:{x:132,y:56}, handR:{x:120,y:34},
+    kneeR:{x:126,y:204}, footR:{x:126,y:252},
+    kneeL:{x:86,y:196}, footL:{x:118,y:186}
+  };
+  const SIT = {  /* seated on the floor, legs extended — start for reclined/seated */
+    head:{x:96,y:150,r:12.5}, headBase:{x:100,y:166},
+    shoulders:{x:104,y:180}, pelvis:{x:120,y:224},
+    elbowL:{x:112,y:200}, handL:{x:108,y:224},
+    elbowR:{x:108,y:202}, handR:{x:104,y:226},
+    kneeL:{x:150,y:214}, footL:{x:186,y:230},
+    kneeR:{x:154,y:216}, footR:{x:190,y:232}
+  };
+  const F4_LIE = {  /* lying back, both knees bent, feet planted */
+    head:{x:64,y:214,r:12.5}, headBase:{x:80,y:214},
+    shoulders:{x:96,y:214}, pelvis:{x:150,y:216},
+    elbowL:{x:120,y:222}, handL:{x:140,y:224},
+    elbowR:{x:116,y:224}, handR:{x:136,y:226},
+    kneeL:{x:172,y:176}, footL:{x:150,y:220},
+    kneeR:{x:176,y:178}, footR:{x:156,y:222}
+  };
+  const F4_CROSS = {  /* ankle crossed over the far knee (knee open), before drawing in */
+    head:{x:62,y:212,r:12.5}, headBase:{x:78,y:213},
+    shoulders:{x:94,y:214}, pelvis:{x:150,y:216},
+    elbowL:{x:120,y:216}, handL:{x:144,y:206},
+    elbowR:{x:118,y:218}, handR:{x:146,y:208},
+    kneeR:{x:158,y:170}, footR:{x:150,y:206},   /* bottom leg, knee up, foot near floor */
+    kneeL:{x:198,y:186}, footL:{x:156,y:168}    /* top leg, knee open, ankle on the thigh */
+  };
+  const DD_REACH = {  /* halfway into down dog — hips already lifting up-and-back */
+    head:{x:90,y:170,r:12.5}, headBase:{x:99,y:164},
+    shoulders:{x:106,y:156}, pelvis:{x:128,y:126},
+    elbowL:{x:92,y:184}, handL:{x:70,y:230},
+    elbowR:{x:102,y:186}, handR:{x:82,y:232},
+    kneeL:{x:152,y:178}, footL:{x:178,y:250},
+    kneeR:{x:146,y:182}, footR:{x:166,y:250}
+  };
+  const WGS_MID = {  /* head-on: step into a wide stance, hands lowering */
+    head:{x:122,y:80,r:12.5}, headBase:{x:121,y:96},
+    shoulders:{x:120,y:112}, pelvis:{x:120,y:166},
+    elbowL:{x:104,y:140}, handL:{x:96,y:172},
+    elbowR:{x:136,y:140}, handR:{x:144,y:172},
+    kneeR:{x:154,y:206}, footR:{x:168,y:250},
+    kneeL:{x:86,y:214}, footL:{x:58,y:250}
+  };
+  const WGS_F = {  /* head-on World's Greatest Stretch: rotate open, top arm to sky */
+    head:{x:128,y:78,r:12.5}, headBase:{x:125,y:94},
+    shoulders:{x:122,y:110}, pelvis:{x:120,y:168},
+    elbowR:{x:140,y:82}, handR:{x:150,y:48},    /* top arm reaching up */
+    elbowL:{x:104,y:150}, handL:{x:96,y:200},   /* bottom hand toward the floor */
+    kneeR:{x:158,y:206}, footR:{x:172,y:250},   /* front leg bent */
+    kneeL:{x:82,y:214}, footL:{x:54,y:250}      /* back leg extended */
+  };
+  const FF_PROF_MID = {  /* profile forward fold, hinged flat with a long spine */
+    head:{x:150,y:150,r:12.5}, headBase:{x:142,y:150},
+    shoulders:{x:132,y:150}, pelvis:{x:116,y:152},
+    elbowR:{x:146,y:172}, handR:{x:150,y:198},
+    elbowL:{x:142,y:174}, handL:{x:146,y:200},
+    kneeL:{x:118,y:202}, footL:{x:116,y:252},
+    kneeR:{x:122,y:202}, footR:{x:124,y:252}
+  };
+  const LU_LIE = {  /* lying flat, legs extended along the floor */
+    head:{x:68,y:216,r:12.5}, headBase:{x:84,y:217},
+    shoulders:{x:98,y:218}, pelvis:{x:150,y:220},
+    elbowL:{x:126,y:224}, handL:{x:150,y:230},
+    elbowR:{x:122,y:226}, handR:{x:146,y:232},
+    kneeL:{x:186,y:224}, footL:{x:220,y:230},
+    kneeR:{x:188,y:226}, footR:{x:222,y:232}
+  };
+  const LU_UP1 = {  /* one leg raised up the wall, the other still down */
+    head:{x:68,y:216,r:12.5}, headBase:{x:84,y:217},
+    shoulders:{x:98,y:218}, pelvis:{x:150,y:220},
+    elbowL:{x:126,y:224}, handL:{x:150,y:230},
+    elbowR:{x:122,y:226}, handR:{x:146,y:232},
+    kneeL:{x:186,y:224}, footL:{x:220,y:230},
+    kneeR:{x:156,y:150}, footR:{x:160,y:86}
+  };
+  const FF_HINGE = {  /* forward fold, hinged halfway with a long spine */
+    head:{x:150,y:150,r:12.5}, headBase:{x:140,y:146},
+    shoulders:{x:128,y:140}, pelvis:{x:118,y:152},
+    elbowL:{x:132,y:170}, handL:{x:130,y:196},
+    elbowR:{x:140,y:168}, handR:{x:138,y:194},
+    kneeL:{x:112,y:204}, footL:{x:108,y:252},
+    kneeR:{x:124,y:204}, footR:{x:130,y:252}
+  };
+  const COB_PRONE = {  /* lying prone, flat, forearms by the chest */
+    head:{x:150,y:224,r:12.5}, headBase:{x:138,y:226},
+    shoulders:{x:124,y:228}, pelvis:{x:66,y:236},
+    elbowL:{x:140,y:236}, handL:{x:150,y:238},
+    elbowR:{x:144,y:238}, handR:{x:154,y:240},
+    kneeL:{x:36,y:240}, footL:{x:8,y:246},
+    kneeR:{x:38,y:242}, footR:{x:10,y:248}
+  };
+  const COB_LOW = {  /* low cobra — chest just lifting */
+    head:{x:164,y:200,r:12.5}, headBase:{x:152,y:206},
+    shoulders:{x:138,y:212}, pelvis:{x:80,y:234},
+    elbowL:{x:146,y:224}, handL:{x:152,y:240},
+    elbowR:{x:150,y:226}, handR:{x:156,y:240},
+    kneeL:{x:50,y:238}, footL:{x:20,y:244},
+    kneeR:{x:52,y:240}, footR:{x:22,y:246}
+  };
+  const CC_BASE = POSE_J.catcow;  /* all-fours neutral */
+
+  /* Step-by-step entry sequences. Each step: l=label, J=joints, c=spine curve,
+     d=ms to reach it, h=ms to hold. Standing/balance poses stay head-on;
+     depth/reclined poses use a fixed side view (no spin, ever). */
+  const SEQ = {
+    mountain: [
+      {l:"Stand tall, feet grounded", J:MTN_FRONT, c:0, d:1100, h:900}
+    ],
+    tree: [
+      {l:"Stand tall, head-on", J:MTN_FRONT, c:0, d:1000, h:500},
+      {l:"Root down, float the left foot", J:TREE_MID, c:0, d:1500, h:600},
+      {l:"Foot to inner thigh, hands overhead", J:TREE_F, c:0, d:1600, h:900}
+    ],
+    downdog: [
+      {l:"Stand at the top of the mat", J:SIDE_STAND, c:0, d:1000, h:500},
+      {l:"Hinge the hips up and back", J:DD_REACH, c:-5, d:1500, h:400},
+      {l:"Press into the inverted V", J:POSE_J.downdog, c:-6, d:1600, h:900}
+    ],
+    lowlunge: [
+      {l:"Stand tall", J:SIDE_STAND, c:0, d:1000, h:500},
+      {l:"Fold and frame the front foot", J:FF_HINGE, c:0, d:1400, h:400},
+      {l:"Step back, sweep the arms up", J:POSE_J.lowlunge, c:6, d:1800, h:900}
+    ],
+    wgs: [
+      {l:"Stand tall, head-on", J:MTN_FRONT, c:0, d:1000, h:500},
+      {l:"Step into a wide stance", J:WGS_MID, c:0, d:1500, h:400},
+      {l:"Rotate open, reach to the sky", J:WGS_F, c:0, d:1600, h:900}
+    ],
+    pigeon: [
+      {l:"From all fours", J:CC_BASE, c:0, d:1100, h:400},
+      {l:"Bring the front shin down", J:POSE_J.pigeon, c:0, d:1400, h:400},
+      {l:"Hinge from the hips, chest toward the floor", J:POSE_J.pigeon, c:-6, d:1600, h:900}
+    ],
+    figure4: [
+      {l:"Sit down slowly", J:SIT, c:0, d:1400, h:500},
+      {l:"Lie back onto the mat", J:F4_LIE, c:0, d:1500, h:500},
+      {l:"Cross the ankle over the knee", J:F4_CROSS, c:0, d:1500, h:500},
+      {l:"Draw the thigh in toward the chest", J:POSE_J.figure4, c:0, d:1600, h:900}
+    ],
+    legsup: [
+      {l:"Sit beside the wall", J:SIT, c:0, d:1400, h:500},
+      {l:"Lie back down", J:LU_LIE, c:0, d:1500, h:500},
+      {l:"Raise one leg up the wall", J:LU_UP1, c:0, d:1500, h:500},
+      {l:"Raise the other, hips near the wall", J:POSE_J.legsup, c:0, d:1500, h:900}
+    ],
+    forwardfold: [
+      {l:"Stand tall (side view)", J:SIDE_STAND, c:0, d:1000, h:500},
+      {l:"Hinge at the hips, long spine", J:FF_PROF_MID, c:0, d:1500, h:500},
+      {l:"Soften the knees, let the head hang", J:POSE_J.forwardfold, c:-14, d:1500, h:900}
+    ],
+    catcow: [
+      {l:"Come to all fours", J:SIDE_STAND, c:0, d:1000, h:400},
+      {l:"Hands under shoulders, knees under hips", J:CC_BASE, c:0, d:1500, h:700}
+      /* then cycles cow<->cat continuously */
+    ],
+    twist: [
+      {l:"Sit tall, one knee bent up", J:SIT, c:0, d:1300, h:500},
+      {l:"Lengthen up through the spine", J:POSE_J.twist, c:0, d:1200, h:400},
+      {l:"Rotate and gaze back", J:POSE_J.twist, c:4, d:1400, h:900}
+    ],
+    cobra: [
+      {l:"Lie prone, forearms by the chest", J:COB_PRONE, c:0, d:1300, h:500},
+      {l:"Lift low — curl the lower back", J:COB_LOW, c:10, d:1400, h:400},
+      {l:"Roll up through the spine, chest high", J:POSE_J.cobra, c:22, d:1600, h:900}
+    ]
+  };
+
+  const prefersReduced = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- geometry helpers ---------- */
+  function lp(a,b,t){ return a+(b-a)*t; }
+  function easeInOut(t){ return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
+  function easeInSine(t){ return 1-Math.cos(t*Math.PI/2); }
+  function easeOutSine(t){ return Math.sin(t*Math.PI/2); }
+  function dist(a,b){ return Math.hypot(b.x-a.x, b.y-a.y); }
+  function ang(a,b){ return Math.atan2(b.y-a.y, b.x-a.x); }
+  function proj(p,a,l){ return {x:p.x+Math.cos(a)*l, y:p.y+Math.sin(a)*l}; }
+  function lerpAng(a,b,t){
+    let d=b-a; while(d>Math.PI)d-=2*Math.PI; while(d<-Math.PI)d+=2*Math.PI;
+    return a+d*t;
+  }
+
+  /* positions -> bone hierarchy (angle+length per limb) */
+  function toBones(J){
+    return {
+      pelvis:{x:J.pelvis.x, y:J.pelvis.y},
+      spine:{a:ang(J.pelvis,J.shoulders),  l:dist(J.pelvis,J.shoulders)},
+      neck: {a:ang(J.shoulders,J.headBase),l:dist(J.shoulders,J.headBase)},
+      head: {a:ang(J.headBase,J.head),     l:dist(J.headBase,J.head), r:J.head.r},
+      upL:{a:ang(J.shoulders,J.elbowL), l:dist(J.shoulders,J.elbowL)},
+      foL:{a:ang(J.elbowL,J.handL),     l:dist(J.elbowL,J.handL)},
+      upR:{a:ang(J.shoulders,J.elbowR), l:dist(J.shoulders,J.elbowR)},
+      foR:{a:ang(J.elbowR,J.handR),     l:dist(J.elbowR,J.handR)},
+      thL:{a:ang(J.pelvis,J.kneeL), l:dist(J.pelvis,J.kneeL)},
+      shL:{a:ang(J.kneeL,J.footL),  l:dist(J.kneeL,J.footL)},
+      thR:{a:ang(J.pelvis,J.kneeR), l:dist(J.pelvis,J.kneeR)},
+      shR:{a:ang(J.kneeR,J.footR),  l:dist(J.kneeR,J.footR)}
+    };
+  }
+  /* bone hierarchy -> positions */
+  function fromBones(b){
+    const pelvis={x:b.pelvis.x,y:b.pelvis.y};
+    const shoulders=proj(pelvis,b.spine.a,b.spine.l);
+    const headBase=proj(shoulders,b.neck.a,b.neck.l);
+    const head=proj(headBase,b.head.a,b.head.l); head.r=b.head.r;
+    const elbowL=proj(shoulders,b.upL.a,b.upL.l), handL=proj(elbowL,b.foL.a,b.foL.l);
+    const elbowR=proj(shoulders,b.upR.a,b.upR.l), handR=proj(elbowR,b.foR.a,b.foR.l);
+    const kneeL=proj(pelvis,b.thL.a,b.thL.l), footL=proj(kneeL,b.shL.a,b.shL.l);
+    const kneeR=proj(pelvis,b.thR.a,b.thR.l), footR=proj(kneeR,b.shR.a,b.shR.l);
+    return {head,headBase,shoulders,pelvis,elbowL,handL,elbowR,handR,kneeL,footL,kneeR,footR};
+  }
+  /* interpolate two bone sets by rotating limbs (angle lerp) + easing */
+  function lerpBones(A,B,tRaw){
+    const t=easeInOut(tRaw), out={pelvis:{x:lp(A.pelvis.x,B.pelvis.x,t), y:lp(A.pelvis.y,B.pelvis.y,t)}};
+    ["spine","neck","head","upL","foL","upR","foR","thL","shL","thR","shR"].forEach(function(k){
+      out[k]={a:lerpAng(A[k].a,B[k].a,t), l:lp(A[k].l,B[k].l,t)};
+      if(k==="head") out[k].r=lp(A.head.r,B.head.r,t);
+    });
+    return out;
+  }
+  function jointsBetween(fromJ,toJ,tRaw){ return fromBones(lerpBones(toBones(fromJ),toBones(toJ),tRaw)); }
+
+  /* simple position lerp (used only while edge-on, where it isn't visible) */
+  function lerpJoints(A,B,t){
+    const e=easeInOut(t), out={};
+    for(const k in B){
+      if(k==="head") out.head={x:lp(A.head.x,B.head.x,e),y:lp(A.head.y,B.head.y,e),r:lp(A.head.r,B.head.r,e)};
+      else out[k]={x:lp(A[k].x,B[k].x,e), y:lp(A[k].y,B[k].y,e)};
+    }
+    return out;
+  }
+
+  function pathFromJoints(J, curve, hi){
+    const p=function(pt){ return pt.x.toFixed(1)+","+pt.y.toFixed(1); };
+    /* a perfectly vertical stroke has a zero-width bbox and drops out of
+       rendering — nudge the endpoint x a hair so every segment stays visible */
+    const seg=function(cls,a,b){
+      let bx=b.x; if(Math.abs(bx-a.x)<0.15) bx=a.x+0.6;
+      return '<path class="'+cls+'" d="M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' L'+bx.toFixed(1)+','+b.y.toFixed(1)+'"/>';
+    };
+    const hand=function(pt){ return '<circle class="sk-hand" cx="'+pt.x.toFixed(1)+'" cy="'+pt.y.toFixed(1)+'" r="6"/>'; };
+    const foot=function(knee,ankle){          /* oval oriented across the shin, like a foot */
+      const a=Math.atan2(ankle.y-knee.y, ankle.x-knee.x)*180/Math.PI + 90;
+      const cx=ankle.x.toFixed(1), cy=ankle.y.toFixed(1);
+      return '<ellipse class="sk-foot" cx="'+cx+'" cy="'+cy+'" rx="9" ry="5" transform="rotate('+a.toFixed(1)+' '+cx+' '+cy+')"/>';
+    };
+    /* arms + torso as simple rounded strokes */
+    const arm=function(elbow,hand){
+      return seg('sh-sleeve',J.shoulders,elbow)+seg('sk-fore',elbow,hand);
+    };
+    /* --- curved spine: a Bézier from pelvis to shoulders, bowed by J.curve.
+       curve>0 bows one way (extension/arch), curve<0 the other (flexion/round).
+       Two control points give a region-by-region (lumbar->thoracic) curve
+       rather than a single stiff hinge. */
+    const P=J.pelvis, S=J.shoulders, cv=(curve!==undefined?curve:(J.curve||0));
+    const sdx=S.x-P.x, sdy=S.y-P.y, sl=Math.hypot(sdx,sdy)||1;
+    const nx=-sdy/sl, ny=sdx/sl;                 /* unit perpendicular to spine */
+    const c1x=P.x+sdx*0.33+nx*cv*0.85, c1y=P.y+sdy*0.33+ny*cv*0.85;  /* lumbar */
+    const c2x=P.x+sdx*0.70+nx*cv*1.05, c2y=P.y+sdy*0.70+ny*cv*1.05;  /* thoracic */
+    let topx=S.x;
+    if(Math.abs(topx-P.x)<0.3 && Math.abs(c1x-P.x)<0.3) topx=P.x+0.6;  /* avoid zero-width */
+    const torso='<path class="sh-torso" d="M'+P.x.toFixed(1)+','+P.y.toFixed(1)
+      +' C'+c1x.toFixed(1)+','+c1y.toFixed(1)+' '+c2x.toFixed(1)+','+c2y.toFixed(1)
+      +' '+topx.toFixed(1)+','+S.y.toFixed(1)+'"/>';
+    /* --- working-muscle highlight: tint the targeted regions accent orange.
+       hi is an object like {thighL:true, torso:true, hip:true}; subtle overlay. */
+    let hl='';
+    if(hi){
+      const line=function(a,b,w){ let bx=b.x; if(Math.abs(bx-a.x)<0.15) bx=a.x+0.6;
+        return '<path class="hl" style="stroke-width:'+w+'" d="M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' L'+bx.toFixed(1)+','+b.y.toFixed(1)+'"/>'; };
+      if(hi.thighL) hl+=line(J.pelvis,J.kneeL,12);
+      if(hi.thighR) hl+=line(J.pelvis,J.kneeR,12);
+      if(hi.shinL) hl+=line(J.kneeL,J.footL,7);
+      if(hi.shinR) hl+=line(J.kneeR,J.footR,7);
+      if(hi.sleeveL) hl+=line(J.shoulders,J.elbowL,9);
+      if(hi.sleeveR) hl+=line(J.shoulders,J.elbowR,9);
+      if(hi.foreL) hl+=line(J.elbowL,J.handL,6);
+      if(hi.foreR) hl+=line(J.elbowR,J.handR,6);
+      if(hi.torso) hl+='<path class="hl" style="stroke-width:13" d="M'+P.x.toFixed(1)+','+P.y.toFixed(1)
+        +' C'+c1x.toFixed(1)+','+c1y.toFixed(1)+' '+c2x.toFixed(1)+','+c2y.toFixed(1)+' '+topx.toFixed(1)+','+S.y.toFixed(1)+'"/>';
+      if(hi.hip){ const a=Math.atan2(sdy,sdx)*180/Math.PI+90;
+        hl+='<ellipse class="hlf" cx="'+P.x.toFixed(1)+'" cy="'+P.y.toFixed(1)+'" rx="16" ry="11" transform="rotate('+a.toFixed(1)+' '+P.x.toFixed(1)+' '+P.y.toFixed(1)+')"/>'; }
+    }
+    return ''
+      /* legs: orange shorts (thigh) + skin (shin) + feet */
+      + seg('sh-thigh',J.pelvis,J.kneeL) + seg('sk-shin',J.kneeL,J.footL)
+      + seg('sh-thigh',J.pelvis,J.kneeR) + seg('sk-shin',J.kneeR,J.footR)
+      + foot(J.kneeL,J.footL) + foot(J.kneeR,J.footR)
+      /* neck (skin) first, then curved torso so the shirt covers the neck base */
+      + seg('sk-neck',J.shoulders,J.headBase)
+      + torso
+      /* arms: lime sleeve (upper) + skin forearm + hands */
+      + arm(J.elbowL,J.handL)
+      + arm(J.elbowR,J.handR)
+      + hand(J.handL) + hand(J.handR)
+      /* working-muscle highlight overlay */
+      + hl
+      /* head: skin */
+      + '<circle class="sk-head" cx="'+J.head.x.toFixed(1)+'" cy="'+J.head.y.toFixed(1)+'" r="'+J.head.r.toFixed(1)+'"/>';
+  }
+
+  function startBreath(fig){ fig.style.transform=''; if(!prefersReduced) fig.classList.add('breathing'); }
+
+  function stepLabelFor(fig){
+    const fr=fig.closest && fig.closest(".frame");
+    if(fr) return fr.querySelector(".steplabel");
+    return document.getElementById("ovStep");
+  }
+  function showLabel(el, step, total, text){
+    if(!el) return;
+    el.innerHTML='<b>Step '+step+'/'+total+'</b> '+text;
+    el.style.opacity='1';
+  }
+  function hideLabel(el){ if(el){ el.style.opacity='0'; } }
+
+  /* Cat–Cow: after arriving on all fours, cycle the spine cow<->cat forever.
+     Only the spine curve and head move — a calm, breath-paced flow. */
+  function startCatCow(fig, hi){
+    fig.style.transform=''; fig.classList.remove('breathing');
+    hideLabel(stepLabelFor(fig));
+    const base=CC_BASE;
+    const cow={hx:178,hy:166, bx:166,by:172, cv:10};   /* gentle extension */
+    const cat={hx:170,hy:198, bx:162,by:190, cv:-12};  /* gentle round */
+    if(prefersReduced){ fig.innerHTML=pathFromJoints(base,0,hi); return; }
+    let t0=null;
+    function loop(now){
+      if(t0===null) t0=now;
+      const s=(1-Math.cos((now-t0)/3600*Math.PI))/2;   /* 0->1->0, ~7.2s each way — calm */
+      const J=Object.assign({},base);
+      J.head={x:lp(cow.hx,cat.hx,s), y:lp(cow.hy,cat.hy,s), r:base.head.r};
+      J.headBase={x:lp(cow.bx,cat.bx,s), y:lp(cow.by,cat.by,s)};
+      fig.innerHTML=pathFromJoints(J, lp(cow.cv,cat.cv,s), hi);
+      fig._anim=requestAnimationFrame(loop);
+    }
+    fig._anim=requestAnimationFrame(loop);
+  }
+
+  /* staged, no-spin entry: play through the pose's labeled step sequence,
+     easing into each step and holding briefly, then settle (breathe) or cycle. */
+  function entrance(fig, poseId, delay){
+    const seq=SEQ[poseId]||[{l:"",J:POSE_J[poseId],c:0,d:1200,h:600}];
+    const hi=HILITE[poseId];
+    if(fig._anim){ cancelAnimationFrame(fig._anim); fig._anim=null; }
+    fig.style.transform=''; fig.classList.remove('breathing');
+    const labelEl=stepLabelFor(fig);
+    if(prefersReduced){
+      if(poseId==="catcow"){ startCatCow(fig, hi); }
+      else { const k=seq[seq.length-1]; fig.innerHTML=pathFromJoints(k.J,k.c,hi); startBreath(fig); }
+      hideLabel(labelEl);
+      return;
+    }
+    /* build a flat timeline of move + hold segments */
+    const segs=[{type:"hold", J:seq[0], c:seq[0].c, dur:seq[0].h, label:seq[0].l, step:1}];
+    for(let i=1;i<seq.length;i++){
+      segs.push({type:"move", from:seq[i-1], to:seq[i], dur:seq[i].d, label:seq[i].l, step:i+1});
+      segs.push({type:"hold", J:seq[i], c:seq[i].c, dur:seq[i].h, label:seq[i].l, step:i+1});
+    }
+    const total=seq.length, lastKF=seq[seq.length-1];
+    fig.innerHTML=pathFromJoints(seq[0].J, seq[0].c);
+    let t0=null, si=0, segT0=null;
+    const wait=delay||0;
+    function frame(now){
+      if(t0===null) t0=now;
+      if(now-t0<wait){ fig._anim=requestAnimationFrame(frame); return; }
+      const seg=segs[si];
+      if(segT0===null){
+        segT0=now; showLabel(labelEl, seg.step, total, seg.label);
+        /* once settled on the final keyframe, reveal the muscle highlight */
+        if(si===segs.length-1 && poseId!=="catcow") fig.innerHTML=pathFromJoints(lastKF.J, lastKF.c, hi);
+      }
+      let p=seg.dur>0 ? (now-segT0)/seg.dur : 1; if(p>1) p=1;
+      if(seg.type==="move"){
+        const J=jointsBetween(seg.from.J, seg.to.J, p);
+        fig.innerHTML=pathFromJoints(J, lp(seg.from.c||0, seg.to.c||0, easeInOut(p)));
+      }
+      if(p>=1){
+        si++; segT0=null;
+        if(si>=segs.length){
+          if(poseId==="catcow"){ startCatCow(fig, hi); }
+          else { fig.innerHTML=pathFromJoints(lastKF.J, lastKF.c, hi); startBreath(fig); hideLabel(labelEl); }
+          fig._anim=null; return;
+        }
+      }
+      fig._anim=requestAnimationFrame(frame);
+    }
+    fig._anim=requestAnimationFrame(frame);
+  }
+
+  /* ---------- pose data ---------- */
+  const POSES = [
+    {id:"mountain",    name:"Mountain",                 cue:"Grounded and tall, easy breath",              hold:20, dur:"4.4s"},
+    {id:"downdog",     name:"Downward Dog",             cue:"Hips high, heels reaching down",              hold:25, dur:"4.2s"},
+    {id:"lowlunge",    name:"Low Lunge",                cue:"Front knee stacked, chest tall, arms overhead", hold:25, dur:"3.8s"},
+    {id:"wgs",         name:"World's Greatest Stretch", cue:"Deep lunge, rotate, reach to the sky",         hold:24, dur:"4.0s"},
+    {id:"pigeon",      name:"Pigeon",                   cue:"Front shin down, hips square, fold forward",   hold:30, dur:"4.6s"},
+    {id:"figure4",     name:"Reclined Figure-4",        cue:"Ankle over knee, draw the thigh in",           hold:26, dur:"4.6s"},
+    {id:"legsup",      name:"Legs-Up-the-Wall",         cue:"Legs vertical, long slow exhale",              hold:40, dur:"5.0s"},
+    {id:"forwardfold", name:"Forward Fold",             cue:"Hinge at the hips, soft knees, let the head hang", hold:25, dur:"4.4s"},
+    {id:"catcow",      name:"Cat\u2013Cow",             cue:"Arch and round with the breath",               hold:32, dur:"4.0s"},
+    {id:"twist",       name:"Seated Spinal Twist",      cue:"Lengthen up, rotate, gaze back",               hold:24, dur:"4.2s"},
+    {id:"cobra",       name:"Cobra",                    cue:"Lift the chest, shoulders down the back",      hold:20, dur:"4.2s"},
+    {id:"tree",        name:"Tree",                     cue:"Root through one foot, steady gaze, hands overhead", hold:22, dur:"4.4s"}
+  ];
+
+  /* ---------- working-muscle map (data-driven, mirrors the muscle-map pattern) ----------
+     each muscle tag resolves to region(s) on the silhouette. */
+  const MUSCLE_SEG = {
+    "hamstrings":["thighL","thighR"], "quads":["thighL","thighR"],
+    "calves":["shinL","shinR"], "ankles":["shinL","shinR"],
+    "glutes":["hip"], "hips":["hip"], "hip flexors":["hip"],
+    "spine":["torso"], "back":["torso"], "lower back":["torso"],
+    "chest":["torso"], "core":["torso"], "obliques":["torso"], "abs":["torso"],
+    "shoulders":["sleeveL","sleeveR"]
+  };
+  const POSE_MUSCLES = {
+    mountain:["core","ankles"],
+    downdog:["hamstrings","calves","shoulders"],
+    lowlunge:["hip flexors","quads"],
+    wgs:["hips","hamstrings","spine"],
+    pigeon:["glutes","hips"],
+    figure4:["glutes","hips"],
+    legsup:["hamstrings","lower back"],
+    forwardfold:["hamstrings","spine"],
+    catcow:["spine","core"],
+    twist:["obliques","spine"],
+    cobra:["chest","spine"],
+    tree:["glutes","ankles","core"]
+  };
+  const HILITE = {};
+  Object.keys(POSE_MUSCLES).forEach(function(id){
+    const set={};
+    POSE_MUSCLES[id].forEach(function(m){ (MUSCLE_SEG[m]||[]).forEach(function(s){ set[s]=true; }); });
+    HILITE[id]=set;
+  });
+  function muscleText(id){
+    return (POSE_MUSCLES[id]||[]).join(" · ");
+  }
+
+  function poseSVG(pose){
+    return '<svg class="pose-svg" viewBox="-26 -27 292 340" role="img" aria-label="'+pose.name+' yoga pose">'+
+      '<rect x="-26" y="-27" width="292" height="340" fill="url(#spot)"/>'+
+      '<ellipse class="mat" cx="120" cy="251" rx="86" ry="12"/>'+
+      '<ellipse class="drop" cx="120" cy="253" rx="60" ry="7"/>'+
+      '<g class="figure" data-pose="'+pose.id+'" style="--dur:'+pose.dur+'">'+pathFromJoints(MTN_FRONT)+'</g>'+
+    '</svg>';
+  }
+
+  /* ---------- build grid ---------- */
+  const grid = document.getElementById("grid");
+  POSES.forEach(function(p,i){
+    const card = document.createElement("article");
+    card.className = "card";
+    card.innerHTML =
+      '<div class="frame"><span class="idx">'+String(i+1).padStart(2,"0")+'</span>'+poseSVG(p)+'<span class="steplabel"></span></div>'+
+      '<h3>'+p.name+'</h3>'+
+      '<p class="cue">'+p.cue+'</p>'+
+      '<p class="targets"><span>Targets</span> '+muscleText(p.id)+'</p>';
+    grid.appendChild(card);
+  });
+
+  /* play the turn-and-bend entrance once, when each card first scrolls in.
+     Observe the HTML card (SVG sub-elements report intersection unreliably). */
+  const cards = grid.querySelectorAll(".card");
+  if("IntersectionObserver" in window && !prefersReduced){
+    const io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          const card=en.target, g=card.querySelector(".figure");
+          if(g) entrance(g, g.dataset.pose, 120);
+          io.unobserve(card);
+        }
+      });
+    }, {threshold:0.18});
+    cards.forEach(function(c){ io.observe(c); });
+  }else{
+    grid.querySelectorAll(".figure").forEach(function(g){
+      const seq=SEQ[g.dataset.pose]; const k=seq[seq.length-1];
+      g.innerHTML = pathFromJoints(k.J, k.c, HILITE[g.dataset.pose]);
+    });
+  }
+
+  /* ---------- web audio chime ---------- */
+  let actx=null;
+  function chime(){
+    try{
+      const AC = window.AudioContext||window.webkitAudioContext;
+      if(!actx) actx = new AC();
+      if(actx.state==="suspended") actx.resume();
+      const t = actx.currentTime;
+      [528, 792].forEach(function(f,i){
+        const o=actx.createOscillator(), g=actx.createGain();
+        o.type="sine"; o.frequency.value=f;
+        o.connect(g); g.connect(actx.destination);
+        const st=t+i*0.09;
+        g.gain.setValueAtTime(0.0001, st);
+        g.gain.linearRampToValueAtTime(0.14, st+0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, st+1.7);
+        o.start(st); o.stop(st+1.8);
+      });
+    }catch(e){}
+  }
+
+  /* ---------- practice mode ---------- */
+  const overlay=document.getElementById("overlay");
+  const ovName=document.getElementById("ovName");
+  const ovCue=document.getElementById("ovCue");
+  const ovCount=document.getElementById("ovCount");
+  const ovSecs=document.getElementById("ovSecs");
+  const stageFig=document.getElementById("stageFig");
+  const ring=document.getElementById("ringProg");
+  const btnPause=document.getElementById("ovPause");
+  const R=150, C=2*Math.PI*R;
+  ring.style.strokeDasharray=C;
+  ring.style.strokeDashoffset=0;
+
+  let idx=0, holdMs=0, startT=0, elapsed=0, paused=false, rafId=null, running=false;
+
+  function setRing(frac){ ring.style.strokeDashoffset = (C*frac).toFixed(2); }
+
+  function loadPose(i){
+    idx=i;
+    const p=POSES[i];
+    stageFig.innerHTML=poseSVG(p);
+    const g=stageFig.querySelector(".figure");
+    if(g) entrance(g, p.id, 80);
+    ovName.textContent=p.name;
+    ovCue.textContent=p.cue;
+    document.getElementById("ovTargets").innerHTML='<span>Targets</span> '+muscleText(p.id);
+    ovCount.textContent=String(i+1).padStart(2,"0")+" / "+String(POSES.length).padStart(2,"0");
+    holdMs=p.hold*1000;
+    elapsed=0; startT=performance.now(); paused=false;
+    btnPause.textContent="Pause";
+    setRing(0);
+    chime();
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId=requestAnimationFrame(tick);
+  }
+
+  function tick(now){
+    if(paused||!running) return;
+    const e=elapsed+(now-startT);
+    const frac=Math.min(e/holdMs,1);
+    setRing(frac);
+    ovSecs.textContent=Math.max(0,Math.ceil((holdMs-e)/1000))+"s";
+    if(frac>=1){ next(); return; }
+    rafId=requestAnimationFrame(tick);
+  }
+
+  function next(){ loadPose((idx+1)%POSES.length); }
+
+  function togglePause(){
+    if(!running) return;
+    if(paused){
+      paused=false; startT=performance.now();
+      btnPause.textContent="Pause";
+      rafId=requestAnimationFrame(tick);
+    }else{
+      paused=true; elapsed+=performance.now()-startT;
+      btnPause.textContent="Resume";
+      if(rafId) cancelAnimationFrame(rafId);
+    }
+  }
+
+  function openFlow(){
+    running=true;
+    overlay.classList.add("open");
+    overlay.setAttribute("aria-hidden","false");
+    loadPose(0);
+  }
+  function closeFlow(){
+    running=false; paused=false;
+    if(rafId) cancelAnimationFrame(rafId);
+    overlay.classList.remove("open");
+    overlay.setAttribute("aria-hidden","true");
+  }
+
+  document.getElementById("startFlow").addEventListener("click", openFlow);
+  document.getElementById("ovClose").addEventListener("click", closeFlow);
+  document.getElementById("ovSkip").addEventListener("click", next);
+  btnPause.addEventListener("click", togglePause);
+  document.addEventListener("keydown", function(e){
+    if(!running) return;
+    if(e.key==="Escape") closeFlow();
+    else if(e.key===" "){ e.preventDefault(); togglePause(); }
+    else if(e.key==="ArrowRight") next();
+  });
+})();
+</script>
+<style>.card.em-deeplink{outline:2px solid #F0852E;outline-offset:4px;border-radius:16px;transition:outline .3s}</style>
+<script>
+/* deep-link: open/scroll to a pose from location.hash (e.g. #pigeon) */
+(function(){
+  function go(){
+    var h=(location.hash||'').replace(/^#/,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    if(!h) return;
+    var fig=document.querySelector('.figure[data-pose="'+h+'"]');
+    var card=fig&&fig.closest&&fig.closest('.card');
+    if(!card) return;
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    card.classList.add('em-deeplink');
+    setTimeout(function(){card.classList.remove('em-deeplink');},2400);
+  }
+  var run=function(){setTimeout(go,140);};
+  if(document.readyState!=='loading') run(); else document.addEventListener('DOMContentLoaded',run);
+  window.addEventListener('hashchange',go);
+})();
+</script>
+</body>
+</html>

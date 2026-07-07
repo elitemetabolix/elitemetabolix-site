@@ -286,6 +286,29 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
         <span class="priv-pill">● Private · never sold</span>
         <h2>Apply for coaching</h2>
         <p class="lead">A few questions so your first plan is built around your real life, not a template. Takes about two minutes. Spots are limited, so this is also how we make sure it's a good fit.</p>
+        <!-- STEP 1 — low-friction hook; partial captured on Continue -->
+        <div id="step1">
+          <div class="fgrid">
+            <div class="field full"><label>Full name</label><input id="s1-name" type="text" placeholder="First and last"></div>
+            <div class="field full"><label>Email</label><input id="s1-email" type="email" placeholder="you@email.com"></div>
+            <div class="field full"><label>Primary goal</label><select id="s1-goal">
+              <option value="">Select…</option>
+              <option>Endurance / a race</option>
+              <option>Fat loss &amp; body composition</option>
+              <option>Strength &amp; muscle</option>
+              <option>General performance</option>
+              <option>Metabolic health</option>
+            </select></div>
+          </div>
+          <div class="apply-actions">
+            <button class="btn btn-primary" onclick="continueStep1()">Continue <span class="arr">→</span></button>
+            <span class="apply-msg" id="step1Msg"></span>
+          </div>
+          <p class="scope-note" style="margin-top:12px">Just the essentials to begin — we save your spot so you can finish the short intake now or come back to it.</p>
+        </div>
+        <!-- STEP 2 — full intake -->
+        <div id="step2" style="display:none">
+        <div id="s2-confirm" style="font-size:13px;color:var(--orange);margin:0 0 14px;font-weight:600"></div>
         <div class="fgrid">
           <div class="field full"><label>Which plan are you applying for?</label><select id="f-plan">
             <option value="">Help me choose / not sure yet</option>
@@ -353,6 +376,7 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
           <button class="btn btn-primary" onclick="submitIntake()">Submit application <span class="arr">→</span></button>
           <span class="apply-msg" id="applyMsg"></span>
         </div>
+        </div>
       </div>
       <div id="applyDone" class="apply-success" style="display:none">
         <div class="tick">✓</div>
@@ -364,6 +388,23 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
 </section>
 <div class="afoot">Private · never sold · © <span id="yr"></span> Elite Metabolix · <a href="#scope">Scope of Services</a> · <a href="https://elitemetabolixhq.com/">elitemetabolixhq.com</a></div>
 <script>
+function continueStep1(){
+  var g=function(id){return document.getElementById(id);};
+  var name=g('s1-name').value.trim(), email=g('s1-email').value.trim(), goal=g('s1-goal').value;
+  if(!name){ g('step1Msg').textContent='Please add your name.'; return; }
+  if(!email || email.indexOf('@')<1){ g('step1Msg').textContent='Please add a valid email.'; return; }
+  if(!goal){ g('step1Msg').textContent='Please choose a primary goal.'; return; }
+  g('step1Msg').textContent='';
+  // Early capture (partial) — fire-and-forget to the Sheet so a drop-off is still recoverable.
+  try{ var EP='https://script.google.com/macros/s/AKfycbzosdkuK6u5QKFqH7Lei41mmuk6PSy8nMAIm9dPakMuedbYdwHLCCCb_X5499ooa-6N9A/exec';
+    fetch(EP,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({form:'intake-partial',name:name,email:email,goal:goal,ref:(window.__REF||''),ts:new Date().toISOString()})}); }catch(e){}
+  // Carry into the full intake; hide the now-redundant fields so nothing is typed twice.
+  g('f-name').value=name; g('f-email').value=email; g('f-goal').value=goal;
+  ['f-name','f-email','f-goal'].forEach(function(id){ var f=g(id); if(f&&f.closest('.field')) f.closest('.field').style.display='none'; });
+  var cf=g('s2-confirm'); if(cf) cf.textContent='Applying as '+name+' \u00b7 '+email+' \u2014 a few more details and you\u2019re set.';
+  g('step1').style.display='none'; g('step2').style.display='block';
+  document.getElementById('apply').scrollIntoView({behavior:'smooth',block:'start'});
+}
 function submitIntake(){
   var g=function(id){return document.getElementById(id);};
   var req=[['f-name','your name'],['f-email','your email'],['f-goal','a primary goal'],['f-exp','your experience level'],['f-days','days per week'],['f-equip','equipment access']];

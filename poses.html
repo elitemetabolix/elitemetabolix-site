@@ -265,7 +265,7 @@
 <style>
   /* solo player mode: one big figure, chrome hidden — embedded by the flow player */
   html.em-solo,body.em-solo{background:transparent!important;margin:0;overflow:hidden;height:100%;}
-  body.em-solo>*:not(#emSoloStage){display:none!important;}
+  body.em-solo>*:not(#emSoloStage):not(svg){display:none!important;}
   #emSoloStage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
   #emSoloStage .pose-svg{width:min(92vw,400px);height:auto;}
 </style>

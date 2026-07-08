@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!DOCTYPE html>
-<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +20,6 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--txt);font-family:var(--fb);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-/* grain + ambient */
 body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .glow{position:fixed;border-radius:50%;filter:blur(120px);z-index:0;pointer-events:none;opacity:.4}
@@ -30,8 +27,6 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .glow.b{width:440px;height:440px;background:radial-gradient(circle,rgba(79,146,222,.28),transparent 70%);top:520px;left:-180px}
 .wrap{max-width:1180px;margin:0 auto;padding:0 28px;position:relative;z-index:2}
 .mono{font-family:var(--fm);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut2)}
-
-/* nav */
 nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,12,16,.72);border-bottom:1px solid var(--line)}
 .nav-in{max-width:1180px;margin:0 auto;padding:15px 28px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .brand{font-family:var(--fd);font-weight:600;font-size:20px;letter-spacing:.01em;color:var(--txt);text-decoration:none;display:flex;align-items:center;gap:9px}
@@ -42,16 +37,12 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(
 .nav-cta{font-family:var(--fm)!important;font-size:11px!important;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--line2);padding:9px 16px;border-radius:7px;color:var(--txt)!important;transition:all .2s}
 .nav-cta:hover{border-color:var(--orange);color:var(--orange)!important}
 .burger{display:none;background:none;border:none;color:var(--txt);font-size:22px;cursor:pointer}
-
-/* buttons */
 .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fb);font-weight:600;font-size:15px;padding:15px 26px;border-radius:10px;text-decoration:none;cursor:pointer;border:none;transition:transform .18s,box-shadow .18s,filter .18s;position:relative}
 .btn-primary{background:linear-gradient(135deg,var(--orange),#f5a059);color:#1a0f04;box-shadow:0 10px 30px rgba(var(--orange-rgb),.32)}
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(var(--orange-rgb),.42)}
 .btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--line2)}
 .btn-ghost:hover{border-color:var(--mut);transform:translateY(-2px)}
 .btn .arr{transition:transform .2s}.btn:hover .arr{transform:translateX(4px)}
-
-/* apply / intake form */
 #apply{padding-top:30px}
 .apply-card{background:linear-gradient(160deg,rgba(var(--orange-rgb),.06),var(--card));border:1px solid var(--line2);border-radius:20px;padding:clamp(24px,4vw,44px);max-width:880px;margin:0 auto;box-shadow:0 30px 70px rgba(0,0,0,.4)}
 .apply-card h2{font-family:var(--fd);font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.08;margin:12px 0 8px}
@@ -77,8 +68,6 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(
 .apply-success p{color:var(--mut);max-width:48ch;margin:0 auto}
 .priv-pill{display:inline-flex;align-items:center;gap:7px;font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);border:1px solid rgba(55,185,129,.3);background:rgba(55,185,129,.08);padding:6px 11px;border-radius:7px}
 @media(max-width:680px){.fgrid{grid-template-columns:1fr}}
-
-/* hero */
 header.hero{padding:88px 0 70px;position:relative}
 .hero-grid{position:absolute;inset:0;z-index:0;opacity:.5;
   background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
@@ -95,30 +84,22 @@ h1.head em{font-style:italic;color:var(--orange)}
 .hero-meta .stat .n{font-family:var(--fd);font-size:30px;color:var(--txt);line-height:1}
 .hero-meta .stat .l{font-size:13px;color:var(--mut2);margin-top:6px}
 @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-
-/* section scaffolding */
 section{padding:84px 0;position:relative}
 .sec-label{display:flex;align-items:center;gap:14px;margin-bottom:30px}
 .sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
 .sec-h{font-family:var(--fd);font-weight:500;font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-.015em;max-width:20ch}
 .sec-intro{color:var(--mut);font-size:17px;max-width:58ch;margin-top:18px}
-
-/* principles strip */
 .principles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px}
 .principle{background:var(--bg2);padding:26px 22px}
 .principle .k{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
 .principle h3{font-family:var(--fd);font-weight:500;font-size:19px;margin-bottom:7px}
 .principle p{font-size:13.5px;color:var(--mut);line-height:1.55}
-
-/* method steps */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:14px}
 .step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 22px;transition:transform .2s,border-color .2s}
 .step:hover{transform:translateY(-4px);border-color:var(--line2)}
 .step .num{font-family:var(--fm);font-size:12px;color:var(--orange);letter-spacing:.1em;margin-bottom:18px}
 .step h3{font-family:var(--fd);font-weight:500;font-size:21px;margin-bottom:9px}
 .step p{font-size:14px;color:var(--mut)}
-
-/* deliverables */
 .deliver{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}
 .deliver ul{list-style:none;margin-top:10px}
 .deliver li{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
@@ -132,8 +113,6 @@ section{padding:84px 0;position:relative}
 .bar i{display:block;height:100%;border-radius:5px}
 .prow{margin-bottom:15px}.prow .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--mut)}
 .prow .lbl b{color:var(--txt);font-weight:600}
-
-/* pricing */
 .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:14px}
 .tier{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
 .tier:hover{transform:translateY(-5px)}
@@ -150,8 +129,6 @@ section{padding:84px 0;position:relative}
 .btn-checkout{width:100%;justify-content:center}
 .tier:not(.feature) .btn-checkout{background:var(--surface);color:var(--txt);border:1px solid var(--line2)}
 .tier:not(.feature) .btn-checkout:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
-
-/* ecosystem */
 .eco{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
 .eco-card{border-radius:16px;padding:34px;position:relative;overflow:hidden;border:1px solid var(--line);min-height:230px;display:flex;flex-direction:column;justify-content:flex-end}
 .eco-card.mind{background:linear-gradient(150deg,#1a2230,#141a24)}
@@ -166,12 +143,8 @@ section{padding:84px 0;position:relative}
 .eco-card.move .chip:hover{border-color:var(--lav);color:var(--lav)}
 .eco-card.mind .chip:hover{border-color:var(--blue);color:var(--blue)}
 .disclose{font-size:12px;color:var(--mut2);margin-top:18px;font-style:italic}
-
-/* cta band */
 .band{background:linear-gradient(135deg,rgba(var(--orange-rgb),.1),rgba(79,146,222,.06));border:1px solid var(--line);border-radius:20px;padding:60px 48px;text-align:center;margin:40px 0}
 .band h2{font-family:var(--fd);font-weight:500;font-size:clamp(28px,4vw,42px);max-width:18ch;margin:0 auto 22px;line-height:1.08}
-
-/* footer */
 footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
 .foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:46px}
 .foot-top .brand{margin-bottom:14px}
@@ -182,8 +155,6 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
 .legal{border-top:1px solid var(--line);padding-top:26px;font-size:12px;color:var(--mut2);line-height:1.7}
 .legal p{margin-bottom:12px;max-width:92ch}
 .legal .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:18px}
-
-/* samples gallery */
 .samples-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
 .scard{position:relative;display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;transition:transform .2s,border-color .2s;overflow:hidden}
 .scard.live:hover{transform:translateY(-5px);border-color:var(--orange)}
@@ -210,8 +181,8 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
   .band{padding:40px 24px}
 }
 </style>
-<style>.nav-links a.active{color:var(--orange)}</style><style>
-/* Mobile nav: open as a vertical full-width dropdown, not a horizontal scrolling bar */
+<style>.nav-links a.active{color:var(--orange)}</style>
+<style>
 @media(max-width:900px){
   nav{position:sticky}
   .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;
@@ -221,6 +192,24 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
   .nav-links a:first-child{border-top:none}
   .nav-cta{margin:10px 28px 6px!important;text-align:center}
 }
+</style>
+<style>
+#founder .ecg-wrap{margin:32px 0 4px;padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+#founder .ecg{display:block;width:100%;height:auto}
+#founder .ecg-flat{fill:none;stroke:var(--line2);stroke-width:1.4}
+#founder .ecg-path{fill:none;stroke:var(--orange);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(var(--orange-rgb),.55));stroke-dasharray:1;stroke-dashoffset:1;animation:ecgdraw 2.1s ease-out .15s forwards}
+@keyframes ecgdraw{to{stroke-dashoffset:0}}
+#founder .cred-card{margin-top:26px;background:linear-gradient(160deg,rgba(var(--orange-rgb),.06),var(--card));border:1px solid var(--line2);border-radius:18px;overflow:hidden}
+#founder .cred-top{padding:clamp(22px,3.4vw,32px)}
+#founder .cred-k{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange);margin-bottom:12px}
+#founder .cred-line{font-family:var(--fd);font-weight:500;font-size:clamp(19px,2.4vw,24px);line-height:1.2;margin-bottom:12px;letter-spacing:-.01em}
+#founder .cred-top p{color:var(--mut);font-size:15px;line-height:1.65;max-width:70ch;margin:0}
+#founder .cred-scope{padding:clamp(20px,3vw,26px) clamp(22px,3.4vw,32px);border-top:1px solid var(--line);background:rgba(10,12,16,.35)}
+#founder .cred-scope .cred-k{color:var(--mut2)}
+#founder .cred-scope p{color:var(--mut);font-size:13.5px;line-height:1.65;max-width:74ch;margin:0}
+#founder .cred-scope b{color:var(--txt);font-weight:600}
+#founder .cred-scope em{color:var(--orange);font-style:normal;font-weight:600}
+@media(prefers-reduced-motion:reduce){#founder .ecg-path{animation:none;stroke-dashoffset:0}}
 </style>
   <script src="/em-auth.js?v=2" defer></script>
 </head>
@@ -235,6 +224,32 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
       <div class="principle"><div class="k" style="color:var(--orange)">The problem</div><h3>Drugs over root causes</h3><p>Modern medicine is extraordinary at acute rescue. But for the slow, metabolic problems — stalled body composition, fading energy, labs drifting the wrong way — the default is too often one more prescription that manages a number without changing what's driving it.</p></div>
       <div class="principle"><div class="k" style="color:var(--green)">The approach</div><h3>Work upstream</h3><p>We focus on the levers a fifteen-minute appointment rarely has time for: how you move, eat, sleep, and recover. Not instead of your physician — alongside them. The plan addresses the cause, not just the symptom.</p></div>
       <div class="principle"><div class="k" style="color:var(--blue)">The goal</div><h3>Health and life</h3><p>This isn't only about a faster race or a leaner photo. It's about helping you navigate your health and your life with a plan that fits both — one you can carry for decades, not weeks.</p></div>
+    </div>
+  </div>
+</section>
+<section id="founder">
+  <div class="wrap">
+    <div class="sec-label"><span class="mono">The clinician behind it</span></div>
+    <h2 class="sec-h">Built by a Doctor of Pharmacy.</h2>
+    <p class="sec-intro">Not an influencer with a supplement code — a Doctor of Pharmacy, years at the hospital bedside where the standard is evidence, not trends, who got obsessed with the upstream levers a fifteen-minute visit never has time for. The same clinical rigor, aimed squarely at how you train, eat, sleep, and recover.</p>
+
+    <div class="ecg-wrap" aria-hidden="true">
+      <svg class="ecg" viewBox="0 0 1200 120" role="presentation">
+        <path class="ecg-flat" d="M0,60 H1200"/>
+        <path class="ecg-path" pathLength="1" d="M0,60 H118 Q128,49 138,60 H164 L171,67 L179,18 L187,98 L195,60 H228 Q246,47 264,60 H418 Q428,49 438,60 H464 L471,67 L479,18 L487,98 L495,60 H528 Q546,47 564,60 H718 Q728,49 738,60 H764 L771,67 L779,18 L787,98 L795,60 H828 Q846,47 864,60 H1018 Q1028,49 1038,60 H1064 L1071,67 L1079,18 L1087,98 L1095,60 H1128 Q1146,47 1164,60 H1200"/>
+      </svg>
+    </div>
+
+    <div class="cred-card">
+      <div class="cred-top">
+        <div class="cred-k">Credentials</div>
+        <div class="cred-line">A Doctor of Pharmacy (PharmD) · years of hospital clinical practice.</div>
+        <p>A real clinician's judgment sits behind every plan — paired with a genuine obsession with helping you become the strongest, healthiest version of yourself. No hype, no hedging, no recycled bro-lore. Just the evidence, applied to your life.</p>
+      </div>
+      <div class="cred-scope">
+        <div class="cred-k">Scope — by design</div>
+        <p>This is coaching, <b>not medicine.</b> Elite Metabolix does not diagnose, treat, prescribe or adjust medication, or interpret your labs — those decisions belong to your own licensed clinicians, and they always lead. What we own is the part a rushed appointment rarely reaches: your training, nutrition, sleep, and recovery, engineered to the same standard of proof. <em>Staying in that lane isn't a limitation — it's the point.</em></p>
+      </div>
     </div>
   </div>
 </section>

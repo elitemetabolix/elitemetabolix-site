@@ -11,6 +11,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/em-mark.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0A0C10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Elite Metabolix">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://elitemetabolixhq.com/inside.html">
+<meta property="og:title" content="What's Inside — Elite Metabolix">
+<meta property="og:description" content="Private, evidence-based performance coaching — training, nutrition, and recovery, engineered around your data.">
+<meta property="og:image" content="https://elitemetabolixhq.com/em-og-base.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://elitemetabolixhq.com/em-og-base.jpg">
 <style>
 :root{
   --bg:#0A0C10; --bg2:#0E1117; --surface:#13171F; --card:#171C26; --line:#232a36; --line2:#2c3543;
@@ -223,10 +239,20 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
 }
 </style>
   <script src="/em-auth.js?v=2" defer></script>
+<style>#inside{position:relative;overflow:hidden}</style>
+<style id="rebrand-hero">
+.hero-bg-layer{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;pointer-events:none}
+.hero-video{position:absolute;inset:0;z-index:0;overflow:hidden;background:#0A0C10;pointer-events:none}
+.hero-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-video::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,12,16,.94) 0%,rgba(10,12,16,.78) 40%,rgba(10,12,16,.42) 72%,rgba(10,12,16,.2) 100%),linear-gradient(0deg,rgba(10,12,16,.9) 0%,rgba(10,12,16,0) 46%)}
+@media(prefers-reduced-motion:reduce){.hero-video video{display:none}}
+.wrap{position:relative;z-index:2}
+</style>
+<style>.cta-photo{position:relative;overflow:hidden}</style>
 </head>
 <body>
 <nav><div class="nav-in"><a href="index.html" class="brand"><span class="dot"></span>Elite Metabolix</a><div class="nav-links"><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html" class="active">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a><a href="mobility.html">Yoga</a><a href="mind.html">Mind</a><a href="mailto:hello@elitemetabolixhq.com?subject=Manage%20my%20membership" class="nav-cta">Manage Membership</a></div><button class="burger" onclick="var n=document.querySelector('.nav-links');n.style.display=(getComputedStyle(n).display==='none'?'flex':'none')">☰</button></div></nav>
-<section id="inside">
+<section id="inside"><div class="hero-video"><video autoplay muted loop playsinline preload="metadata" poster="/em-pillar-data.jpg"><source src="/em-loop-data.webm" type="video/webm"><source src="/em-loop-data.mp4" type="video/mp4"></video></div>
   <div class="wrap">
     <div class="deliver">
       <div>
@@ -252,7 +278,7 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
     </div>
   </div>
 </section>
-<section><div class="wrap" style="text-align:center;padding:34px 0 10px"><h2 class="sec-h" style="margin:0 auto 14px">Build yours.</h2><p class="sec-intro" style="margin:0 auto 24px">Your goal, your schedule, your data — engineered into one private dashboard and refined every week.</p><a href="apply.html" style="display:inline-block;background:var(--orange);color:#0A0C10;font-weight:600;padding:14px 28px;border-radius:9px;text-decoration:none;font-family:var(--fb);font-size:15px">Apply to start →</a></div></section>
+<section class="cta-photo"><div class="hero-bg-layer" style="background-image:linear-gradient(180deg,rgba(10,12,16,.72),rgba(10,12,16,.93)),url('/em-pillar-nutrition.jpg');"></div><div class="wrap" style="text-align:center;padding:34px 0 10px"><h2 class="sec-h" style="margin:0 auto 14px">Build yours.</h2><p class="sec-intro" style="margin:0 auto 24px">Your goal, your schedule, your data — engineered into one private dashboard and refined every week.</p><a href="apply.html" style="display:inline-block;background:var(--orange);color:#0A0C10;font-weight:600;padding:14px 28px;border-radius:9px;text-decoration:none;font-family:var(--fb);font-size:15px">Apply to start →</a></div></section>
 <footer><div class="wrap"><div class="foot-top"><div><a href="index.html" class="brand"><span class="dot"></span>Elite Metabolix</a><p>Evidence-based, research-backed performance coaching — the science of your body, in plain language. Built around your data, iterated every week. <b style="color:var(--green)">We will never sell your data.</b></p></div><div class="foot-col"><h4>Explore</h4><a href="about.html">About</a><a href="method.html">The Method</a><a href="inside.html">What's Inside</a><a href="programs.html">Programs</a><a href="samples.html">Samples</a></div><div class="foot-col"><h4>Ecosystem</h4><a href="mobility.html">Mobility &amp; Recovery</a><a href="mind.html">Mind &amp; Breath</a><a href="mailto:hello@elitemetabolixhq.com?subject=Manage%20my%20membership">Manage Membership</a></div></div><div class="legal"><p><strong style="color:var(--mut)">Scope.</strong> Elite Metabolix provides performance and wellness coaching — training programming, nutrition strategy, and general wellbeing education. It is not medical care and does not diagnose, treat, or manage any disease. Always consult your physician before changing how you train, eat, or supplement. <b style="color:var(--green)">Your data is private and is never sold.</b></p><p style="margin-top:6px"><a href="/terms.html" style="color:var(--mut,#8a94a3);text-decoration:underline">Terms &amp; Disclaimer</a> &middot; <a href="/privacy.html" style="color:var(--mut,#8a94a3);text-decoration:underline">Privacy</a></p></div></div></footer>
 <script>var y=document.getElementById("yr");if(y)y.textContent=new Date().getFullYear();</script>
 </body>

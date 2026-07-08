@@ -1,0 +1,10 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Elite Metabolix mark">
+  <g fill="none" stroke="#F0852E" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M64 250 L168 250 C212 250 232 100 256 100 C280 100 300 250 344 250 L448 250"/>
+    <path d="M64 280 L168 280 C212 280 232 130 256 130 C280 130 300 280 344 280 L448 280"/>
+    <path d="M64 310 L168 310 C212 310 232 160 256 160 C280 160 300 310 344 310 L448 310"/>
+    <path d="M64 340 L168 340 C212 340 232 190 256 190 C280 190 300 340 344 340 L448 340"/>
+    <path d="M64 370 L168 370 C212 370 232 220 256 220 C280 220 300 370 344 370 L448 370"/>
+    <path d="M64 400 L168 400 C212 400 232 250 256 250 C280 250 300 400 344 400 L448 400"/>
+  </g>
+</svg>
